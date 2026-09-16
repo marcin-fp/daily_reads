@@ -10,6 +10,9 @@ graphify-out/cypher.txt
 graphify-out/obsidian/
 graphify-out/wiki/
 
+# Bulk conversion logs
+logs/
+
 # Local env
 .env
 .DS_Store

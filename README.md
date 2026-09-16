@@ -70,3 +70,20 @@ uv run scripts/arxiv_to_md.py 2605.26492v1
 ```
 
 Existing files are protected. Regenerate with `--force`. `--mode pdf` or `--mode source` picks a starting point but still falls through. Table warnings exit `2`; raw fallback exits `3`.
+
+Bulk conversion from a raw dump (skips files that already exist in `papers/canonical/`):
+
+```bash
+uv run scripts/canonicalize_raw.py papers/raw
+uv run scripts/canonicalize_raw.py papers/raw/2026-06-09 --dry-run
+```
+
+ArXiv dumps are converted with auto mode against the newest version. Non-arXiv dumps are copied as-is. The summary at the end lists successes, skips, raw fallbacks, table warnings, and failures. `--force` overwrites; `--limit N` processes a prefix; `--delay` (default 1s) spaces arXiv fetches.
+
+Every job is appended to `logs/canonicalize-<timestamp>.jsonl` (gitignored) as it finishes, flushed per line, so an aborted run keeps its record. Ctrl-C summarizes what completed and exits `130`. Re-run just the problem papers — failures, raw fallbacks, and table warnings — against that log:
+
+```bash
+uv run scripts/canonicalize_raw.py papers/raw --retry-from logs/canonicalize-20260916-124500.jsonl --mode source
+```
+
+`--retry-from` implies `--force`, and a clean result in a later log entry clears an id from the retry set.

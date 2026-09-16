@@ -66,6 +66,27 @@ class ArxivId:
         return self.base + (self.version or "")
 
 
+@dataclass
+class ConversionResult:
+    ok: bool
+    status: str
+    paper: str
+    output: Path | None
+    warnings: list[str]
+    fallbacks: list[str]
+    error: str | None = None
+
+    @property
+    def exit_code(self) -> int:
+        if not self.ok:
+            return 1
+        if self.status == "raw":
+            return 3
+        if self.warnings:
+            return 2
+        return 0
+
+
 def parse_id(value: str) -> ArxivId:
     match = ARXIV_ID_RE.fullmatch(value.strip())
     if not match:
@@ -502,6 +523,100 @@ def validate(output: Path, report: dict[str, object]) -> list[str]:
     return warnings
 
 
+def convert_paper(
+    paper_id: str,
+    output_dir: Path,
+    *,
+    mode: str = "auto",
+    force: bool = False,
+    repo_root: Path | None = None,
+) -> ConversionResult:
+    """Convert the newest arXiv version. Never raises for conversion failures."""
+    requested = parse_id(paper_id)
+    fallbacks: list[str] = []
+    paper, metadata, meta_error = resolve_latest(requested)
+    if meta_error:
+        fallbacks.append(meta_error)
+    if requested.version and paper.version and requested.version != paper.version:
+        fallbacks.append(
+            f"used newest version {paper.full} (request was {requested.full})"
+        )
+
+    output_dir = output_dir.resolve()
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output = output_dir / f"{paper.base}.md"
+    if output.exists() and not force:
+        return ConversionResult(
+            ok=True,
+            status="skipped",
+            paper=paper.full,
+            output=output,
+            warnings=[],
+            fallbacks=fallbacks,
+        )
+
+    repo_root = repo_root or Path(__file__).resolve().parent.parent
+    raw = find_raw(repo_root, paper)
+    report: dict[str, object] | None = None
+    warnings: list[str] = []
+
+    try:
+        with tempfile.TemporaryDirectory(prefix=f"arxiv-{paper.full}-") as tmp:
+            work = Path(tmp)
+            if mode in ("auto", "pdf"):
+                try:
+                    report = convert_pdf(paper, work, output, extra_metadata=metadata)
+                except Exception as error:  # noqa: BLE001 - conversion must fall through
+                    fallbacks.append(f"pdf: {type(error).__name__}: {error}")
+            if report is None:
+                try:
+                    report = convert_source(paper, work, output, extra_metadata=metadata)
+                except Exception as error:  # noqa: BLE001 - conversion must fall through
+                    fallbacks.append(f"source: {type(error).__name__}: {error}")
+            if report is None and raw:
+                try:
+                    report = convert_raw(paper, output, raw, repo_root, metadata)
+                    fallbacks.append("used local raw dump because PDF and source failed")
+                except Exception as error:  # noqa: BLE001 - last-resort dump
+                    fallbacks.append(f"raw: {type(error).__name__}: {error}")
+            if report is None:
+                return ConversionResult(
+                    ok=False,
+                    status="failed",
+                    paper=paper.full,
+                    output=None,
+                    warnings=[],
+                    fallbacks=fallbacks,
+                    error="No PDF, LaTeX source, or local raw dump could be converted.",
+                )
+
+            if raw and report.get("mode") != "raw":
+                text = output.read_text(encoding="utf-8")
+                if re.search(r"^raw:", text, re.MULTILINE) is None:
+                    text = text.replace("\nrepair:", f"\nraw: {raw}\nrepair:", 1)
+                    output.write_text(text, encoding="utf-8")
+            warnings = validate(output, report)
+            status = str(report.get("mode") or "ok")
+            return ConversionResult(
+                ok=True,
+                status=status,
+                paper=paper.full,
+                output=output,
+                warnings=warnings,
+                fallbacks=fallbacks,
+            )
+    except Exception as error:  # noqa: BLE001 - never abort with a traceback
+        return ConversionResult(
+            ok=False,
+            status="failed",
+            paper=paper.full,
+            output=None,
+            warnings=warnings,
+            fallbacks=fallbacks,
+            error=f"{type(error).__name__}: {error}",
+        )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
@@ -522,82 +637,32 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
-        requested = parse_id(args.paper)
+        parse_id(args.paper)
     except ValueError as error:
         parser.error(str(error))
 
-    failures: list[str] = []
-    paper, metadata, meta_error = resolve_latest(requested)
-    if meta_error:
-        failures.append(meta_error)
-    if requested.version and paper.version and requested.version != paper.version:
-        print(
-            f"Using newest version {paper.full} (request was {requested.full})",
-            file=sys.stderr,
-        )
-
-    output_dir = args.output_dir.resolve()
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output = output_dir / f"{paper.base}.md"
-    if output.exists() and not args.force:
-        parser.error(f"{output} exists; pass --force to replace it")
-
-    repo_root = Path(__file__).resolve().parent.parent
-    raw = find_raw(repo_root, paper)
-    report: dict[str, object] | None = None
-    warnings: list[str] = []
-
-    try:
-        # Everything downloaded (PDF, LaTeX tarball, OCR images) lives here and
-        # is deleted on exit; only the Markdown file survives.
-        with tempfile.TemporaryDirectory(prefix=f"arxiv-{paper.full}-") as tmp:
-            work = Path(tmp)
-            if args.mode in ("auto", "pdf"):
-                try:
-                    report = convert_pdf(paper, work, output, extra_metadata=metadata)
-                except Exception as error:  # noqa: BLE001 - conversion must fall through
-                    failures.append(f"pdf: {type(error).__name__}: {error}")
-            if report is None:
-                try:
-                    report = convert_source(paper, work, output, extra_metadata=metadata)
-                except Exception as error:  # noqa: BLE001 - conversion must fall through
-                    failures.append(f"source: {type(error).__name__}: {error}")
-            if report is None and raw:
-                try:
-                    report = convert_raw(paper, output, raw, repo_root, metadata)
-                    failures.append("used local raw dump because PDF and source failed")
-                except Exception as error:  # noqa: BLE001 - last-resort dump
-                    failures.append(f"raw: {type(error).__name__}: {error}")
-            if report is None:
-                print(
-                    "No PDF, LaTeX source, or local raw dump could be converted.",
-                    file=sys.stderr,
-                )
-                for failure in failures:
-                    print(f"  {failure}", file=sys.stderr)
-                return 1
-
-            if raw and report.get("mode") != "raw":
-                text = output.read_text(encoding="utf-8")
-                if re.search(r"^raw:", text, re.MULTILINE) is None:
-                    text = text.replace("\nrepair:", f"\nraw: {raw}\nrepair:", 1)
-                    output.write_text(text, encoding="utf-8")
-            warnings = validate(output, report)
-    except Exception as error:  # noqa: BLE001 - never abort with a traceback
-        print(f"Conversion failed without a usable file: {error}", file=sys.stderr)
-        for failure in failures:
+    result = convert_paper(
+        args.paper,
+        args.output_dir,
+        mode=args.mode,
+        force=args.force,
+    )
+    if result.status == "skipped":
+        print(f"{result.output} exists; pass --force to replace it", file=sys.stderr)
+        return 1
+    if not result.ok:
+        print(result.error or "Conversion failed without a usable file.", file=sys.stderr)
+        for failure in result.fallbacks:
             print(f"  {failure}", file=sys.stderr)
         return 1
 
-    print(f"Wrote {output}")
-    print(f"Mode: {report['mode']} ({paper.full})")
-    for warning in warnings:
+    print(f"Wrote {result.output}")
+    print(f"Mode: {result.status} ({result.paper})")
+    for warning in result.warnings:
         print(f"WARNING: {warning}", file=sys.stderr)
-    for failure in failures:
+    for failure in result.fallbacks:
         print(f"FALLBACK: {failure}", file=sys.stderr)
-    if report.get("mode") == "raw":
-        return 3
-    return 0 if not warnings else 2
+    return result.exit_code
 
 
 if __name__ == "__main__":
