@@ -1,0 +1,215 @@
+\section{Where we stand in the landscape}
+\label{section:start}
+
+\begin{summarybox}
+To know where to go, we first need to know where we stand. This section briefly summarizes the competitive landscape in AI for Science: how other players approach the space, what they optimize for, and, more importantly, what they leave untouched. It also explains why physics is distinct from other scientific domains and how that distinction can shape our research, development, and product roadmap.\\[6pt]
+\textbf{TL;DR:} Giants are rewarded for being adequate everywhere. A small team can win by going deep on one niche, such as theoretical physics, and shaping every layer of the system around how the field actually reasons. The bitter lesson suggests that better structure makes sense only if it enables further scaling. Physics itself presents particular challenges: it's noisy, relies on implicit assumptions, asks a wide range of questions, isn't purely textual, and isn't as self-consistent as math.
+\end{summarybox}
+
+% We will use it later to build an executive summary.
+% % Box styles
+% \newtcolorbox{betbox}{
+%   colback=blue!5,
+%   colframe=blue!45,
+%   coltitle=blue!55!black,
+%   title=The bet,
+%   fonttitle=\bfseries,
+%   boxrule=0.5pt,
+%   arc=2mm,
+%   left=2.5mm,
+%   right=2.5mm,
+%   top=2mm,
+%   bottom=2mm
+% }
+
+% \newtcolorbox{summarypointsbox}{
+%   colback=black!2,
+%   colframe=black!30,
+%   coltitle=black,
+%   title=What this means for us,
+%   fonttitle=\bfseries,
+%   boxrule=0.4pt,
+%   arc=2mm,
+%   left=2.5mm,
+%   right=2.5mm,
+%   top=2mm,
+%   bottom=2mm
+% }
+
+% \newtcolorbox{summarytablebox}{
+%   colback=black!1,
+%   colframe=black!30,
+%   coltitle=black,
+%   title=Competitive landscape in AI for Science,
+%   fonttitle=\bfseries,
+%   boxrule=0.4pt,
+%   arc=2mm,
+%   left=2mm,
+%   right=2mm,
+%   top=2mm,
+%   bottom=2mm
+% }
+
+% % Summary page
+% \begin{betbox}
+% Giants are rewarded for being adequate everywhere. A small team wins by going deep on one niche, such as theoretical physics, and shaping every layer of the system around how the field actually reasons.
+% \end{betbox}
+
+% \vspace{3mm}
+
+% \noindent
+% \begin{minipage}[t]{0.39\linewidth}
+% \vspace{0pt}
+% \begin{summarypointsbox}
+% \small
+% \begin{itemize}
+%   \setlength\itemsep{1.8mm}
+%   \setlength\parskip{0pt}
+%   \setlength\parsep{0pt}
+%   \setlength\leftskip{0pt}
+
+%   \item \textbf{Scope:} Narrow means sharper interventions and thinner competition. Broad means more data, but also direct competition with Google.
+
+%   \item \textbf{Complexity:} The simplest system that works usually wins. Our advantage should not come from architecture complexity alone.
+
+%   \item \textbf{Physics is hard:} Physics involves approximation, noisy data, implicit assumptions, and questions like ``why'' and ``what if''.
+
+%   \item \textbf{Completeness:} Not every scientific question is an optimization problem. Some require abstractions that generalize back to the real world.
+
+%   \item \textbf{Emergence:} A system tuned to one scientific level may not scale to another without the laws, structures, and data of that higher level.
+
+%   \item \textbf{Modality:} Physics is not only text. Equations, plots, units, symmetries, and causal structure all matter.
+% \end{itemize}
+% \end{summarypointsbox}
+% \end{minipage}
+% \hfill
+% \begin{minipage}[t]{0.58\linewidth}
+% \vspace{0pt}
+% \begin{summarytablebox}
+% \scriptsize
+% \renewcommand{\arraystretch}{1.28}
+% \begin{tabularx}{\linewidth}{
+%   @{}
+%   >{\raggedright\arraybackslash}p{2.25cm}
+%   >{\raggedright\arraybackslash}X
+%   >{\raggedright\arraybackslash}X
+%   @{}
+% }
+% \toprule
+% \textbf{Player / system}
+% &
+% \textbf{What it optimizes for}
+% &
+% \textbf{Gap it leaves}
+% \\
+% \midrule
+
+% Google --- Co-Scientist
+% &
+% General hypothesis generation using multi-agent debate, ranking, review, web search, and databases.
+% &
+% Deep fit to any single scientific field.
+% \\
+
+% \addlinespace[1mm]
+
+% Google --- ERA
+% &
+% Expert-level empirical software through tree search over LLM-written code.
+% &
+% Breadth over depth.
+% \\
+
+% \addlinespace[1mm]
+
+% Axiomatic AI --- AxProverBase
+% &
+% Token-efficient theorem proving with a minimal Lean~4 feedback loop and lightweight search.
+% &
+% Specialized training still wins.
+% \\
+
+% \addlinespace[1mm]
+
+% Big players, generally
+% &
+% General-purpose frontier models plus agentic loops.
+% &
+% Excellence in one particular niche.
+% \\
+
+% \bottomrule
+% \end{tabularx}
+
+% \vspace{2mm}
+
+% \footnotesize
+% \emph{Takeaway:} frontier labs optimize for broad coverage. Our opening is depth, domain fit, and structure-aware reasoning in physics.
+% \end{summarytablebox}
+% \end{minipage}
+
+% \clearpage
+
+% \subsection{Elaboration}
+
+The large players approach AI for Science with monolithic, general-purpose frontier backbones and agentic loops built atop them. Google's Co-Scientist \cite{Gottweis2026}\footnote{%
+    Co-Scientist is a multi-agent system built on Gemini 2.0 that scales test-time compute to generate and refine scientific hypotheses. Given a natural-language research goal, a Supervisor coordinates six specialized agents (Generation, Reflection, Ranking, Evolution, Proximity, Meta-review). Hypotheses compete in an asynchronous, tournament-based evolution process using multi-turn simulated debates ranked by an Elo system; the Meta-review agent synthesizes insights across debates and appends them to other agents' prompts, enabling iteration without back-propagation. Critically, the loop is \emph{not} purely semantic: the paper names "web search and retrieval" as primary tools and uses "domain-specific tools, such as open databases" to constrain searches.
+    %Full citation: J.~Gottweis et al., \emph{Accelerating scientific discovery with Co-Scientist}, Nature (2026). \url{https://doi.org/10.1038/s41586-026-10644-y}.
+    }
+and their empirical-software system ERA \cite{Aygn2026}\footnote{%
+    ERA is a system that treats the creation of scientific software as an optimization problem. Given a dataset, a metric, and a seed research idea (often summarized from a paper), an LLM generates candidate Python programs. ERA uses a modified AlphaZero-style Tree Search to iteratively mutate the code and hill-climb based on a sandbox quality score; the stochasticity comes from the LLM's sampling distribution rather than from random sampling. Its largest performance jumps came from a programmatic recombination step: prompting Gemini 2.5 Flash to explain the technical similarities and differences between two successful parent nodes, adding that explanation to the prompt, and instructing the search to fuse them into a new seed tree
+    %Full citation: E.~Aygün et al., \emph{An AI system to help scientists write expert-level empirical software}, Nature (2026). \url{https://doi.org/10.1038/s41586-026-10658-6}.
+    }
+both use Gemini as the universal backbone for general reasoning, critique, and coding. Notably, their improvements often come from a bag of clever tricks (tournament-style Elo ranking, prompt templates, meta-review cycles, inference scaling, tree search, etc.) rather than fundamental advances (cf.\ the elaborated description in \ref{section:lessons}). They also target where the money is: big pharma, biology, medicine, and chip design (more about the competitive landscape in \ref{section:landscape}).
+
+This leaves a niche. While a single, small organization cannot out-scale Google or Anthropic, it can make targeted, qualitative interventions. Because the giants must serve a broad, general audience, there is a limit to how far they can optimize their products for any one niche's mode of operation -- they are rewarded for being adequate everywhere, not excellent anywhere in particular. By focusing on a single niche, such as theoretical physics, we can instead shape every layer of the system around how the field actually reasons and operates.
+This is reflected in our internal bets: math- and expression-aware embeddings, conjecturing tools, domain-fine-tuned models, etc., all aiming at qualitative leaps. This stands in contrast to inference scaling and refinement loops, which buy only quantitative improvements. So yes, we can beat Google and others; likely not in the general capabilities, but in our selected niche, both in the quality of the product and the particular fit to the market.
+
+\paragraph{A note about the bitter lesson.}
+A skeptical reader might object that this entire bet runs against Sutton's ``bitter lesson'' \cite{Sutton2019}\footnote{%
+    Sutton's essay argues that, across seventy years of AI research, general methods that leverage computation (search and learning) have consistently outperformed methods that build in human domain knowledge, and that this pattern has repeated so often it deserves to be treated as a lesson learned the hard way.
+}: general methods that scale with compute have repeatedly beaten hand-crafted domain knowledge, so is it safe to bet on structure over scale? However, there is some subtlety in the lesson. Sutton does not argue against structure as such; after all, good structure can \emph{enable} further scaling. Convolutional networks are good examples. They encoded translation equivariance directly into the architecture, thereby enabling learning and search to operate more efficiently on image data, which is precisely why they scaled better than fully connected networks. Our bet is similar. For example, by connecting a math engine and exposing tools that leverage symmetries and conservation laws, we can free the system to scale up in other aspects (so as not to make LLMs do things that can be done more easily by other means).
+
+\paragraph{A note about scope.}
+Each niche we select carries its own tension, and it is worth exploring them before we treat them as settled. There are tradeoffs regarding how wide the niche is (do we target one sub-topic of theoretical physics, or do we build a system "for all natural sciences"?). 
+A general system gives us more data and lets us exploit non-obvious synergies across fields; the narrow system lets us make sharper, more targeted interventions. The general system puts us in direct competition with giants like Google and Microsoft; the narrow one lets us carve out our own niche, where arguably, the competition is thinner. The border between the two is thin, and we should have a deliberate discussion about how to balance the scope of our system.
+
+
+\paragraph{A note about complexity.}
+Google explicitly reported that among the many agentic configurations they explored, \emph{the simplest implementation performed best}. The same lesson shows up in the work of Axiomatic AI \cite{2602.24273}\footnote{%
+    Axiomatic AI proposed AxProverBase, a minimal agentic theorem prover for Lean 4 built from three parts: an iterative proof-refinement loop driven by Lean compiler feedback (errors + goal states), a self-managed "lab notebook" memory (an LLM summarization step that replaces a full-history context window), and lightweight library/web search tools. With Claude Opus~4.5 as the backbone, AxProverBase ties the far more complex prover, Hilbert, on PutnamBench (54.7\% pass@1) while operating with a 450$\times$ smaller token budget ($\approx$1880M vs 4.2M), at an average cost of \$12.6/problem. 
+    This work illustrates that a minimal agentic loop and a few tricks make a frontier model competitive with complex provers. However, on a separate note, while achieving good results, AxProverBase was still far from the leader, Seed-Prover 1.5, a specialized, training-heavy theorem-proving system achieving 87.9\% on PutnamBench. This tells us another bitter lesson -- while general models might be good, specialization still wins, however, at the cost of flexibility.
+    %Full citation: Borja Requena et al., A Minimal Agent for Automated Theorem Proving, arXiv:2602.24273 (2026). \url{https://arxiv.org/abs/2602.24273}.
+    },
+whose minimal agentic theorem prover, AxProverBase, ties to a far more complex prover while using 2 orders of magnitude fewer tokens. The lesson is that complexity of architecture alone, then, is not where the advantage lies. Though, to be frank, ``simplest'' here means \emph{simplest that works}, not \emph{simplest possible} (in AxProverBase, the refinement loops are still important, as is the agent-managed notebook, both of which allow lowering the cost and increasing it over the baseline).
+
+\paragraph{A note about physics.}
+Physics is arguably the deliberately hard choice. From an ML perspective, math is a field with zero measurement noise: one counterexample falsifies a faulty conjecture, every computed value is exact, etc. Physics operates in a permanent state of approximation (e.g., a typical Hamiltonian derivation rests on a dozen or more assumptions, often implicit rather than explicit). Most physics also confronts noisy experimental data, and asks a wider variety of questions: not only ``how'' or ``which'' but also ``why'' and ``what if''. As an illustration, see the Five Open Problems in Quantum Information Theory \cite{Horodecki2022},
+where only two of the five are classification questions ("Establish whether ..." and "Decide whether ..."), the rest are either actionable ("Construct ...") or require generalization ("Provide general necessary and sufficient conditions ..."). Therefore, conjecturing in physics likely requires a wider variety of questions than the set typically encountered in math; it might also be probabilistic in nature and able to incorporate messier signals from the empirical world.
+
+Another important aspect is the "stickiness" of physical theories. As Popper argued \cite{Popper1959}, a single anomalous observation is not enough to reject a well-established theory, since only a reproducible counter-effect counts as a genuine falsifier. And by the Duhem–Quine thesis \cite{Duhem1954, Quine1951}, a theory is never tested in isolation but only alongside a host of auxiliary assumptions, so any anomaly can in principle be deflected onto one of them, faulty measurement, instrumental error, or some unmodeled systematic effect, leaving the core theory intact. Only once counter-evidence accumulates and proves reproducible do we treat the theory as refuted and adopt an alternative. This stickiness may be awkward to work with when we apply our conjecturing tool outside the realm of mathematical physics.
+
+\paragraph{A note about completeness.}
+In a recent talk we attended, Jesse Thaler described how he rephrased physics questions as optimization problems to apply ML. That works for a class of questions, but not all of them: sometimes we ask \emph{why} something works or fails; sometimes we ask for an abstraction, e.g., an idealization of a messy reality, where the criterion for getting the modeling right is whether the idealized model generalizes out of scope, or in other words, lets us predict something real back in the empirical world. The latter is an example of a signal that cannot be inferred from the mathematical description alone. In that sense, physics has, paradoxically, both a larger variety of questions (as discussed in the previous point) and a \emph{narrower} scope than math (just as in illustration, we could discuss infinitely many Hamiltonians, but only some of them have physical sense -- describing systems that can actually exist).
+
+\paragraph{A note about emergent phenomena.}
+Anderson's ``More is Different'' \cite{Anderson1972}
+argues that new qualities appear as we move from physics to chemistry to biology, and so on. Those \emph{emergent phenomena} obey new laws not deducible from the level below. Therefore, even if everything reduces to the same fundamental laws, we cannot in practice reconstruct the higher levels from those laws alone.\footnote{%
+    P.~W.~Anderson's classic essay arguing that at each level of complexity entirely new properties appear, and that understanding them requires research as fundamental as any other -- so that a science is not ``just applied'' versions of the science below it.
+    For instance, the ammonia molecule (NH$_3$) is a triangular pyramid with an electric dipole moment; yet no stationary state can have a dipole moment. By quantum-mechanical tunneling, the nitrogen inverts through the triangle of hydrogens at about $3\times10^{10}$ times per second, so the only stationary state is an equal superposition of the pyramid and its inverse, which preserves the parity symmetry of the underlying laws. In larger systems (e.g.\ sugar molecules or crystals) inversion becomes effectively impossible, and the symmetry is genuinely ``broken.'' This is an example of an emergent behavior that only takes place in more complex systems.
+    %Full citation: P.~W.~Anderson, \emph{More Is Different}, Science 177, 393--396 (1972). \url{https://www.science.org/doi/10.1126/science.177.4047.393}.
+    }
+This holds even within a single subject, such as physics. Take fundamental particle physics vs.\ condensed matter physics. Phenomena such as superconductivity and superfluidity arise from collective behavior in many-body systems. Below a phase transition, the system spontaneously settles into a state of lower symmetry than its governing equations, and this broken symmetry, rather than any new fundamental law, is what gives rise to qualitatively new properties (superconductivity, superfluidity, etc.). The important point is that these behaviors cannot be obtained by simple extrapolation from the properties of a few particles. This gives us a warning that when we tailor our system on some level of Anderson's hierarchy (e.g., mathematical physics), we might not be able to simply scale it "up" to apply it at a higher level (material science, chip design, chemistry, etc.), without adding the missing "fundamental" laws (and corresponding empirical data) inherent to the particular level we target.
+
+\paragraph{A note about modality.}
+Let us also remember that not all knowledge is textual. While arXiv and similar repositories offer dozens of millions of pages, those materials are themselves rich in graphics, diagrams, and plots. In addition, mathematical notation itself is not strictly sequential. While we might serialize formulas for printing, they in fact have a much richer, hierarchical structure \cite{2410.21324}\footnote{%
+    The authors show how to represent a formula as \emph{derivation graph}: a directed acyclic graph whose nodes are the key (numbered) equations and whose edges record which equation is derived from which, turning ``understanding the math'' into a relation-extraction task over a graph rather than over linear text.
+}.
+And yet, text, images, and math are still not the whole story. Physics data can be multidimensional, carry units, may follow specific implicit notation, often have non-trivial temporal and causal relations, and arrive entangled with the noise and quirks of the instruments that produced them.
+Accommodating these properties introduces a further set of challenges, and the field has responded in several ways: some train separate foundation models for time series or structured data; others delegate the analysis to external tools (e.g., exposed over MCP); one of the newest approaches introduces lightweight bridge models~\cite{Tang2026}\footnote{%
+    MatterChat is a multimodal LLM that connects graph-based atomic structures to natural language. Rather than serializing 3D structures into text (CIF/SMILES), it uses frozen, pretrained universal machine-learning interatomic potentials (MLIPs) as feature extractors; a lightweight, trainable bridge model then aligns the resulting atom embeddings with a frozen Mistral~7B backbone, letting the model reason over atomic structures it never has to read as text.
+    \label{footnote:MatterChat}
+}.
+
+Another aspect is data representation and the corresponding model architecture. While one can, in principle, feed a picture to a fully connected network as an unstructured vector of pixels, such a data representation -- and such a neural architecture -- are both far from optimal. However, by leveraging what we already know about the data -- that neighboring pixels are correlated, and that the model \emph{should be} equivariant to translations and rotations -- we can both increase the quality and reduce the cost, achieving the same (or better) results with orders of magnitude fewer parameters. Physics is, if anything, even more richly endowed with such structure: symmetries, invariance, and conservation laws are not incidental features of the data but the very content of the theory (and reality). A representation that respects them, rather than forcing everything through a generic sequence model, is among the clearest places where a focused effort can beat raw scale. Hence, we might invest in different architectures \cite{2606.18246}, Physics-informed neural networks (PINNs), or variants of \emph{world models} (an internal, structured representation of how a physical system behaves, against which hypotheses can be simulated and tested, rather than an ever-longer chain of text).
+We do not yet claim to know the right representation; the point is that \emph{which modalities and what structure to use} is a first-class design question for us, not something to ask after the first minimum viable product is built.

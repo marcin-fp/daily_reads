@@ -1,0 +1,149 @@
+\section{Research Bets}
+\label{section:research_bets}
+
+\begin{summarybox}
+    While the arcs of \ref{section:research_arcs} are full research programs, the bets below are single experiments, collected in two tiers. The first tier is short-term: small, digestible tests we can start within the next few weeks. The second tier is long-horizon bets. Every bet, in both tiers, names the arc it feeds, the hypothesis it tests, a concrete experiment, and -- most importantly -- an explicit kill criterion. The philosophy is falsify-fast: before we invest heavily in any direction, a cheap test should confirm the idea is sound. A bet that dies here is a success, not a failure; it just saved us months of work.
+\end{summarybox}
+
+
+
+\subsection{Near-term bets}
+\label{section:near_term_bets}
+
+\paragraph{B1 -- Answer fusion on physics numerics (feeds \ref{arc:baseline}).}
+\textit{Hypothesis:} fusion of $N$ answers beats best-of-$N$ on many tasks -- but it struggled precisely on MGSM, mathematics-oriented numerical tasks \cite{2510.00931}, which is uncomfortably close to our domain. 
+\textit{Test:} run both (fusion of $N$ and best-of-$N$) on a fixed physics task set at equal token budget. 
+\textit{Kill criterion:} if fusion loses, we know there is no reason to implement it.
+\textit{Classification:} \textbf{C2-P/L, S1, 1M, medium/high confidence}.
+
+\paragraph{B2 -- Improving answer diversity (feeds \ref{arc:targeted_contributions}).}
+\textit{Hypothesis:} conditioning on diverse real snippets preserves hypothesis diversity better than raising temperature, because seeding changes the attractor landscape while temperature merely reshuffles it \cite{2605.26492, 2604.18176}.
+\textit{Test:} generate hypotheses or derivation sketches from identical base prompts under three conditions -- no seed, moderate-high temperature, retrieved diverse seeds. Test also a few original alternatives (e.g., single temperature "nudge" to break the pattern or adaptive temperature variations). Control for output quality (increased diversity should not cost us correctness).
+\textit{Kill criterion:} if seeding buys no measurable diversity at matched quality, the diversity program pivots to its more expensive candidates (debate ensembles, mechanistic interventions, etc.). This bet also forces us to define the diversity metrics -- which is on its own, a worthy deliverable.
+\textit{Classification:} \textbf{C3-P/A, S2 (preliminary tests already completed), 1M, medium/high confidence}.
+
+\paragraph{B3 -- Process Failure Red-Teaming (feeds \ref{arc:targeted_contributions}).}
+\textit{Hypothesis:} a model that correctly rejects an invalid method when \emph{asked} about it can silently defend that same method when it arrives as a \emph{presupposition} of a routine task (draft, extend, tighten, rebut). We further predict that format constraints (word limits, house style, etc.) and explicit social pressure can erode the model's initial reservations.
+\textit{Test:} a scripted adversary -- fixed persona, one escalation move per turn, never permitted to assert or ask about the seeded claim -- run closed-book scenario against a pinned target on $\sim$10 seed problems. Each seed is a true-in-a-regime law stretched past its validity window. We will test different question formats and personas, assess how the model responds to authority, increased stakes, etc., and compare the output against a no-pressured baseline and a question-framed control.
+\textit{Kill criterion:} if that final direct question (the control) does \emph{not} flip the answer -- i.e.\ the model keeps defending what it just wrote -- the phenomenon is a knowledge gap, not a process failure, and belongs to the benchmark line instead.
+\textit{Classification:} \textbf{C3-A/R, S3 (a prototype already completed), 1M, medium/high confidence}.
+
+\paragraph{B4 -- Sycophancy under context load (feeds \ref{arc:targeted_contributions}).}
+\textit{Hypothesis:} Jain et al.~\cite{Jain2026} find that agreement sycophancy in
+open-ended advice rises with the \emph{presence} of interaction context, and that in
+most models tested the effect is largest for distilled memory profiles rather than raw
+transcripts. We conjecture: a critic that carries session context will accept false physics claims more often
+than a context-shielded one (especially if at stake is to contradict the user).
+\textit{Test:} $N$ known-false physics assertions, each paired with a verifier output
+contradicting the user, across six arms: (i) no context; (ii) length-matched irrelevant
+context; (iii) session transcript; (iv) transcript plus profile; (v) short profile alone,
+separating personalization framing from token count; (vi) profile as inert text, no
+personalization instruction, isolating the wrapper. We will measure retraction rate under user
+pressure. \emph{Controls:} the same assertions without pressure, per arm, to separate
+sycophancy from long-context degradation; and a mirrored set where the user is right and
+the verifier wrong -- symmetric concession means general capitulation, not user-mirroring.
+\textit{Kill criterion:} pre-register a minimum detectable effect of 10 pp, arm (iv)
+against (i), and kill below it with no-pressure performance held constant. Kill also if
+(ii)--(vi) are indistinguishable: the driver is then bulk context, and the intervention
+reduces to the offline monitor (context-aware against zero-shot, verifier-adjudicated).
+Implement context-shielded critique only if (v) or (vi) separates from (ii) -- only if
+the memory layer, not session length, carries the effect.
+\textit{Classification:} \textbf{C2-P/L, S0, 1M, medium confidence}.
+
+
+\paragraph{B5 -- Semantic loading of number tokens (feeds \ref{arc:data_representation}).}
+\textit{Hypothesis:} numbers carry cultural baggage that leaks into mathematical reasoning, and the leak is capability-shaped rather than monotonic -- absent in the smallest models, strongest at mid capability, attenuated at the frontier \cite{2604.04043}. If it survives into a mathematical representation, the system might react differently to a lemma because a specific number is used.
+\textit{Test:} two cheap probes and one measurement. First, run the contamination prompt across a real capability sweep -- several families, open weights where possible so guardrails do not mask the effect, and reasoning and non-reasoning variants paired -- and plot success against compute. Second, invert it: prime with loaded context and ask for random numbers, which yields the list of semantically loaded tokens as a by-product. Third, take that list into Nickvash's expression embeddings and run the embedding-algebra task: does $88 - 8$ land on $80$, or does it drift toward the cultural neighborhood?
+\textit{Kill criterion:} if number tokens behave algebraically inside the mathematical representation, the effect is confined to the natural-language pathway, and no intervention is needed. The sweep is worth running either way -- it is the cheapest available test of whether \cite{Betley2026}'s narrow-finetuning result and \cite{2202.12837}'s scrambled-examples result differ because of model capability or because of signal dilution.
+\textit{Confound to control:} the models know they are being tested. Gemma 4 sanitized its own first response, and evaluation awareness runs far ahead of what chains of thought verbalize \cite{frasertaliente2026natural}, so an attenuated frontier result may be measuring compliance rather than immunity. The sweep needs a covert framing arm, or it measures our own prompt.
+\textit{Classification:} \textbf{C2-P/L, S2, 1M, medium confidence}.
+
+\begin{highlightbox}
+    From the several dozen bets our literature review produced, we kept those that are (i) decisive -- the outcome changes what we build next, (ii) proportionate -- cost vs.\ payoff, and (iii) upstream -- other works in the arcs depend on them to work.\\[6pt]
+    Treat the above as examples, not a complete list.
+    Please put your own bets here, either in the short-term or the long-horizon category. For compatibility, use the classification system proposed by Alex T.
+\end{highlightbox}
+
+
+\subsection{Long-horizon bets}
+\label{section:long_term_bets}
+
+\paragraph{L1 -- Compressing a literature into one working context (feeds \ref{arc:data_representation}).}
+\textit{Hypothesis:} dynamic, query-conditioned summarization can compress hundreds of papers into a single reasoning context, and this approach (might -- to be tested) beats plain RAG and static summaries on cross-paper synthesis -- the capability nobody in the reviewed corpus has built.
+\textit{Why promising:} fast, cheap generation makes per-question compression of an entire sub-literature economically feasible for the first time, and the failure modes are known in advance (query-conditioned compression drops exactly what looked irrelevant to the query as posed).
+\textit{Test:} one subfield; compare query-conditioned hierarchical summaries against static ARA-style summaries \cite{2604.24658}, plain RAG, lexical baselines, and a no-context control -- measuring utilization of the material directly rather than assuming it from presence \cite{2605.26302}, with precision-critical reading routed back to source text.
+\textit{Kill criterion:} if query-conditioned compression loses to static summaries or plain RAG at matched cost, the arc pivots to hierarchical retrieval and drops the compression bet.
+\textit{Gate:} two checks must pass first: full context needs to clearly beat no-context and shuffled-context, or reasoning over compressed literature isn't worth it; and our retriever needs solid first-stage recall on our own queries, since compression can't fix papers it never found.
+\textit{Classification:} \textbf{C3-P/A, S1, 1Q, low/medium confidence}.
+
+\paragraph{L2 -- An in-house verification-trained physics backbone (feeds \ref{arc:backbone}).}
+\textit{Hypothesis:} we can rebuild the training pipeline of \cite{2604.18176} in-house and get
+a mid-size local model that is reliable on step-by-step physics derivations, cheap to run, and
+competitive with a much larger frontier model.
+%
+\textit{Why promising:} the reported results are strong, and the pipeline plus the resulting
+models are a moat others cannot easily copy. Main obstacle: the paper's seed questions come from
+a copyrighted textbook and need replacing.
+%
+\textit{Test:} five phases. \emph{P0:} audit $\sim$200 items per candidate
+subdomain verified for automatic checkability -- symbolic equivalence, dimensions, limiting cases,
+conservation laws, numerical spot-checks. \emph{P1:} assemble a seed corpus from openly licensed
+sources, plus seeds we write or generate ourselves. \emph{P2:} generate problems, scoring
+quality and diversity. \emph{P3:} train, logging how often the learned reward agrees with the
+solver. \emph{P4:} compare against a frontier model \emph{with} solver access on independently
+graded out-of-distribution problems. Keep learning from \cite{2604.25110} in mind.
+%
+\textit{Kill criterion:} (1) fewer than half the items automatically checkable -- the domain is not
+verifier-friendly.
+(2) The learned reward agrees with the solver no better than a length-and-style baseline.
+%(3) A frontier model with solver access matches us at comparable per-query cost, or pass@$k$ at large $k$ falls below the base model.
+%
+\textit{Limitations:} the source reports its model \emph{competitive with} frontier models on its
+own test distribution and never runs the frontier-plus-solver comparison. We should be better.
+Quantum mechanics is also unusually easy to verify -- clean linear algebra,
+mature solvers -- and much of physics is not, hence P0. And this is distillation, not plain
+fine-tuning: a frontier teacher writes the questions, judges them, and supplies the reward model.
+Thus, the teacher sets our ceiling. Distillation comes with limitations, like students struggling to know when
+to abstain \cite{2604.25110}.
+%
+\textit{Gate:} B2 must have delivered a diversity metric and at least one intervention that
+survived its own kill criterion; P0 coverage must pass in a subdomain we care about.
+%
+\textit{Classification:} \textbf{C4-A/P, S1, 2Q+, medium confidence}.
+
+
+\subsection{Honorable mentions}
+\label{section:honorable_mentions}
+ 
+To be determined whether they should enter the list of short or long bets.
+ 
+\paragraph{H1 -- ARA on physics papers.} The code is available, and we have already run it against physics papers, where it works to a reasonable degree. \textit{Task:} Audit the pipeline end to end, then run the controlled experiment -- swap the backbone, and answer $\sim$100 benchmark questions from plain-text retrieval against the same questions answered from ARA-structured input. Verify whether agents perform better with explicit configuration and preserved failure history than with narrative PDFs and contrast the findings with \cite{2604.24658}.
+\textit{Classification:} \textbf{C3-A/P, S2, 1M, high confidence}
+ 
+\paragraph{H2 -- General Scales on our own data.} The authors published the rubrics, the annotation models, and the code, so this is application rather than research. \textit{Task:} Produce a capability profile of the current system across 18 demand dimensions, with demand levels that are meant to predict behavior on harder unseen problems \cite{Zhou2026}. The value here is diagnostic and relative: it tells us \emph{which} dimension failed, which is exactly what \ref{arc:baseline} needs.
+ \textit{Classification:} \textbf{C2-R/L, S1, 2M, medium confidence}.
+ 
+\paragraph{H3 -- Mechanistic decoupling of warmth from reliability.} Training for warmth raises error rates by roughly ten points and sharply increases agreement with users' incorrect beliefs \cite{Ibrahim2026}. Models lexically mimic an instructed reasoning style while executing their own prior, and contrastive activation steering measurably improves compliance \cite{2604.27251}. And steering reaches residual-stream states no discrete prompt can reach \cite{Mishra2026}, which is simultaneously why the intervention is interesting and why it is dangerous. \textit{Task:} The target is a mechanism that decouples being pleasant from being compliant -- a publishable and timely research project. Control might include: a ``cold'' engine that reasons first, a rewriter that only adjusts tone, a faithfulness check confirming that the substance of a correction survives the restyling. The off-manifold property predicts that pushing the steering coefficient far enough will break the strict syntax our symbolic verifiers require, so syntax validity is a required readout rather than an afterthought. However, before doing any of that, it would be good to assess how significant a problem the warmth-reliability coupling is in our domain (results of B3 might partly inform us).
+ \textit{Classification:} \textbf{C1-P/L, S1, 1Q, low confidence}.
+
+
+
+% \paragraph{B10 -- Structured paper representations (feeds \ref{arc:data_representation}).}
+% \textit{Hypothesis:} distilling a paper into a structured object -- hypotheses, methods, results, dependencies, and preserved dead ends -- reduces chunk count while concentrating signal, and answers questions better than retrieving over the same paper's text \cite{2604.24658}.
+% \textit{Test:} the code exists and already runs on physics papers, so two weeks: audit the pipeline end to end in the first, then answer $\sim$100 benchmark questions three ways in the second -- plain-text retrieval, a cheap static summary, and the structured representation -- holding backbone and tool access fixed. The static summary is the arm that matters; against plain text alone, a win tells us only that summarization helps. Report cost per answered question alongside quality: per-paper structuring can approach a dollar with a capable model, which is the number that decides whether this reaches a corpus.
+% \textit{Kill criterion:} if the structured arm does not beat the static summary at comparable cost, we keep the cheap summary and take only the one component the source evidence independently supports -- explicit preservation of failures and dead ends.
+% \textit{Note:} the retrieval-ceiling motivation should not be leaned on. The embedding bound is on which top-$k$ \emph{combinations} a single-vector model can return, not a chunk-count threshold, and a long-context reranker bypasses it \cite{2508.21038}; first-stage recall is the real constraint (cf.\ B7). Fewer, denser chunks are a cost argument, not a fix for that bound.
+% \textit{Classification:} \textbf{C2-P/A, S2 (already runs on physics papers), 1M, medium/high confidence}.
+ 
+% \paragraph{B11 -- A capability profile of the current system (feeds \ref{arc:baseline}).}
+% \textit{Hypothesis:} the published General Scales rubrics, annotation models, and code can be applied to our own datasets to localize \emph{which} capability demand our failures load on, and the resulting demand levels predict performance on harder unseen problems \cite{Zhou2026}.
+% \textit{Test:} two weeks applying the existing artifacts to our task sets, producing a profile across the 18 demand dimensions plus a held-out check on whether predicted and observed performance agree on harder instances.
+% \textit{Kill criterion:} if the published artifacts do not run on our data inside the sprint, we stop rather than reimplement 18 rubrics ourselves. Two expectations set in advance so the result is not misread: the annotator is an LLM judge and the profile inherits its error, and the paper's own findings -- knowledge scaling with model size, reasoning with inference compute -- mean an absolute profile will likely favor frontier models. The value is relative and diagnostic. Runtime routing on these demand vectors is a separate idea and should be discarded: it needs a frontier judge per step, defeating the efficiency it would serve.
+% \textit{Classification:} \textbf{C2-P/A, S1, 1M, medium confidence (execution risk, not hypothesis risk)}.
+ 
+% \paragraph{L6 -- Decoupling warmth from compliance, mechanistically (feeds \ref{arc:targeted_contributions}).}
+% \textit{Hypothesis:} there exists an internal intervention that makes a model resistant to user suggestion without making it unpleasant to work with. Three results motivate it: training for warmth raises error rates by roughly ten points and sharply increases agreement with users' incorrect beliefs \cite{Ibrahim2026}; models lexically mimic an instructed reasoning style while executing their own prior, and contrastive activation steering measurably improves compliance \cite{2604.27251}; and steering reaches residual-stream states no discrete prompt can reach \cite{Mishra2026} -- which is both why it can do more than prompt engineering and why it is risky.
+% \textit{Test:} steer for suggestion-resistance on flaw-seeded objective tasks, with two mandatory readouts. First, the cheap architectural control runs alongside: a ``cold'' engine that reasons, a rewriter that only adjusts tone, and a faithfulness check confirming the substance of a correction survives the restyling. Second, syntax validity under increasing steering coefficient, since the off-manifold property predicts that pushing far enough breaks the strict output syntax our symbolic verifiers require.
+% \textit{Kill criterion:} if the architectural control matches the steered model on resistance at equal warmth, we ship the control and the steering work becomes a paper rather than a product decision. If syntax validity collapses before resistance improves, the intervention is incompatible with a tool-grounded system.
+% \textit{Gains:} a hot, timely result at a good ML venue, and a Collaborator that pushes back. \textit{Risks:} this is a real research project -- time, effort, and compute -- not a sprint.
+% \textit{Classification:} \textbf{C1-A/R, S1, 2Q, low/medium confidence}.

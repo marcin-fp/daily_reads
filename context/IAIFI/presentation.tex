@@ -1,0 +1,254 @@
+% =====================================================================
+%  IAIFI Summer Workshop 2026 -- internal debrief
+%  Audience: AI engineers / AI researchers at FirstPrinciples
+%  Target length: 5-7 minutes (13 slides, ~30 s each)
+%  Compile: pdflatex IAIFI_2026_Debrief_Slides.tex  (run twice)
+%  Uses only base beamer -- no external themes required.
+% =====================================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% -- Theme: minimal, built from base beamer for portability --
+\usetheme{default}
+\usecolortheme{default}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}}{}
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+
+% -- Palette --
+\definecolor{fpblue}{HTML}{16324F}
+\definecolor{fpaccent}{HTML}{B5460F}
+\definecolor{fpgray}{HTML}{5B6672}
+
+\setbeamercolor{structure}{fg=fpblue}
+\setbeamercolor{normal text}{fg=fpblue!95!black}
+\setbeamercolor{frametitle}{fg=fpblue}
+\setbeamercolor{title}{fg=fpblue}
+\setbeamercolor{itemize item}{fg=fpaccent}
+\setbeamercolor{itemize subitem}{fg=fpgray}
+\setbeamercolor{takeaway}{fg=fpblue,bg=fpblue!8}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamerfont{itemize/enumerate subbody}{size=\small}
+\setbeamertemplate{itemize item}{\raisebox{0.15em}{\rule{0.45em}{0.09em}}}
+\setbeamertemplate{itemize subitem}{\raisebox{0.15em}{\rule{0.35em}{0.06em}}}
+
+% Frame title with a thin accent rule underneath
+\setbeamertemplate{frametitle}{%
+  \vskip0.8em%
+  \usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle\par
+  \vskip0.25em%
+  {\color{fpaccent}\rule{\textwidth}{0.9pt}}\par
+}
+
+% Slide numbers, discreet
+\setbeamertemplate{footline}{%
+  \hfill{\color{fpgray}\scriptsize\insertframenumber}\hspace{1.2em}\vspace{0.6em}%
+}
+
+% -- Helpers --
+\newcommand{\takeaway}[1]{%
+  \vfill
+  \begin{beamercolorbox}[wd=\textwidth,sep=0.45em]{takeaway}
+    \small\textbf{Takeaway:} #1
+  \end{beamercolorbox}%
+}
+\newcommand{\lead}[1]{\textcolor{fpaccent}{\textbf{#1}}}
+\newcommand{\src}[1]{{\color{fpgray}\scriptsize #1}}
+
+% Uncomment to rehearse with speaker notes:
+% \setbeameroption{show notes}
+
+% -- Title --
+\title{\textbf{What Physicists Actually Want From Us}}
+\subtitle{IAIFI Summer Workshop 2026 -- field notes and engineering implications}
+\author{Marcin Abram \& Moinul Hossain Rahat}
+\institute{FirstPrinciples}
+\date{August 2026}
+
+\begin{document}
+
+% ------------------------------------------- 1
+\begin{frame}[plain]
+  \titlepage
+  \begin{center}
+    \src{Five days at MIT with the community our products are for.}
+  \end{center}
+\end{frame}
+\note{Five days, ~25 seconds. Frame: this is user research, not a conference recap.}
+
+% ------------------------------------------- 2
+\begin{frame}{The room we were in}
+  \begin{itemize}\setlength\itemsep{0.7em}
+    \item Four days of research talks by working physicists; one day of industry flash talks.
+    \item Of \textbf{13 organisations} presenting on Industry Day, exactly \textbf{two} build AI for fundamental science: \textbf{Physical Superintelligence} and \textbf{us}.
+    \item Of three VC firms present, only one said ``AI for science'' out loud.
+  \end{itemize}
+  \takeaway{The market (AI for theoretical physics) might be less crowded than the noise suggests. The conference was worth the effort: this was five days of unfiltered access to our exact users.}
+\end{frame}
+\note{Don't linger. The point is: small category, we were in the room, everything that follows is first-hand.}
+
+% ------------------------------------------- 3
+\begin{frame}{Three sentences to take, if you don't want to read more}
+  \begin{enumerate}\setlength\itemsep{1.0em}
+    \item The room named the main gap: it is \lead{calibration, not capability}.
+    \item \lead{Verifiers generalize where generators don't} -- so verification cost, not raw capability, is what determines which architecture can scale to harder problems.
+    \item \lead{How we ship} matters as much as what we ship: one our direct competitor seem less advanced$^1$ but they already tapped \emph{into} the runtimes physicists already use.\\[24pt]
+    {\footnotesize $^1$ Their "get-physics-done" project offers workflow orchestration with LLM-generic verification checks; has 900+ stars on github and is already used in workflows of people present at IAIFI.}
+  \end{enumerate}
+  \vfill
+\end{frame}
+\note{This is the spine of the talk. Say each sentence, then move on -- the next slides are the evidence.}
+
+% ------------------------------------------- 4
+\begin{frame}{A customer told us the output contract}
+  MERL (Mitsubishi Electric's research lab), our ideal industry-type-of-client archetype, asked for, in order:
+  \vspace{0.6em}
+  \begin{enumerate}\setlength\itemsep{0.5em}
+    \item A \lead{verdict}: is this right?
+    \item A \lead{physical explanation}$^1$, in the language they already use (engineers/physicists not mathematicians).
+    \item A \lead{minimal runnable example}.
+  \end{enumerate}
+  \vspace{0.6em}
+  {\footnotesize $^1$ Full formal derivation -- they feel it already exists and is overwhelming (they might be wrong here; however, it is their current perception when using Claude/Gemini/ChatGPT).}
+  \takeaway{Formal verification in physics has limitation. Something closer to the way how physicsts work might be better. E.g.: verdict + confidence/intuition + minimal runnable example.}
+\end{frame}
+\note{Emphasise: we did not infer this. A customer said it, and a competitor shipped it.}
+
+% ------------------------------------------- 5
+\begin{frame}{Why ``calibration, not capability''}
+  Three criticisms of current AI, raised repeatedly and independently:
+  \begin{itemize}\setlength\itemsep{0.55em}
+    \item Models are \textbf{too good at convincing the user} (so it is hard to verify the results).
+    \item Models \textbf{comply} where a human collaborator would push back.
+    \item On long-horizon work the failure is not (always) a wrong answer -- it is a \textbf{plausible shortcut at an intermediate step}.
+  \end{itemize}
+  \vspace{0.4em}
+  And the community's own norm: they will accept \textbf{wider error bars} in exchange for fewer unvalidated assumptions -- and present that trade as the success.
+  \takeaway{A system optimised to sound confident optimises for exactly what this audience distrusts.}
+\end{frame}
+\note{The wider-error-bars point usually lands hardest with engineers -- it inverts the usual demo instinct.}
+
+% ------------------------------------------- 6
+\begin{frame}{Finding 1 -- the work is in the representation, not the model}
+  \begin{itemize}\setlength\itemsep{0.6em}
+    \item Four plenary speakers in one day, independently: the \textbf{architectures were ordinary}; encoding the problem into a learnable object \textbf{was} the non-trivial research.
+    \item There is \textbf{no procedure} for choosing among encodings, the choice measurably changes results, and practitioners feel it as a bottleneck.
+    %\item Industry Day made the stakes concrete: for algebraic structure, the \textbf{type} of embedding (matrix vs.\ vector) determines what is learnable at all.
+  \end{itemize}
+  \takeaway{Search over representations of a scientific object is a concrete, \emph{highly desirable} research direction -- and it lands directly on our mathematical-embedding stream.}
+\end{frame}
+\note{Flag this as the clearest open research seam we saw. Nobody owns it.}
+
+% ------------------------------------------- 7
+\begin{frame}{Finding 2 -- verifier}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \lead{Cheap verifier is ok}\par\vspace{0.3em}
+      \small
+      A frequently-wrong model can be still valuable.\par\vspace{0.3em}
+      (depending what that model \emph{enables}).
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \lead{Doing it right is hard}\par\vspace{0.3em}
+      \small
+       E.g., What stays stable as assumptions vary, plus what was assumed.
+    \end{column}
+  \end{columns}
+  \vspace{1.9em}
+  The deepest learning for us: \textbf{verification generalises where generation does not.}
+  \takeaway{Verification work buys capability, not just safety.}
+\end{frame}
+\note{Half a minute. This is the finding most likely to change what an engineer builds next week.}
+
+% ------------------------------------------- 8
+\begin{frame}{Finding 3 -- agents are ``very good at outcome, very bad at process''}
+  \begin{itemize}\setlength\itemsep{0.55em}
+    \item On 24--36 hour tasks, every branch offers a \textbf{harder correct route} and an \textbf{easier route that looks approximately right}. Their current experience is that the system takes the easier one.
+    \item Amazon's responsible-AI lead mentioned something similar: a model that ``solved'' a task by \textbf{exploiting the harness}.
+    \item Consequence: unattended run time is bounded by \textbf{how hard shortcuts are to find}. So verification tooling and autonomy duration are ultimately \textbf{the same problem}.
+  \end{itemize}
+  \takeaway{Outcome-only evaluation is structurally blind to this.}
+\end{frame}
+\note{Tie back to slide 3, sentence 2: this is why verification is a capability lever.}
+
+% ------------------------------------------- 9
+\begin{frame}{Finding 4 -- diversity collapse}
+  Arrived from \textbf{three independent directions in a single day}:
+  \begin{itemize}\setlength\itemsep{0.4em}
+    \item a scaled-up vision model suffering from mode-collapse;
+    \item particle resampling erasing diversity;
+    \item RL post-training collapsing a language model's answer distribution.
+  \end{itemize}
+  \vspace{0.5em}
+  It might impact our conjecturing system. We should monitor this and, desirably, mitigate this.
+  \takeaway{Research arc on preserving output diversity is desirable.}
+\end{frame}
+\note{Strongest cross-paradigm signal of the week. Cheap to instrument, expensive to discover late.}
+
+% ------------------------------------------ 10
+\begin{frame}{Findings 5 \& 6 -- two constraints from the field}
+  \small
+  \lead{Base vs.\ Fine-tuned.}
+  \begin{itemize}\setlength\itemsep{0.2em}
+    \item Fine-tuned physics models differentiate \textbf{only} where the corpus sits outside base-model training distributions -- and we should know exactly where that boundary is.
+  \end{itemize}
+  \vspace{0.4em}
+  \lead{Timeline.}
+  \begin{itemize}\setlength\itemsep{0.2em}
+    \item A large collaboration takes a \textbf{year} to adopt anything; agentic capability turns over in \textbf{months} (see the next Figure). Results must stay reproducible to \textbf{2041}.
+  \end{itemize}
+  \takeaway{Functional requirement: ``can this result be regenerated in five years without us?''}
+\end{frame}
+\note{Two constraints, fast. The 2041 number is the one people remember.}
+
+% % ------------------------------------------ 11
+% \begin{frame}{The competitor: two companies in one}
+%   \begin{columns}[T,onlytextwidth]
+%     \begin{column}{0.47\textwidth}
+%       \lead{The pitch -- not a threat}\par\vspace{0.35em}
+%       \small Their founder told the room physics ``will get solved'' within ten years, maybe next year, after four days of senior researchers cataloguing why it is hard. It cost them the room.
+%     \end{column}
+%     \begin{column}{0.47\textwidth}
+%       \lead{The product -- serious}\par\vspace{0.35em}
+%       \small Apache-2.0, one-command install into the coding agents physicists \emph{already run}. Two of four papers citing it come from IAIFI's own leadership.
+%     \end{column}
+%   \end{columns}
+%   \vspace{0.8em}
+%   Worth adopting: \textbf{convention locking} (notation and signs persisted per project -- attacks a silent-drift failure we know we have) and \textbf{profile-based routing} (expose ``deep-theory / numerical / review,'' not model names).
+%   \takeaway{Their distribution strategy is one we have no answer to. Decide explicitly whether we ship \emph{into} physicists' runtimes or only invite them into ours.}
+% \end{frame}
+% \note{Keep the founder anecdote to one sentence -- it sets up the closing slide.}
+
+% % ------------------------------------------ 12
+% \begin{frame}{What this changes for us}
+%   \begin{itemize}\setlength\itemsep{0.5em}
+%     \item \lead{Ship} -- Verify's output contract: verdict $+$ confidence $+$ minimal runnable example, derivations on request. Adopt convention locking and profile-based routing.
+%     \item \lead{Measure} -- intermediate-step shortcut detection in agents; mode-occupancy protocol in Conjecture; rediscovery benchmarks on non-obvious known results \emph{before} any novel output ships.
+%     \item \lead{Demo} -- the MERL thermofluid/airflow case. Note their stack is Modelica / Julia / MATLAB / C++, \textbf{not Python-first}.
+%     \item \lead{Research} -- corpus scaling statistics ($\gamma$, $\beta$) to predict data requirements before committing a training budget; the shared-backbone independence question. Both are ownable and publishable.
+%   \end{itemize}
+% \end{frame}
+% \note{Read the four verbs. Detail lives in the daily reports; don't narrate the bullets.}
+
+% ------------------------------------------ 13
+\begin{frame}{Single best slide presented}
+
+\centering
+\includegraphics[width=0.98\textwidth]{pics/lhc-runs.png}
+\end{frame}
+\note{Land on the takeaway line and stop. ~20 seconds.}
+
+\begin{frame}{Conferences}
+
+\vspace{-1cm}
+\centering
+\includegraphics[width=0.59\textwidth]{pics/conferences.png}
+\end{frame}
+\note{Land on the takeaway line and stop. ~20 seconds.}
+
+\end{document}

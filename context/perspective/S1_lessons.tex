@@ -1,0 +1,41 @@
+\section{Lessons learned}
+\label{section:lessons}
+
+\begin{summarybox}
+    By reading a corpus of contemporary papers, we analyze the field's collective trajectory. In this chapter, we list interesting mechanisms and surprising findings worth adapting (or avoiding).
+\end{summarybox}
+
+Varying the temperature during supervised fine-tuning usually improves out-of-distribution detection. Interestingly, the active ingredient appears to be variation itself rather than the specific shape of the schedule \cite{2505.18137}.
+
+Selective tuning (SA Proj. or MLP Gate\&Up with the Down projection frozen) limits catastrophic forgetting, likely because it preserves the output distribution of the trained LLM \cite{2510.08564}. %A word of caution. To use it, we shall verify that this technique beats the LoRA/full-FT plus 10–20\% general replay control group.
+
+Tracking pivotal-token log-probabilities over the first ~100 fine-tuning steps is a cheap early-warning system for unintended behavioral shifts \cite{Betley2026}.
+
+The Engram paper estimates the optimal static memory allocation heuristic (~75–80\% of the sparse budget allocated to lookup memory). Models with Engram behave in benchmarks as if they had a larger effective size. \cite{2601.07372}.
+
+Data quantity is a good substitute for data quality (training becomes less sensitive to quality as the dataset size grows); 
+As the exponent for data quality $\gamma$ grows, filtering becomes more preferable \cite{2510.03313}.
+
+Training a retrieval subagent specifically on examples where naive retrieval fails (a contrastive gain-beyond-RAG reward) is where its data efficiency came from \cite{2512.16301}.
+
+A self-healing retry loop that treats failures as diagnostic increases the chance of success on open-ended problems \cite{2605.20025, 2605.28655}.
+
+A fusion of $N$ answers in most of the cases gives better results than the best-of-N approach; however, the method seems to struggle with mathematics-oriented numerical tasks \cite{2510.00931}
+
+Any RLVR recipe should be gated on pass@k at large k and verified-strategy diversity, not pass@1 alone \cite{2605.27878}.
+
+AxProverBase's LLM-summarized "lab notebook" beats a sliding window (~7\% more theorems at ~20\% lower cost) \cite{2602.24273}.
+
+Many benchmarks fail to measure what their creators claim, often confounding different "capability dimensions" \cite{Zhou2026}.
+
+For long-lived agents: diagnose memory failures with write/read/utilization probe ladders rather than aggregate failure rates; inject lifecycle shocks (forced recompaction, memory flush) in CI; and never read behavioral compliance as evidence that the underlying state is intact \cite{2605.26302}.
+
+Input-only filtering is structurally bypassable via compute asymmetry; monitoring should be on outputs and reasoning traces, and raw thinking blocks should not be surfaced to users unfiltered, since they leak even without an attack \cite{2510.01529}.
+
+Same-model self-critique misses ~63\% of the model's own exploits; critics must be independent and ideally stronger \cite{2606.04075}.
+
+Persistent memory, ingesting external literature, is a standing indirect prompt-injection surface -- a malicious preprint can plant instructions that persist in the wiki and poison later sessions; linting checks correctness, not adversariality \cite{karpathy2026llmwiki}.
+
+Context presence raises sycophancy, and distilled memory profiles raise it most, so critic roles should be context-shielded and the deployed model tested directly, since the effect is strongly model-dependent \cite{Jain2026}.
+
+Finally, compliance can be lexically mimicked: a model can verbally accept user-provided directions while running different types of reasoning underneath; the presence of something in the chain of thought is not proof that it was used \cite{2604.27251}.

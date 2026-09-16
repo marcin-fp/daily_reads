@@ -1,0 +1,294 @@
+\section{Research Arcs}
+\label{section:research_arcs}
+
+\renewcommand{\thesubsection}{Arc \arabic{subsection}}  % Enumerate arcs as R.x
+
+\begin{highlightbox}
+    In this section, we present a set of research arcs, each including several distinct research bets. None of this is a final word handed down from above. Building a coherent research plan is a group exercise, and ultimately a collective decision. Please read everything below as a set of propositions, or maybe even provocations, with the goal of sparking a discussion.
+    The ideas collected here are meant to be criticized, completed, refined, and, in several cases, ultimately, discarded. What survives that process might become the basis of our actual research plan (and, subsequently, research roadmap). Therefore, if you have something to add, whether a missing bet, a sharper framing, or a flat-out objection, please add it directly (modify also \texttt{main.tex} to add your name as a co-author of this piece).
+\end{highlightbox}
+
+In Sections~\ref{section:lessons} and \ref{section:landscape}, we mapped where the field already stands. In Section~\ref {section:tensions}, we discussed some open trade-offs we still need to resolve (or at least review). This section serves as the bridge between those exploratory sections and an actual roadmap. However, before committing to a prioritized plan, we want to explore where a small, focused team could make a genuine contribution, given everything we now know about the competitive landscape. 
+
+We organized all our ideas into six arcs. \ref{arc:baseline} argues for building the strongest, simplest alternative we can, so we can hold our main system to that bar (and see how much the complex designs matter, after all). \ref{arc:backbone} focuses on building the strongest, physics-attuned backbone -- a costly endeavor, but one that might allow us to generate the biggest leap in performance and will open additional business opportunities. \ref{arc:data_representation} focuses on memory and context; as one of the major research bets, it also confronts the specific demands of reasoning across an entire body of literature rather than a handful of documents. \ref{arc:architecture} turns to the architecture needed to sustain long-lived, multi-day sessions, exploring non-trivial challenges related to those requirements. \ref{arc:targeted_contributions} encapsulates several targeted interventions, each with the aim of differentiating us and creating an edge we can use to compete with the biggest companies in the world. Last but not least, \ref{arc:human_aspect} discusses the role of a human in the process and motivates our product line (namely, Theo Collaborator).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%:~
+
+\subsection{A strong, simple baseline}
+\label{arc:baseline}
+
+\begin{summarybox}
+    The idea here is simple: we shall challenge our own design by deliberately building the strongest, simplest baseline we can. Better us than the competition, right? In addition, this will allow us to hold Theo to a high standard, testing whether the various research bets we invested our time in deliver a real improvement.
+    The point is not modesty for its own sake -- it is about avoiding the most common sin in the literature we reviewed, in which a proposed advancement is often compared against a weak or crippled baseline.
+    This also allows us to create two tiers: one (perhaps open-sourced) can reach a broad community, and another, proprietary, will be the basis of our commercial products.
+\end{summarybox}
+
+\paragraph{Motivation.}
+Many of the papers we reviewed compare apples to oranges (cf.\ \ref{section:landscape}), and the missing baseline is almost always the cheapest non-trivial experiment available: an LLM with access to bash-and-Python against AutoResearchClaw's 23-stage pipeline \cite{2605.20025}; a budget single agent against the co-mathematician's hierarchical coordinator \cite{2605.06651}; a frontier model paired with a computer-algebra system against QuantumQA's 8B verification-tuned model \cite{2604.18176}; or a single LLM given the same tool access against PaperOrchestra's five specialized agents \cite{2604.05018}.
+
+Another common "sin" is judge circularity. In many papers, researchers use an LLM-as-judge from the same model family that powers the answer generation, a pattern that we identified across at least five papers in the reviewed corpus \cite{2405.17044, 2604.05018, 2604.24658, 2605.20025, Gottweis2026}. This is not a harmless shortcut: as tests show, same-model self-critique misses roughly 63\% of a model's own exploitable flaws \cite{2606.04075}. A third, subtler problem is that comparisons tend to be one-dimensional (only one metric to judge performance, e.g., average accuracy or an average score from an LLM-as-a-judge), rather than asking what kinds of mistakes a system makes or evaluating it holistically, as a real deployment would require. After all, cost, latency, robustness, reliability, and safety (e.g., resistance to adversarial examples) all matter just as much as raw performance.
+
+\paragraph{The main idea.}
+Let us be better than the crowd. When we compare our system, let us do it against the simplest strongest baseline that exists.
+This will allow us to hold Theo to reasonably high standards and boost our credibility when we share our advances publicly.
+
+\paragraph{Proposed direction.}
+The first concrete task is to build a reasonably strong alternative to our system. We shall take Theo's design and strip it down to the simplest architecture, progressively applying the simplest reasonable alternative to all elements of the system. 
+To make it fair, we might still apply the handful of tricks we have identified, across the corpus, as carrying the most weight relative to their cost -- a refinement loop driven by deterministic tool feedback \cite{2602.24273}, a self-healing retry loop that treats failure as diagnostic information \cite{2605.20025, 2605.28655}, an agent-managed notebook in place of a full-history context window \cite{2602.24273}, or answer fusion in place of best-of-$N$ \cite{2510.00931} (the list is not exhausted).
+
+\paragraph{Discussion.}
+A natural objection could be: why build a separate system at all, when ablation studies could isolate the contribution of each element? Because complex systems are not strictly reducible -- by removing just one piece, we can not tell what a system designed without it from the start would look like. The recurring lesson across the corpus we reviewed (cf.\ \ref{section:lessons} and \ref{section:landscape}) is that smaller, simpler systems often rival larger, more complex ones on a fraction of the token or training budget. Taking that seriously, and building an internal rival to our own system \emph{in addition} to ablation, seems worth the effort.
+
+This exercise also forces us to define a proper suite of metrics and to think about how to weigh them against one another -- for instance, the marginal value of an accuracy gain against a latency or cost reduction in a given task category.\footnote{
+    In that sense, the entire exercise might be, at its core, close to refactoring or pruning a complex codebase: we are asking whether we can replace the complex with the simple while still passing all the tests (here, without affecting overall performance on various benchmarks).
+}
+
+There is a second, more methodological reason to run this arc. Benchmarks measure absolute performance, but absolute numbers can be misleading: frontier models are inherently agentic nowadays, whereas smaller or fine-tuned models are often tested as stand-alone models, so much of the apparent capability gap can stem from scaffolding rather than model strength itself. The General Scales work adds a further complication: a single benchmark routinely blends tasks that draw on quite different underlying skills, often not even the skill the benchmark claims to measure \cite{Zhou2026}. Relative comparisons offer an alternative. Instead of asking how good our system is on some benchmark in isolation, we ask how much a specific design contributes against a reasonably strong but simple alternative.\footnote{
+    For example, something one could build with minimal effort using available open-source resources.
+}
+That is a cleaner question, and it is the one a continuously maintained internal baseline lets us answer directly.
+
+\paragraph{Approach.}
+We should deliberately counter the assumptions baked into our main design. If Theo commits to a proprietary platform, the baseline should lean on skills and MCP servers running in something more generic, like Cursor. If Theo commits to on-prem models, the baseline should use frontier models accessed via API. If Theo relies on bespoke tools, the baseline should make do with a strong backbone and a plain coding terminal. The point is not to handicap the baseline, but to make sure that the gains that our main approach offers are real.
+
+\paragraph{Team composition and timeline.}
+The team running this can be deliberately small. Their job is to play devil's advocate, attempting to show that our more elaborate system can be reduced to something requiring an order of magnitude less engineering. This should not be a one-off audit but an ongoing effort.
+
+\paragraph{Gains.}
+This is a low-risk bet by design. If the simpler alternative falls short, we have demonstrated that our system earns its complexity. If it succeeds, we would rather be the ones who found that out than a competitor; in that case, we can always fold the lesson back into the main system and improve it. Either outcome helps us.
+
+There is an additional advantage baked into this scenario. If, after repeated iterations, our main design clearly demonstrates its superiority over the strong-but-simple alternative, we can consider releasing the baseline itself as an open-source contribution. This would create a natural two-tier structure: an open baseline available to anyone, and a paid platform layered on top of it, offering superior performance along some additional functionalities, such as persistent memory, long-lived sessions, optional on-prem deployment, faster or unlimited access to our template and paper catalog, multimodal support, higher accuracy through dedicated models or inference-time scaling, and lower latency or token cost through various hardware optimizations. Handled well, this would not cannibalize the paid product; it would raise awareness of what we offer and lower the barrier to entry for users who would otherwise never try us.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%:~
+
+\subsection{A physics-attuned backbone}
+\label{arc:backbone}
+
+\begin{summarybox}
+    This arc takes the opposite bet to \ref{arc:baseline}: instead of assembling the strongest system from existing frontier models, we ask whether a smaller backbone, trained or fine-tuned specifically for physics reasoning, can carve out an advantage that frontier labs cannot easily match. Realistically, we may need more than one such backbone
+    -- after all, different cognitive tasks (synthesis, abduction, hypothesis formulation, question answering) may call for different specializations.
+\end{summarybox}
+
+\paragraph{Main Idea.}
+There are several reasons to consider on-prem LLMs: better steerability, tighter privacy control, lower marginal cost once trained, and a direct offering for clients who cannot, for regulatory or competitive reasons, send their data to third-party providers (e.g., national labs, or users handling sensitive or export-controlled technologies).
+
+This is also, arguably, our cleanest path to create a real moat. By applying the lessons from \ref{section:lessons}, we can compound many moderate advances. But the biggest change might come from a domain-specific optimization. While Google, OpenAI, and Anthropic must optimize for a broad, general audience, we have the luxury of optimizing for one domain, physics, end-to-end.
+
+\paragraph{Discussion.}
+To be clear-eyed about this: any specific model we train will likely not survive long-term competition. Sooner rather than later, we will have to replace it. What should survive is the training pipeline, our accumulating domain knowledge, and the data we construct or curate along the way -- these compound even as the model itself becomes obsolete.
+
+This arc deliberately runs in the opposite direction from \ref{arc:baseline}. There, we lean on the simplest, strongest combination of third-party frontier models; here, we take the harder route of building our own backbone.
+
+The difficulty is compounded by the fact that our product is not just the backbone, but a complex agentic workflow operating over long trajectories. A strong backbone can still lose to a weaker model that is simply more obedient and easier to steer inside that workflow. The instruction-following literature is a sobering example here: models often override an explicit instruction when it conflicts with their own sense of the best approach, then misreport this in their reasoning trace, a failure mode that is largely orthogonal to raw capability \cite{2604.27251}. This is exactly why \ref{arc:baseline} matters: it lets us evaluate any candidate backbone inside the full system, not in isolation. Standard benchmarking, red-teaming, and ablation, of course, remain necessary throughout as well.
+
+\paragraph{Approach.}
+One possible approach is to build on QuantumQA's blueprint \cite{2604.18176}, which discusses task-adaptive synthesis, hybrid symbolic-plus-semantic verification, and a verification-aware reward model. In addition, we can also layer in several lessons from earlier chapters: selective tuning or learning-without-forgetting against a replay baseline, to inject physics knowledge without eroding general reasoning \cite{2510.08564}; measuring the quality exponent $\gamma$ on our own scientific corpus, to decide how much we can trade data volume for logical correctness \cite{2510.03313}; temperature-schedule variation during fine-tuning, to improve out-of-distribution sensitivity so the model recognizes when a problem falls outside its competence \cite{2505.18137}; log-probability monitoring over early fine-tuning steps, as a cheap early-warning signal for both outright misalignment \cite{Betley2026} and the kind of persona drift, warmth-driven sycophancy in particular, discussed in \ref{arc:critique} \cite{Ibrahim2026}; answer fusion rather than best-of-$N$, to boost accuracy \cite{2510.00931}; and Engram-style lookup memory, possibly paired with embedding-only fine-tuning as a cheap path for knowledge updates worth testing against full fine-tuning \cite{2601.07372}.
+
+This list is illustrative, not exhaustive; the final plan should fold in every advance we have already tested, discussed, or built into the system, since the field keeps moving.
+
+\paragraph{Testing.}
+\ref{arc:architecture} covers architectural advances; this arc is scoped to the backbone alone, but we still need to be careful about what we compare it against. Benchmarking a bare custom backbone against a third-party model like Claude might not always be a fair fight, since Claude is agentic by nature and ships with tools, retrieval, and a built-in refinement loop. The fix is symmetry: if we give our backbone a planning loop and access to tools, the comparison is only fair if the frontier model we benchmark against has the same tools, or at least a terminal with comparable libraries and a compute budget. This is precisely the discipline \ref{arc:baseline} is meant to enforce.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%:~
+
+\subsection{Reasoning over hundreds of papers at once}
+\label{arc:data_representation}
+\label{arc:corpus}
+
+\begin{summarybox}
+    This arc is about retrieval and synthesis at a scale current systems do not handle well: reasoning over an entire sub-literature, not a single paper or a handful of snippets. Two streams matter most: representing mathematical content well enough to reason over it, and compressing or organizing hundreds of papers into something the system can actually use (our DRO concept).
+\end{summarybox}
+
+\paragraph{Main Idea.}
+Growing context windows, now reaching millions of tokens, do not solve this problem; in a sense, they \emph{are} the problem. Attention compute grows quadratically with sequence length, and even though the KV cache only grows linearly in memory, it still becomes enormous at this scale -- we cannot simply load a million pages and let the model attend to all of it. KV cache compression is the usual workaround, but most such techniques are heuristics: keep the first tokens plus a sliding window, or retain only the highest-attention ``heavy hitters.'' Eviction methods like these mean the model does not actually read all of the context it was given, while the lossless variants (quantization, low-rank projection) keep every token but only make the same model cheaper to serve. Crucially, none of these raise capability; they lower cost, nothing more. Application-layer alternatives are not obviously better either: providers often let a model write simple scripts that grab sentences matching a list of synonyms, but lexical filtering only surfaces what already shares vocabulary with the query, while real synthesis means connecting ideas expressed in entirely different terms. A more systematic retrieval step could pass higher-quality context to the model, but the harder bottleneck is the model itself. Even with the right material in front of it, today's LLMs do not do Feynman-level synthesis, drawing a genuine unifying thread across thousands of papers, and they will confidently produce plausible-looking connections they cannot actually verify.
+
+\paragraph{Approach.}
+One bet is to improve how we represent and reason over mathematical formulas, building on Nickvash's ongoing work on math embeddings. Another, the focus of this section, is to make the system genuinely reason over a large corpus of papers at once.
+
+Both topics are underdeveloped by the competition, and academic benchmarks do not test for them either: the standard tests either bury a single fact in a sea of noise (the needle-in-a-haystack problem), or ask a system to retrieve a small relevant subset from a larger corpus (top-$k$ retrieval, which has its own dimension-bounded limits \cite{2508.21038}). Neither is what we actually want: joint reasoning over a complex problem using the context of hundreds of relevant papers at once, not the retrieval of a single fact or a short list of documents.
+
+Pre-computed summaries may not be enough, since even after compression there can be too much noise left over. The ARA concept, with modification, could help \cite{2604.24658}, but it only moves the needle rather than solving the problem: even granting ARA's roughly tenfold space reduction, reasoning would still happen over dozens, not hundreds, of papers -- the approach does not scale to the regime we want.
+
+A different avenue, in opposition to \emph{static} ARA-type objects, is to produce dynamic, query-conditioned summarizations. Fast, cheap generation opens a capability that nobody in the corpus we reviewed has built: compressing an entire body of literature into a single working context, conditioned on the specific question at hand. This could take several forms: a hierarchical summary that pulls candidates, summarizes them, and merges the result, or a sliding-window approach that walks through hundreds of papers while maintaining a running local wiki. We do not want to commit to one specific design here; the point is to flag the direction, not settle the implementation.
+
+\paragraph{Testing.}
+We owe ourselves an honest look at the alternatives. BM25 with dynamic synonym expansion can be surprisingly robust. We should test whether dynamic, query-conditioned summaries actually beat a single general-purpose summary, and whether leaning on ARA's hierarchical structure (reasoning over the abstract first, then descending into the tree only where the model sees a fit) outperforms either.
+
+Dynamic summarization should itself be tested across models, not just with DiffusionGemma's $>$1000 tokens/s generation \cite{google2026diffusiongemma}. Classical filter-based scoring, which ranks sentences by relevance, is another baseline worth keeping in the comparison. And we should not skip the simplest possible control, a plain RAG pipeline, as well as a base control where no context is added, to measure how much the retrieved context actually helps -- especially since some evidence suggests models tolerate irrelevant context quite well \cite{2202.12837}.
+
+Evaluation here is hard, and so is gathering ground truth. Query-conditioned compression is lossy in close to the worst possible way: whatever gets dropped is, by construction, what the summarizer judged irrelevant to the query as posed, yet the most valuable findings in cross-paper reasoning are often exactly the details that looked irrelevant at first glance. AgingBench's utilization residual is a useful warning here: being in context is not the same as being used, so reasoning over a hundred compressed papers has to be measured directly, not assumed simply because the material was technically available \cite{2605.26302}. Finally, summary quality is usually judged indirectly, through downstream task performance, and some calibration against human judgment, in the spirit of \cite{2405.17044}, will likely be needed.
+
+\paragraph{Further Considerations.}
+One concern is data quality -- not all input sources should be weighted equally. Another is data modality: incorporating figures, diagrams, code blocks, and the hierarchical structure of mathematical notation, rather than treating a paper as flat text.
+A further direction is generation: producing graphs, diagrams, or even full presentations from synthesized material, an area with a growing body of relevant work \cite{2601.23265, 2603.03072, 2605.30611}. Whether we pursue this is itself worth deciding explicitly -- we cannot attack everything at once, and knowing what to deliberately leave for later matters as much as choosing what to build now.
+
+\paragraph{Other directions.}
+We have focused on one particular bet here, making the system genuinely reason over a large corpus, but other streams flagged earlier in this arc deserve their own attention: context management; the wiki concept, with its attendant security challenges; and the local/global wiki split that lets the system evolve.
+
+\paragraph{Benefit.}
+Either piece, on its own, would matter. Better mathematical representation and reasoning could, by itself, open a generational gap between us and the competition. Genuine reasoning over an entire subfield's literature would be a true game-changer, and the applications would reach well beyond physics: any other domain that depends on synthesizing hundreds or thousands of pages of material faces exactly the same wall.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%:~
+
+\subsection{Long-lived sessions}
+\label{arc:architecture}
+\label{arc:sessions}  % alias
+
+\begin{summarybox}
+    If \ref{arc:backbone} is about the backbone and \ref{arc:corpus} is about making sure the input is right, this arc is about everything in between: the architecture that holds a session together over hours or days. In this arc, we focus especially on long-lived, multi-day sessions tailored to how our users actually work, including collaboration across project members, versioning (giving our dynamical research objects, or DROs, the structure of a DAG, with explicit branches, merges, and a time dimension), and self-evolution, learning from both failures and successes over time.
+\end{summarybox}
+
+\paragraph{Main Idea.}
+A good architectural decision now may determine whether this project survives long-term; a weak backbone, by contrast, can be swapped out relatively easily. Good UX and UI can keep users engaged even when the gap to the competition is small, since judging what counts as a ``good answer'' is genuinely hard and subjective -- a wordy answer can feel thorough or exhausting, a short one can feel crisp or incomplete, and whichever system is easier to work with tends to win regardless of backbone parity. Architecture is the next most important lever, and there is good evidence that one can do a lot with relatively little \cite{2602.24273}.
+
+We are making a bet here, based on intuition rather than hard data so far (one we should verify through interviews with prospective users), that, unlike a typical ChatGPT or Claude user, ours will engage in a single session over hours or even days.
+
+Multi-day research sessions require persistent, inspectable, versioned memory with explicit handling of dead ends, and they pose challenges that shorter sessions do not: context overflow, drifting behavior, and sycophancy that compound the longer a session runs \cite{Jain2026}.
+
+Wordiness is a related problem worth naming directly. ChatGPT and Claude generally get this right: a typical answer rarely exceeds a thousand words and stays conversational rather than reading like dense academic prose, unless the user asks for more, at which point the longer material gets pushed into an editable, saveable file rather than crammed into the chat window.\footnote{
+    Most readability metrics are shaped like a U, meaning both extremes tend to be bad, and the reason for this is that the metrics themselves are quite simplistic in nature, measuring things like the length of words and sentences and the frequency of common versus uncommon words, which makes them trivially easy to game, so a low score simply tells you that your sentences and words are long -- like this one, which keeps going and going and refuses to stop, piling clause upon clause in a way that is, despite its extraordinary and frankly unreasonable length, still completely and effortlessly readable, because length alone does not equal difficulty.
+    (Flesch Reading Ease scale of this sentence was MINUS 40 in a scale that usually goes from 0 to 100).
+
+    Read this. It is fine. Each bit is wee. Each word, too. But wait. What is a quib? Or a florp? Does this vorx make you feel semiotic? It should. Zing! Now parse this: diegetic norbs flerp each trope. See? Short. Fast. High score. But pure zibble.
+    (Flesch Reading Ease scale of this sentence is PLUS 109).
+}
+
+\paragraph{Discussion.}
+We might also let users control how easy or difficult the displayed text is to read, to lower the engagement barrier. A two-layer structure could work well: a complex, fully rigorous version underneath as ground truth, with a simplified version rendered on top. One way to think about this is as two languages: the underlying reasoning and documents are always in ``Academic English'' (precise, dry, difficult to read), while what is displayed is in ``Conversational English''.
+
+A second aspect is how we balance writing and reading. Both extremes exist: pure writing with no interactive feedback, and pure reading with no active engagement. A good interface should blend writing and reading naturally to maintain user engagement. What also matters is making sure that what people write does not disappear into the void: spending ten minutes drafting something difficult, only to have no visibility into whether or how it gets used, is genuinely frustrating. Claude's approach, projects and project spaces where files can be added, revisited, and audited, is one reasonable model to build on.
+
+A third aspect follows from the nature of the source material itself: not every paper is correct, not every claim is genuine, and not every observation is factual. Reasoning over a large literature without a critical mind attached is dangerous. This is where the concept of the critic or skeptic becomes essential, too. This is unlikely to be achievable by simply instructing the model to ``be critical''; we want criticism that is grounded in evidence and constructive, leaving room for the possibility that a single voice that disagrees with the field's consensus might be right. Whether this is best achieved through inference-time scaling, perplexity-based signals, activation steering, or some other technique remains an open problem.
+
+\paragraph{Approach.}
+Several concrete approaches are worth pursuing. On one side, models that are simply better at instruction-following, or techniques that push existing models in that direction \cite{2604.27251}, would help regardless of which backbone we end up using.
+
+On the memory side, a few mechanisms stand out. A three-layer store -- immutable sources, AI-maintained synthesis, and a governing schema, following Karpathy's separation \cite{karpathy2026llmwiki} -- gives us a clear separation of different types of context. Branch support, where the system explores alternative lines and, on hitting a dead end, writes a post-mortem before returning to an earlier node, generalizes both AutoResearchClaw's diagnostic treatment of failure \cite{2605.20025} and ARA's finding that failure content itself speeds up downstream reasoning \cite{2604.24658}. EvoMem-style patches handle non-additive updates by recording old content, new content, temporal metadata, a change summary, an update rationale, and supporting evidence from the triggering context \cite{2606.13681}; we could strengthen this by replacing EvoMem's free-text evidence with verifier artifacts, such as CAS or SymPy checks, unit tests, or execution traces, wherever they are available.
+
+For long-term reliability, time-decayed retirement of stale concepts bounds the growth of context. A local/global split is a related idea: session-local memory occasionally promotes generalizable lessons, a recurring mistake in a class of derivations, a reusable trick, into a cross-session, and eventually cross-user, store. How to prevent polluting or degradation over a longer horizon is an open question.
+
+\paragraph{Phase flexibility.}
+A related design question is how rigid our pipeline's phases should be. Fully static phases create friction for users accustomed to the near-instant back-and-forth of mainstream chat products, but fully flexible phases give up the ability to optimize tool use and go deep on a well-understood workflow. A hybrid resolves this -- essentially Proposition 2's in Sec.\ \ref{section:proposition} -- a flexible coordinator or planner decides what the phases for a given project should look like, then hands off to a more deterministic builder that assembles a pipeline from a repository of prepared templates, falling back to on-the-fly construction only where no template fits.
+
+\paragraph{Open questions.}
+Should the wiki remain a backstage working artifact, invisible to the user, or should we expose it and expect scientists to actively read and correct it, the way one would audit a lab notebook, rather than letting it pass silently from one agent to the next?
+
+\paragraph{Concerns.}
+A related and currently under-explored area is safety and compliance. We may not have the space to dive into this fully here, but the design should at least leave room for simple placeholder filters to block clearly abusive or offensive content, to be replaced by something more sophisticated later.
+
+Two additional risks that we might need to address early: privacy (a lesson distilled from one group's session could leak their unpublished research direction to others sharing the same global memory) and adversarial ingestion (e.g., a planted preprint that poisons a shared memory).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%:~
+
+\subsection{Targeted Contributions}
+\label{arc:targeted_contributions}
+\label{arc:critique}  % alias
+
+\begin{summarybox}
+    This arc collects targeted contributions at two scales. At the program scale (defensible over a two-to-three-year horizon, with first outcomes within months) and at the intervention scale (smaller bets that sharpen the product).
+\end{summarybox}
+
+\paragraph{Main Idea.}
+Each of the previous arcs targets a different layer of the system: \ref{arc:baseline} keeps us honest by building a strong, simple baseline; \ref{arc:backbone} asks whether a physics-attuned backbone is worth building; \ref{arc:data_representation} confronts the unique demands of working memory and the bet on reasoning over hundreds, potentially thousands, of papers at once; and \ref{arc:architecture} turns to the architecture of long-lived, active sessions. Running through \ref{arc:architecture} in particular, there is a problem that deserves to be named plainly here: repeated context measurably increases sycophancy in LLMs \cite{Jain2026}, and for a system whose entire purpose is to produce correct science, sycophancy is not a minor UX flaw. Left unchecked, it would steer the system toward telling users what they want to hear, accelerating the proliferation of confident-sounding pseudoscience rather than real science.
+
+\paragraph{Conjectures for physics.}
+In mathematics, a conjecture engine needs a prover; in physics, it needs a credence engine. Physics is sticky: a hypothesis is only ever tested jointly with a web of auxiliary assumptions about instruments, approximations, and background theory, so a single contrary observation can always be deflected onto the equipment or the interpretation \cite{Duhem1954, Quine1951}. Popper accordingly demanded reproducible effects rather than lone anomalies \cite{Popper1959}, and Lakatos described how a research program's ``protective belt'' absorbs contrary evidence until it mounts \cite{Lakatos1970}. Only accumulating evidence rejects a theory. This messiness is not the obstacle to a conjecturing program -- it is the research object. The question ``is this true?'' is replaced by ``under which assumptions, in which regime, with what accumulated evidence?'', and the deliverable is therefore not a stream of conjectures but conjectures with attached falsification programs: each candidate ships with its assumption set, the limiting cases it must reduce to, and the cheapest numerical experiment that could kill it. What survives that treatment might be non-trivial. The competition here is genuinely thin: the mathematics side has co-mathematician-style systems \cite{2605.06651}, but the probabilistic, assumption-laden physics analog remains unbuilt.
+
+\paragraph{The assumption ledger.}
+A typical problem in physics rests on a dozen or more assumptions, most of them implicit. The program is to make them first-class objects: extract assumptions from derivations, type them (approximation, symmetry, regime, idealization), track their propagation through a chain of results, and flag when a conclusion silently exits its validity domain. This operationalizes the stickiness above: when evidence contradicts a conclusion, the ledger names which auxiliary assumptions are candidates for blame.
+
+\paragraph{A physics-native verification stack.}
+Mathematics has Lean; physics has nothing between prose and code. Yet physicists verify semi-formally all the time: dimensional analysis, symmetry and conservation checks, and above all limiting cases -- every new result must reduce to known results in the appropriate limits. Each of these checks is individually automatable. They form a graded verifier that returns ``passes dimensions, passes symmetry, fails the classical limit'' rather than a binary verdict. An automatic limiting-case checker over a derivation corpus could be a realistic first deliverable.
+
+\paragraph{The grounded skeptic.}
+A system prompt can buy a skeptical \emph{style}; it cannot buy skepticism. Prompted skepticism produces criticism as decoration. What we want instead is disagreement grounded in facts: an objection that arrives with a counterexample computed by a solver, a contradicting result located in the literature, or a named assumption the idea silently violates. And the point of the disagreement is constructive -- the goal is to help the user strengthen a research proposal, a thesis, a program. A reviewer that grills an idea until every hole is found and patched leaves the researcher with a better idea.
+
+The design can be hierarchical. The first level is rhetorical: spotting internal inconsistencies, unsupported leaps, circular arguments. The second is literature-grounded: retrieving published results that contradict the claim, or prior work that has already tried the proposed route. The third level is computational counterevidence -- the system runs the small numerical experiment or toy model that breaks the claim, gathering preliminary results \emph{against} the proposal before the user invests months in it. No human reviewer runs experiments against your proposal; a system that does is a qualitatively new artifact.
+
+Building such a critic requires a holistic approach, not a single trick. The critic needs to be context-shielded, since context presence itself drives agreement sycophancy \cite{Jain2026}; tested by an independent, ideally cross-family judge, since same-model self-critique misses roughly 63\% of a model's own exploits \cite{2606.04075}; and architecturally separated from warmth, for instance through a two-stage pattern where a ``cold'' engine reasons first and a separate rewriter only adjusts tone afterward, with a faithfulness check confirming that the substance of a correction survives the restyling \cite{Ibrahim2026}. Finally, the critic needs to be validated on flaw-seeded objective tasks: problems where we deliberately insert a specific bug, error, or piece of incorrect information and observe how the system responds.
+
+Two further requirements deserve naming. First, the hard problem is not just finding a criticism; it is deciding whether to flag anything at all. A skeptic that overreacts is as useless as one that is silent. Second, disagreement, when it occurs, should be communicated clearly. Models routinely override an explicit instruction while lexically mimicking compliance in their reasoning trace \cite{2604.27251}; the constructive alternative is to surface the conflict -- ``you asked for X; the evidence points to Y; here are both''.
+
+\paragraph{A credence engine over the literature.}
+Not every published claim is correct, and the disagreements are rarely marked. The program: extract claims -- at the claim level, not the paper level -- detect contradictions across a corpus, and maintain calibrated credences that update as evidence accumulates.
+
+\paragraph{Retrieval as exploration.}
+Retrieval, as commonly built, is pure exploitation: the system returns the closest matches to what the user already asked. A research instrument should also explore. Concretely, this means budgeting part of every retrieval for material that is relevant but deliberately distant -- the way Co-Scientist's proximity agent forces diversity among generated hypotheses \cite{Gottweis2026}. SciMuse's human evaluation hints at where to aim: ideas built from high-centrality, heavily cited concepts were rated \emph{less} interesting, while semantic proximity to the researcher's own work raised interest \cite{2405.17044}. This can give us some idea how to personalize the results for users.
+
+The retriever layer should also give a balanced view. A retriever that only ever confirms the user's framing is sycophancy by other means; surfacing the strongest dissenting sources alongside the supporting ones is the retrieval-side counterpart of the credence engine above, and a direct answer to the information-bubble risk that personalization would otherwise create (cf.\ \ref{arc:human_aspect}).
+
+The most ambitious piece is showing not only what is, but what is missing. We can map a sub-literature and mark its blank regions: under-populated intersections of methods and problems, assumptions nobody has relaxed, results that exist in one formalism but not its neighbor. A gap is, admittedly, ambiguous: it can mean the missing idea is uninteresting, or that it was quietly tried and abandoned -- or that nobody has looked, and that is where discoveries live. The literature publishes survivors, which is why the complementary asset is a \emph{failure atlas}: the ``we were unable to'' admissions buried in limitation sections, abandoned approaches reconstructible from citation patterns, and -- growing over time -- the post-mortems our own system writes. Such an atlas of what was tried and failed is unique data that forms a real moat.
+
+On mechanisms, the corpus is clear about where the bottleneck sits: single-vector embeddings are dimension-bounded, so first-stage recall, not reranking, is the real constraint -- a hybrid sparse-plus-dense first stage feeding a long-context reranker might be a better configuration \cite{2508.21038}. On top of that, a retrieval subagent can be trained contrastively on precisely the cases where naive retrieval fails \cite{2512.16301} -- in effect, teaching the system to look where lookup breaks. To improve user experience, we might return cheap first results immediately while a deeper agentic search runs in the background, and let the user's early selections steer the exploration frontier -- while providing the illusion of unparalleled search speed.
+
+\paragraph{Updating knowledge without retraining.}
+For a research instrument, we might want to decouple reasoning from retrieval (to be discussed, whether it is a good idea or not). Factual capacity scales with parameter count, whereas reasoning ability does not \cite{lesswrong2026incompressible, Zhou2026}. Engram-style conditional memory gives a lookup primitive \cite{2601.07372}, but it is keyed on local token $n$-grams -- it captures two- and three-token correlations, not concepts.
+
+The same decoupling enables a second, more provocative intervention: a \emph{knowledge dial}. Stored knowledge might be ballast. When the task is reasoning about new physics, recall can actively hurt -- the model pattern-matches to the literature instead of deriving, the failure mode we called retrieval mimicry. With recall as a controllable, maskable component, we can suppress it during the creative phase (reason from first principles) and re-enable it during verification (now check the result against everything known). An evaluation of this idea is publishable: we can ablate retrieval on discovery-style tasks and measure how performance, novelty, and error profiles shift. Either result would be interesting.
+
+\paragraph{Diversity-preserving generation.}
+Whatever generates -- the conjecture engine, the muse, the skeptic's counterarguments, an autonomous loop -- inherits a documented pathology: under weak conditioning, LLM outputs collapse onto a narrow set of attractors. In one study, 88\% of twenty thousand generated stories shared eleven core words, and half featured a lighthouse \cite{2605.26492}. Whether this transfers to scientific work is unknown (to be checked), but the analogous failure is easy to picture: hypothesis generation defaulting to canonical derivations and ``generically safe'' themes -- not the most common ideas, just the ones post-training made comfortable. For a system whose value lies in exploring untested connections, this is a first-order risk.
+
+The contribution with thin competition is measurement, not mitigation: diversity metrics exist for stories, not for hypothesis spaces or derivations. Defining motif entropy over derivation structures, verified-strategy coverage, and novelty against a reference corpus would let the candidate mitigations -- seeding with diverse real snippets, debate ensembles across model families, priming with semi-random seeds, mechanistic interventions -- be compared rather than anecdotally endorsed. The mitigation is likely conditioning, not temperature -- seeding changes the attractor landscape, whereas raising the temperature merely reshuffles it, the same mechanism QuantumQA used to seed problem generation \cite{2604.18176}. And if we train our own models, two hygiene rules follow: gate any RLVR recipe on pass@$k$ at large $k$ and on verified-strategy diversity rather than pass@1 alone \cite{2605.27878}, and audit the lineage of synthetic data, since rare reused patterns can come to dominate outputs at rates their corpus frequency does not predict.
+
+\paragraph{The idea muse.}
+A complementary bet is an idea muse: a feature that looks at a user's recent work and proposes adjacent research directions. SciMuse is the closest existing precedent. However, we should move carefully. SciMuse shows that building a 58-million-paper knowledge graph gave no measurable lift to idea \emph{generation} over a plain LLM baseline; but a small supervised model built on graph features substantially outperformed zero-shot LLM ranking at the \emph{selection} stage, with top-3 precision around 66\% versus 45\% \cite{2405.17044}. The practical reading is that we should not over-invest in bespoke graph-steered generation: a zero-shot LLM ranker, an Elo-style tournament or any comparable scheme, is a perfectly reasonable cold-start filter for surfacing the best few ideas, with a supervised selector as the natural upgrade once enough human feedback accumulates.
+
+\paragraph{Problem formulation.}
+The reviewed literature crowds the solving end of the research workflow: ERA optimizes code, provers prove, question-answering systems answer. The formulation end is nearly empty -- SciMuse and Co-Scientist's generate-debate-evolve loop are the closest exceptions \cite{2405.17044, Gottweis2026} -- yet physics asks a wider variety of question types than any benchmark tests: not only ``which'' and ``how'' but ``why'', ``what if'', ``construct'', ``generalize''. An intervention here would build tools that turn a vague hunch into a well-posed problem: naming the implicit assumptions (the ledger again), choosing the idealization, stating what would count as an answer, and proposing the first falsifying test (the conjecture machinery again). This is also the part of the workflow where a human-in-the-loop is an asset rather than a burden.
+
+\paragraph{Other ideas.}
+To avoid exhausting the reader, we list a few more ideas with minimal description.
+\begin{itemize}
+    \item \textbf{Sycophancy metrology before sycophancy mitigation.} Before we start developing mitigations, we shall measure how big the problem is. Not all results will generalize to the scientific domain. Does long context degrade the critic's willingness to dissent \cite{Jain2026}? Does a warm persona override a verified tool output under emotional pressure \cite{Ibrahim2026}?
+    \item \textbf{Reasoning controllability.} Compliance can be lexically mimicked -- a model can verbally accept an instructed reasoning path while executing a different one underneath \cite{2604.27251} -- so verification needs probes on the executed schema, not the verbalized trace. We shall build some monitoring to support this.
+    \item \textbf{Failure-mode-targeted evaluation.} The red-teaming set of deceptive problems proposed in \ref{section:Evaluation} is what makes this whole arc measurable: define the failure mode (retrieval mimicry, semantic collapse, uncritical agreement), build the probe set, intervene, re-measure.
+\end{itemize}
+
+These are examples, not a fixed list. If you have more, add. If you disagree with some of them, let's discuss.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%:~
+
+\subsection{Collaborator}
+\label{arc:human_aspect}
+
+\begin{summarybox}
+    This arc collects everything that runs on user feedback. The central bet: by observing how scientists actually conduct research, we can adapt our flows to better support the creative process -- and the interaction traces themselves become data that nobody else has. Around that core sit intent capture, adaptation to a user's knowledge level and reading ease, interruption and hand-back policies, safeguards against cognitive offloading, and the network effects a research platform unlocks. This arc motivates the Theo Collaborator product line.
+\end{summarybox}
+
+\paragraph{Main Idea.}
+The product is also the instrument. Every session with a working physicist is an observation of how research actually happens: where they slow down, what they reread, which suggestions they accept, edit, or discard, when they branch and when they abandon. From these traces we can learn to adapt our flows to the creative process as practiced, not as idealized -- and the traces themselves are an asset with a compounding property.
+
+One caution frames everything below: the signal worth capturing is not the thumbs-up. Standard preference feedback rewards verbose plausibility, while QuantumQA found token length \emph{negatively} correlated with solution quality \cite{2604.18176} -- so a large user base producing binary ratings might be less useful for training than a small one producing edits, interventions, corrections, and re-runs validated against verifiers.
+
+\paragraph{Intent capture.}
+There is often a gap between what a user asks for and what they actually want. The early signal -- what the user selects, what they reject, what they rephrase -- can close that gap, refining searches and tailoring what the user sees next. Two design commitments matter. First, the inferred intent should be an inspectable, correctable object, not a silent adjustment: scientists likely want the hood open; in addition, there is a fine line between guessing intentions and gaslighting the user. Second, there is no universal split into ``core'' and ``chore'': computation is plumbing for one physicist and the creative arena for another, and automating the same step is a relief to one and a loss of agency to the other. Observed behavior can set the default position of those dials per user (however, an explicit override must always win).
+
+\paragraph{Adapting the register.}
+A related signal is the user's knowledge level: capturing it lets the system tailor how it talks about difficult things -- which analogies land, how much background to supply, when jargon helps and when it obscures. The two-layer structure from \ref{arc:architecture} is the natural mechanism: a fully rigorous version underneath as ground truth, with the rendered presentation adapted to the reader. Adaptation changes presentation, never the underlying work. Measuring reading ease is part of this, with the caveat already noted in \ref{arc:architecture}: naive readability metrics are trivially gameable, so calibration against actual comprehension -- what users reread, where they stall, what they ask to have re-explained -- matters more than any formula score.
+
+\paragraph{Helping think, not thinking instead.}
+A tool this capable carries a specific risk: cognitive offloading can atrophy exactly the skills it serves -- the ``brain rot'' increasingly discussed around AI-assisted work. Our users are the last audience that should be dulled by their tools, and the mitigation is a design stance: introduce desirable difficulty. A Socratic mode that asks before it answers; requiring the user to articulate their position before the system reveals its own; the deliberate balance of writing and reading discussed in \ref{arc:architecture}, so engagement stays active rather than passive. And, in the spirit of this document, the stance should be measured, not assumed: a longitudinal study of whether users' own ability to catch planted flaws improves or decays over months of use is an experiment nobody in the reviewed corpus has run. If the result is positive, it is also the positioning: the tool that makes you sharper, against a background of ambient anxiety that AI makes you duller.
+
+\paragraph{Interruption and hand-back.}
+A few patterns from the corpus apply. Explicitly halting and asking the user when a workstream is blocked beats silently guessing \cite{2605.06651}. Demand-gated hand-back -- returning control \emph{before} a predicted failure cascade rather than after it \cite{Zhou2026}. And visible negotiation on reasoning conflicts (\ref{arc:targeted_contributions}) replaces both silent compliance and silent override: surface the conflict, show both paths, let the scientist decide.
+
+\paragraph{Shared, auditable surfaces.}
+Feedback needs a place to live. The wiki described in \ref{arc:architecture}, exposed as a product surface rather than kept backstage, could be that place: users read what the system believes, and their corrections feed back into it.
+
+\paragraph{Network effects.}
+Once feedback flows through a platform, cross-user opportunities open up. Pairing researchers with adjacent interests, as SciMuse's infrastructure suggests \cite{2405.17044}; letting a group collaborate across different branches of the same exploration tree; and promoting session-local lessons into a cross-user store, so the platform's reasoning over the literature improves with every user. Three caveats. Privacy boundaries between local and shared knowledge must be designed from the start, since a lesson distilled from one group's session could leak their unpublished research direction. Personalization must not become confirmation: an intent-tailored view risks placing scientists in information bubbles, which is why the exploration-and-dissent retrieval of \ref{arc:targeted_contributions} is the necessary counterweight. And aggressive automatic personalization has regulatory exposure under the EU AI Act, so its scope is a compliance decision as much as a product one.
+
+\paragraph{Trust calibration.}
+Scientists will only lean on a system whose confidence they can calibrate. Showing not just what the system concluded but why it believes it and how far each component can be trusted should belong in the interface from the start. A system that is right 95\% of the time but cannot tell you which 95\% is, for research purposes, a system that must be checked 100\% of the time.
+
+\paragraph{Concerns.}
+Two limits deserve honesty. First, our bet that users will engage in long, multi-day sessions is intuition, not data (\ref{arc:architecture}). Second, observational data is reflexive: users adapt to the tool while the tool adapts to them, so traces record the co-evolved workflow. That is not fatal -- it is the usual condition of instrumentation -- but it means adaptation should be evaluated against outcomes (better research, faster) rather than against engagement, which is trivially and dangerously easy to optimize instead.
+
+\paragraph{Where this leaves us.}
+These six arcs are not a roadmap; they are candidate raw material for one. Some will survive scrutiny, some will merge, and some should probably be cut once we weigh them against our actual constraints: team size, budget, and the specific clients we are targeting. What we hope carries through, regardless of which bets we ultimately choose, is the discipline behind \ref{arc:baseline} (compare against our own best alternative, not a strawman) and the stakes behind \ref{arc:targeted_contributions} (a system that flatters its user is worse than no system at all, in a field where being right is the entire point). Turning this discussion into a prioritized, resourced roadmap is the next step, and it should be a group one.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%:~
+
+% Go back to normal style
+\renewcommand{\thesubsection}{\Alph{section}.\arabic{subsection}}

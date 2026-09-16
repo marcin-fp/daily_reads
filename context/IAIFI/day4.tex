@@ -1,0 +1,197 @@
+\documentclass[11pt]{article}
+
+% --- Packages ---
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+]{hyperref}
+
+% --- Title Information ---
+\title{IAIFI Summer Workshop\\[12pt]
+\large{Notes, Insights and Learnings -- Day 4}\\[3pt]
+\large{\url{https://iaifi.org/summer-workshop.html}}}
+\author{Marcin Abram and Moinul Hossain Rahat}
+\date{Thursday, Aug 13, 2026}
+
+\begin{document}
+\maketitle
+
+% ---
+\section{Gordon Watts, University of Washington\\
+{\large Experimental Particle Physics, Large Language Models, Agentic Workflows, and Collaborations}}
+
+\emph{Watts is a professor of physics at the University of Washington and a long-time member of the ATLAS collaboration at the Large Hadron Collider. He is Deputy Executive Director of IRIS-HEP, the National Science Foundation institute building software infrastructure.}
+
+\subsection*{Summary}
+Watts proposed three escalating tests. Does a model know physics? Does it know software? Does it know both? The point: the model can get the right physics answer while being inconsistent about how it got there — which is a real problem if you need someone to later reproduce exactly what was done.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item Changing a large collaboration takes about a year, while major agentic capabilities arrive every couple of months. A collaboration cannot adopt a \emph{tool}, since by approval time it is two generations obsolete.
+    \item Model lifetime is shorter than the reproducibility horizon of a result, which is disqualifying, since the collider runs to 2041 and a published analysis must stay reproducible indefinitely. The deliverable is therefore not the answer but a deterministic artefact that regenerates it \emph{without} the model. Models \emph{``need to write themselves out of the process.''}
+    \item This community fears the reviewing bottleneck, not the producing bottleneck. Fears inside ATLAS were a small statistical error going unnoticed and published. More AI-assisted output means more results needing review, but review capacity doesn't scale the same way production does.
+    \item The model knows the physics; it does not know the institution. It handled the neutrino ambiguity and the jet combinatorics unprompted, but could not reach ATLAS's private tagging fields or get the in-house calibration convention right. Institution-specific conventions, schemas and calibrations are not public but they must be incorporated into the flow.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item Silent domain-specific failures dominate, and generic evaluation is blind to them.
+    \item An eighty percent pass rate is the usability floor; below it \emph{``you probably just should not bother.''}
+    \item Models defer where a human collaborator would push back. In a case study of a veteran detector physicist brainstorming with an assistant, the consequential shifts came from single well-chosen human questions while the model agreed rather than objecting.
+\end{itemize}
+
+% ---
+\section{Sa\'ul Alonso-Monsalve, ETH Z\"urich\\
+{\large From Pixels to Particles: Deep Learning in Accelerator Neutrino Experiments}}
+
+\emph{Alonso-Monsalve is a senior scientist at ETH Z\"urich working on accelerator-based neutrino experiments, with a background in computer science.}
+
+\subsection*{Summary}
+Neutrino oscillation experiments measure the same beam twice, near the source and several hundred kilometres away. The field's recipe for a decade has been to take the best general model of the day and adapt the input format. The obstacle is that detector images are overwhelmingly empty, so ordinary convolutions spend nearly all their arithmetic on blank space; the fix that made deep learning practical restricts each convolution to sites already active.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item Arbitrary human choices in the representation are treated as disqualifying, not as hyperparameters. His objection to graph neural networks for detector data is not that they perform worse but that deciding which hits are connected is \emph{``completely arbitrary''} and \emph{``introduces human-based biases.''}
+    \item The accepted validation protocol is out-of-distribution stress testing. The bar for trusting a learned physics tool is demonstrated behaviour on inputs it was provably never trained for, not benchmark performance.
+    \item The highest-value contribution is shrinking a systematic uncertainty, not improving a headline metric.
+    \item The binding constraint on this field is public data, not compute or capability, since each experiment's data is collaboration-internal.
+\end{itemize}
+
+% ---
+\section{Todd Zickler, Harvard University\\
+{\large Generative Perception: Probabilistic Inference for 3D Vision and Autonomy}}
+
+\emph{Zickler is a professor of electrical engineering and computer science at Harvard. He has worked for two decades on the physics of image formation, recovering shape, material and illumination from images, and recently reframed that programme around generative inference.}
+
+\subsection*{Summary}
+The main problem: one measurement, several genuinely different explanations. A single shaded image of a surface is consistent with a continuous three-parameter family of shape-and-lighting pairs, plus a discrete flip between convex and concave. These are not modelling failures but exact invariances of the physics of diffuse reflection, which is why no amount of data resolves them and why a model returning one answer is returning an arbitrary member of an equivalence class. Hence his claim: for an under-constrained problem, ``find the single best explanation'' is the wrong task specification, and the right output is a set of samples spanning the possibilities.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item For an ill-posed scientific question the deliverable is the explanation set, and a single answer is a lossy summary of it.
+    \item The real value of the distribution is that it tells a system when to go and get more data. The point of diverse samples, he says, is so a system knows \emph{``this is ambiguous, I've got to resolve it by acting.''} That reframes uncertainty from a reporting feature into a control signal. An agentic research system that cannot represent ``I have several incompatible explanations'' cannot know when to run another experiment, which is arguably the most useful thing it could tell a researcher.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item Separate epistemic uncertainty from an invariance of the physics. The first shrinks with more data; the second never does and can only be broken by a different measurement. Which kind you face determines whether more data or a different experiment is the right response.
+\end{itemize}
+
+% ---
+\section{Eva Silverstein, Stanford University\\
+{\large Symmetry Breaking in Transformers and Interpretable Alignment}}
+
+\emph{Silverstein is a professor of physics at Stanford and one of the most senior string theorists of her generation. She is on sabbatical at OpenAI, and noted this talk is entirely separate from that work.}
+
+\subsection*{Summary}
+Her opening move is the physicist's: treat the transformer as a physical system and enumerate its symmetries. Inside an attention head the scores depend on query and key vectors only through their inner products, so rotating both by the same orthogonal matrix leaves every activation and output exactly unchanged. This is an exact redundancy of the parameterisation, directions in which the loss is perfectly flat and gradients are guaranteed zero. So break the symmetry and put those directions to work, e.g., insert a fixed, unlearned bias inserted into the query.
+
+Note: A continuous symmetry implies a conserved quantity, and here the conserved angular momenta, combined with conserved energy, constrain how fast the optimiser can move in \emph{every} direction. Removing the symmetry should help optimisers that respect it and should not help the widely used adaptive one, which already breaks it through its own preferred basis.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item Enumerate the continuous symmetries and see whether any are being wasted. A tool that enumerates the exact invariances of a \emph{model or a computation}, as distinct from the invariances of the data.
+    \item The community distinguishes sharply between symmetries of the data and redundancies of the architecture.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item The payoff is compute economics rather than the loss number. The memory-efficient optimiser needs about two auxiliary variables per parameter against roughly three for the adaptive methods, and symmetry breaking essentially closes the quality gap, which at scale means reduced optimiser-state memory during training.
+    \item Physics tokens aligned notably worse than digits, and nobody knows why. Mathematics has crisp symbolic tokens while physics requires "comfort with uncertainty and its vocabulary is not cleanly delimited". For anyone fine-tuning on physics data this warns that techniques validated on mathematical tokens may not transfer, and that ``physics tokens'' may not be a well-defined category to begin with.
+\end{itemize}
+
+\section{Contributed Session: Representation Learning and Robust AI}
+
+\subsection*{Sriram Sekhar Bharadwaj, University of California, Los Angeles: Topological Phases in Lattice Quantum Electrodynamics}
+
+Uses topological invariants (integers that survive noisy near-term quantum hardware) as the target observable, and cross-checks results with two independent methods that fail in different ways.
+
+\subsection*{Margaret Lazarovits, University of Kansas: Clustering Jets Without Choosing a Scale}
+
+The standard algorithm for grouping detector energy deposits into jets makes the analyst fix a radius in advance, the same for every jet regardless of what produced it. Her hierarchical probabilistic model infers the scale instead. This is the third instance across the workshop of ``we removed a parameter the analyst had to choose'' presented as the headline claim.
+
+\subsection*{Axiomatic AI: A Formal Benchmark for AI Reasoning in Quantum Mechanics}
+
+The project formalises seven hundred exercises from a standard graduate quantum mechanics text in Lean. The pitch is not the obvious one: the argument for formalising physics is not correctness but \emph{assumption discovery}. Physics arguments routinely leave the class of objects and the conditions of validity implicit, surfacing them only as the derivation proceeds, whereas a formal system will not let you proceed without stating them up front. The deliverable is therefore not ``your proof is correct'' but ``here are the seven hypotheses you were silently assuming.''
+
+\subsection*{Juan Pablo Bonilla Ataides, Harvard University: Scalable Neural Decoders for Fault-Tolerant Quantum Computation}
+
+Qubits today err roughly once in a hundred to a thousand operations; anything useful needs about once in a trillion. Error-correcting codes close that gap. His decoder generalises a classical message-passing algorithm into a learnable convolution whose kernel geometry matches each code's check structure.
+
+\subsection*{Yanick Thurn, University of W\"urzburg: Gram-Matrix Spectra Predict Trainability}
+
+Deep networks sit near a phase transition: too ordered and nearby inputs collapse to the same representation, too chaotic and they decorrelate. He built a way to measure which side you are on, in a real finite network, before training.
+
+\subsection*{Jose Mu\~noz, Massachusetts Institute of Technology: Emulating Nuclear Ab Initio Calculations}
+
+The nuclear force is not known from first principles; it is an expansion with about seventeen unknown coefficients fitted to data, and many combinations fit the light nuclei equally well, so the honest procedure is to sample over them and propagate. Doing that rigorously would take more than five thousand years to put one error bar on one observable. The emulator therefore does not exist to compute a central value faster; it exists to make a statistical procedure possible at all. In this case, the most valuable output is not a prediction but a ranking of which coefficients control which observables, telling experimentalists which measurement to make next.
+
+% ---
+\section{Benjamin Wandelt, Johns Hopkins University\\
+{\large AI and Cosmology}}
+
+\emph{Wandelt is a foundational figure in Bayesian and field-level cosmological data analysis, co-inventor of Information Maximizing Neural Networks.}
+
+\subsection*{Summary}
+Cosmology can simulate forward in extraordinary detail but, for forty or fifty years, could only analyse data by finding closed-form likelihoods, compressing everything into a few summary statistics and trading fidelity against tractability. His reframing is that the trade is unnecessary: if you can specify a procedure that generates data from parameters, that \emph{fully specifies} the inference problem.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item \emph{``The really limiting factor for all of this is anything that limits your ability to write down any model you want.''} He is not against differentiable simulators, but has watched the differentiability requirement quietly narrow the model space his group could explore. Any methodological requirement a tool imposes on a researcher's simulator is a constraint on the science.
+    \item Rediscovery of a known result is how a discovery method earns the right to be believed.
+    \item This audience will deliberately trade precision for robustness against a bias they cannot quantify. On his simulator-robustness result the error bars get \emph{wider}, and he presents that as the success. For a measurement destined to be compared against theory an unquantified bias is disqualifying while a larger honest error bar is not, so a system optimising a point-estimate accuracy metric is optimising the wrong thing.
+\end{itemize}
+
+% ---
+\section{Yilun Du, Harvard University and the Kempner Institute\\
+{\large Building Intelligence through Energy-Based Models}}
+
+\emph{Du is an assistant professor at Harvard and the Kempner Institute, and one of the leading researchers on energy-based models, compositional generative modelling, and their application to reasoning, planning and robotics.}
+
+\subsection*{Summary}
+Two ideas. First: instead of a network that predicts the answer, use one that takes a \emph{candidate} answer and returns a single scalar, low when the candidate is good and high when it is bad, so the answer is whatever minimises that landscape. The cost is that inference becomes a search. Second: compositionality as the answer to narrow training data. Language models work because their training distribution roughly covers deployment; robots do not have that, and neither does most of physics. So decompose the problem into factors each individually in-distribution and take their product, which is biased, because the factors are not independent, but covers situations for which you have no data at all.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item A system that can absorb a new constraint without retraining is worth a great deal of inference-time slowness.
+    \item ``Verification generalises where generation does not'' -- verification work is not merely a safety measure but a capability lever.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item Energies add, which gives Boolean logic over learned concepts for free: intersection is a sum, union a soft minimum, difference a subtraction. This is the structural property a directly parameterised generator lacks, since there is no meaningful way to ``add two samplers.'' The practical tax is magnitude calibration, because heterogeneous constraints require, in his words, \emph{``a lot of engineering on the actual composites.''}
+    \item Lowering the temperature on each token's logits does \emph{not} sample from the sharpened sequence distribution; it samples from a different distribution entirely, and obtaining the sharpened one requires Markov chain Monte Carlo over whole sequences.
+\end{itemize}
+
+% ---
+\section*{Papers Behind the Talks}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Watts:} \href{https://arxiv.org/abs/2509.08535}{arXiv:2509.08535} (Agents of Discovery), \href{https://arxiv.org/abs/2512.07785}{arXiv:2512.07785} (reproducible workflow-graph agentic analysis), \href{https://arxiv.org/abs/2603.20179}{arXiv:2603.20179} (autonomous analyses on open data); \emph{Building an AI-native Research Ecosystem for Experimental Particle Physics}, community whitepaper, February 2026
+    \item \textbf{Alonso-Monsalve:} \href{https://arxiv.org/abs/2604.07037}{arXiv:2604.07037} (foundation-style pre-training for heterogeneous neutrino detectors), \href{https://doi.org/10.1038/s42005-024-01669-8}{doi:10.1038/s42005-024-01669-8} (vertex decomposition), \href{https://arxiv.org/abs/2511.09442}{arXiv:2511.09442} (PLATON plenoptic detector); background \href{https://arxiv.org/abs/1711.10275}{arXiv:1711.10275} (submanifold sparse convolutions)
+    \item \textbf{Zickler:} \href{https://arxiv.org/abs/2405.14530}{arXiv:2405.14530} (multistable shape from patch diffusion), \href{https://arxiv.org/abs/2506.02473}{arXiv:2506.02473} (shape and material from differential motion), \href{https://arxiv.org/abs/2412.02798}{arXiv:2412.02798} (filterless snapshot hyperspectral imaging); background: Belhumeur, Kriegman and Yuille, \emph{The Bas-Relief Ambiguity} (1999)
+    \item \textbf{Silverstein:} \href{https://arxiv.org/abs/2601.22257}{arXiv:2601.22257} (symmetry breaking in transformers); background: De Luca and Silverstein, \emph{Energy Conserving Descent}, ICML 2022, and subsequent work
+    \item \textbf{Bharadwaj:} \href{https://arxiv.org/abs/2603.05616}{arXiv:2603.05616}, \href{https://arxiv.org/abs/2504.21828}{arXiv:2504.21828}
+    \item \textbf{Lazarovits:} PSICHE paper forthcoming at the time of the talk
+    \item \textbf{Axiomatic AI:} the AX-Prover family of open-source agentic provers; corpus formalised from Galitski et al., \emph{Exploring Quantum Mechanics}
+    \item \textbf{Bonilla Ataides:} \href{https://arxiv.org/abs/2604.08358}{arXiv:2604.08358} (Cascade neural decoders), \href{https://arxiv.org/abs/2509.11370}{arXiv:2509.11370} (decoders for universal algorithms)
+    \item \textbf{Thurn:} the speaker's own method, building on his group's reconstruction-network approach; reference point is the 2016 deep-information-propagation work on the edge of chaos
+    \item \textbf{Mu\~noz:} FRAME, the multi-fidelity physics-constrained emulator; background: chiral effective field theory, similarity renormalisation group, parametric matrix models
+    \item \textbf{Wandelt:} \href{https://arxiv.org/abs/2507.07833}{arXiv:2507.07833} (Fisher score matching), \href{https://arxiv.org/abs/2402.05137}{arXiv:2402.05137} (LtU-ILI inference and validation framework); \emph{Teaching Dark Matter to Speak Galaxy}; the macrocanonical wavelet-moment generative model, building on Bruna and Mallat
+    \item \textbf{Du:} \href{https://arxiv.org/abs/2406.11179}{arXiv:2406.11179} (iterative reasoning through energy diffusion), \href{https://arxiv.org/abs/2510.02300}{arXiv:2510.02300} (equilibrium matching), \href{https://arxiv.org/abs/2510.14901}{arXiv:2510.14901} (reasoning with sampling)
+\end{itemize}
+
+\end{document}

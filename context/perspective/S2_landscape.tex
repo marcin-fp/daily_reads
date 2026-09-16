@@ -1,0 +1,105 @@
+\section{The competitive landscape}
+\label{section:landscape}
+
+\begin{summarybox}
+    By analyzing a corpus of 54+ contemporary papers (most of them from May and June 2026), we examine the field's competitive landscape, focusing on: agentic architectures, model specialization, memory \& knowledge representation, tool \& cross-modal integration, evaluation \& profiling, risk \& limitations, and compliance.
+\end{summarybox}
+
+When approaching the AI for Science topic, the tech giants seem to converge on the following recipe: (1) a frontier monolithic backbone, (2) an agentic framework around,(3) increased test-time compute for better results, (4) with humans present in the loop for additional feedback and steering
+\cite{Gottweis2026}\footnote{%
+    Google's Co-Scientist runs six specialized agents in a tournament-style generate-debate-evolve loop over Gemini. The Meta-review agent synthesizes insights across debates and appends them to other agents' prompts, enabling iteration without back-propagation (for an alternative, cf. \cite{Yuksekgonul2025}). The loop is not purely semantic; the paper names web search and retrieval as primary tools and uses domain-specific tools, such as open databases to constrain searches, so the results are heavily grounded by external data retrieval.
+},
+\cite{2605.06651}\footnote{%
+    DeepMind's AI co-mathematician is a stateful, interactive workspace in which a project coordinator agent delegates tasks across parallel workstreams, each run by workstream coordinators that spin up specialized sub-agents (reviewers, coders).
+    Its native output is a compiled LaTeX "working paper" with margin annotations tracking the provenance of claims, and it explicitly asks the human for help when a workstream is blocked. Failed explorations are preserved.
+    The system relies entirely on standard LLM calls (Gemini 3.1 Pro and Deep Think) plus standard agent primitives. The authors note they do not yet deeply integrate AlphaEvolve, AlphaProof, or Aletheia, nor formal verifiers -- but they explicitly frame the architecture as a chassis designed to host exactly those engines later.
+},
+\cite{Aygn2026}\footnote{%
+    The authors present Empirical Research Assistance (ERA), a system that treats the creation of scientific software as an optimization problem. The starting point for EAR is a dataset, a metric, and a seed research idea (often summarized from a paper).
+},
+\cite{2604.05018}\footnote{%
+    Google's PaperOrchestra is a multi-agent system that turns unstructured pre-writing materials (idea summaries and experimental logs) into submission-ready LaTeX manuscripts. Unlike prior end-to-end systems (e.g., AI Scientist \cite{Lu2026}) where the writer is coupled to the experimental loop, PaperOrchestra is a standalone writer that orchestrates five specialized agents to generate outlines, synthesize targeted literature reviews, create data-grounded plots, draft sections, and iteratively refine via simulated peer review.
+}.
+The popular argument for this approach is that scaffolding (the code, architectural frameworks, and tooling built around a base model) is cheaper than training specialized models; in addition, such a setup inherits every improvement introduced to frontier models for free \cite{2605.20025}\footnote{
+    AutoResearchClaw is a good example of that trend. In v0.3.2, they introduced cross-platform support, so the project can run on any ACP-compatible agent backend (Claude Code, Codex CLI, Copilot CLI, Gemini CLI, Kimi CLI). The project also illustrates the gradual shift from an autonomous to a human-in-the-loop set-up. The project started as an autonomous research pipeline, but in v0.4.0, they added six intervention modes (full-auto, gate-only, checkpoint, step-by-step, co-pilot, custom) and a new deep human-AI collaboration mode. See more at \url{https://github.com/aiming-lab/AutoResearchClaw}.
+}.
+As a result, the field becomes overwhelmingly generic. Many successful projects repeat the same pattern \cite{2605.18661}. 
+
+The arguments for a different approach -- specialization -- exist, but with a few caveats. QuantumQA's verification-aligned Qwen3-8B is competitive with frontier models on quantum-mechanics reasoning while cutting logical/physical violations from 41\% to 28\% -- but on the authors' own distribution, against zero-shot frontier models, and with the decisive frontier-plus-tools baseline missing \cite{2604.18176}. The Avengers shows ten routed 7B models narrowly defeating single-shot GPT-4.1 by 1.34 percentage points on average; however, a detailed picture shows it won in only 9 of 15 benchmarks -- so its performance is not even \cite{2505.19797}. Engram's measured U-shaped allocation curve shows that the external memory layer can free up computation within a model -- but the improvements likely have diminishing effects as we scale models \cite{2601.07372}.
+DeLeAn's profiling of fifteen models finds that knowledge ability tracks model size, while reasoning scales with inference compute and is largely influenced by the system's architecture \cite{Zhou2026}. And the distillation literature reminds us that a student matching the teacher's scores can silently lose calibration, abstention, and on-policy stability \cite{2604.25110}.
+
+Despite the rapid progress of automating research, the best results are achieved when combining AI efforts with human judgment \cite{Lu2026}\footnote{%
+    The end-to-end "AI Scientist" pipeline that passed a workshop review process. In this demonstration, however, humans manually filtered the most promising outputs at every stage.
+}, \cite{2605.30353}\footnote{%
+    A single physicist supervised Claude Code (Sonnet and Opus) over 12 work days and 57 sessions to build a differentiable one-loop cosmological perturbation-theory module in JAX. The agent resolved ~10 autonomously by iterating on an oracle test suite (convention/unit errors, algorithm transcription, numerical coefficients); 2 were accelerated when the physicist spotted magnitude discrepancies that shape-based comparison missed; 3 required human physics judgment and could not be reached by oracle testing at all.
+}.
+In addition, many demonstrations are restricted to AI research \cite{2604.05018, 2605.18661, Lu2026}, with disappointing performance when applied to physics \cite{2605.20025}\footnote{%
+    High-energy physics was the weakest-scoring domain of AutoResearchClaw (0.489, vs. Biology 0.912 and Statistics 0.898).
+}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{pics/differentiation.jpg}
+    \caption{The giants must serve a broad, general audience; there is a limit to how far they can optimize their products for any one niche's mode of operation. In contrast, a small organization, by focusing on a single niche, can shape every layer of the system around how the field actually reasons and operates.}
+    \label{fig:landscape}
+\end{figure}
+
+Organizations that cannot compete on scale with big-tech (universities and smaller companies) often add verifiable rewards to the mix, showing that minimalist agentic architecture with access to rich feedback signals (proof checkers, compilers, unit tests, etc.) can rival larger, specialized systems \cite{2602.24273}\footnote{%
+    A minimal agentic loop around Claude Opus 4.5 ties the complex prover Hilbert while operating on 450$\times$ smaller token budget.
+}.
+
+
+Big labs and companies target areas where the money and the data are. Their demonstrations cluster in biomedicine, materials science, and chip design \cite{Gottweis2026, Tang2026, 2605.01489, 2506.13905}. 
+All those domains have strong commercial appeal (massive financial incentives, market demand, and scalability potential) and offer abundant measurable data. 
+All those fields rely more on empirical than on formal verification (wet labs, leaderboards, etc.).
+This might explain why their architectures are built on orchestration around a general-purpose monolithic backbone, rather than on dedicated models coupled with formal verification.
+
+Most of the advances in the analyzed corpus are around orchestration and scaffolding.
+Alone, they do not create any serious moat.
+MatterChat's \cite{Tang2026} bridges can be trained within a few days.
+The Avengers router is training-free by construction \cite{2505.19797}. AxProverBase's architecture is deliberately minimal \cite{2602.24273}. Published recipes can be replicated within weeks, as evidenced by rapid progress in the field. What is not cheap to copy: training pipelines and the verified data they produce, e.g., QuantumQA's synthesis-plus-hybrid-verification pipeline \cite{2604.18176}, evaluation suites with calibrated scores, e.g., the DeLeAn cognitive scales \cite{Zhou2026}, and paired interaction data from real expert users (edits, interventions, corrections, and re-runs validated against verifiers, not necessarily thumbs-up ratings) \cite{2601.05280}.
+
+Many papers report their findings in a biased way, showing progress against an overly restrictive baseline. Across the corpus, the missing baseline is almost always the cheapest non-trivial experiment: a thin bash+Python loop against AutoResearchClaw's 23 stages \cite{2605.20025}; a budget-matched single agent against the co-mathematician's hierarchy \cite{2605.06651}; frontier-plus-CAS against QuantumQA's 8B model \cite{2604.18176}; a single LLM with identical tools against PaperOrchestra's five agents \cite{2604.05018}, LoRA or full-fine tuning plus 10–20\% general replay as a control group against the proposed selective tuning \cite{2510.08564}. Therefore, we have to be careful when adopting a novel solution; a cheaper or simpler method might yield comparable (or better) results.\footnote{%
+    We might try to run the missing baseline before committing to any direction. This will help us reduce the risks and choose a better approach.
+}
+
+From a general review \cite{2605.18661}, "the field is no longer bottlenecked by model capability alone, but also by orchestration, evaluation, reliability, and governance across the full research lifecycle."
+Opportunities for us: the cited bottlenecks (orchestration, evaluation, reliability, governance/trust) and verification layer are precisely where we can make non-trivial progress. 
+
+Specialization through verification-dense training can buy reliability and increase the capability per cost rate \cite{2604.18176}. Quality data allows us to train models faster and with fewer examples \cite{2510.03313}. Many of those techniques, however, are distillations in disguise. QuantumQA's pipeline is downstream of frontier models at nearly every stage (GPT-4o synthesis, LLM judges), so a "small specialized model" is often a distillation-plus-verification product whose ceiling is the teacher's frontier, after all.
+
+The field experiments with different-sized agentic pipelines: 23 stages and several additional mechanisms (AutoResearchClaw, \cite{2605.20025}), six tournament agents (Co-Scientist, \cite{Gottweis2026}), hierarchical coordinators (Co-mathematician, \cite{2605.06651}), and five writing agents (PaperOrchestra, \cite{2604.05018}). However, the evidence, when decomposed, repeatedly attributes the gains to a small number of mechanisms rather than to agent count.
+AxProverBase shows that a minimal loop is sometimes enough; their three-part loop ties a complex prover operating on 450$\times$ fewer token budget \cite{2602.24273}. AutoResearchClaw's own ablations identify value in the self-healing retry loop and registry gating, while its marquee multi-agent debate failed to detect a broken experimental design without human steering \cite{2605.20025}.
+PaperOrchestra's margin over baselines is driven mainly by access to tools, with the single-agent baseline given no search tool and contradictory instructions (it was instructed to "search for and include influential papers", but also was separately instructed not to do it) \cite{2604.05018}. In addition, the survey literature reports that multi-agent pipelines can degrade on sequential tasks due to coordination overhead and error compounding \cite{2512.16301, 2605.18661}.
+
+Most of the particular gains can be attributed to a single mechanism.
+The largest single gain in AxProverBase came from feeding compiler errors, and goal states back to the proposer \cite{2602.24273}; SciHorizon-DataEVA's framework success collapses from 89\% to 33\% when its verification-and-self-correction loop is removed \cite{2604.26645}; QuantumQA's solver-in-the-reward-loop significantly reduces logical violations and mitigates the length-bias often
+associated with RLHF \cite{2604.18176}; and the self-improvement theory literature exempts near-exact verifiers from collapse arguments \cite{2601.05280}.
+
+On the LLM judgment side, there are numerous challenges. Self-critique flags only 37\% of RL-discovered loopholes on average \cite{2606.04075}. PaperOrchestra's refinement loop was reward-hacked by its own simulated reviewer until the authors patched it by banning limitation statements \cite{2604.05018}; judge-circularity (same model family writing and grading) recurs in at least five papers \cite{2405.17044, 2604.05018, 2604.24658, 2605.20025, Gottweis2026}; and LLM Elo ranking carries a systematic bias against counterintuitive-but-correct hypotheses \cite{2405.17044, Gottweis2026}.
+
+The bottleneck demonstrated by GSM-Symbolic is problem setup, not arithmetic \cite{2410.05229}. Models do correct math on the wrong equation, and a solver cannot rescue a wrongly formalized problem. Verification is therefore conditional on formalization and phase boundaries handling: "weak ideas, semantic code errors, unsupported claims, and lenient reviews can compound when phase handoffs are not explicitly verified"
+\cite{2605.18661}.
+
+The hard-to-solve, easy-to-verify, and difficulty-scalable niche is real but narrow (finding specific counterexamples, solving engineered planted problems, \ldots) and excludes many of the interesting problems in physics (emergent, many-body, strongly-correlated behavior, \ldots). The verifier wall appears exactly where physics gets interesting, e.g., where computing the classical ground truth (exact diagonalization, tensor-network contraction, \ldots) becomes infeasible \cite{Eisert2020}, or where correctness is a claim about nature (where self-consistency checks are not enough and the theory must be confronted with the experiment) \cite{Popper2005}.
+
+Single-vector embeddings have a proven, dimension-bounded limit on the number of top-k combinations they can correctly represent \cite{2508.21038}. The same paper shows that a long-context model \emph{can} retrieve the right set of documents, achieving 100\% accuracy.\footnote{
+    The authors gave Gemini-2.5-Pro content of 46 documents as context and presented it with 1000 queries at once, asking it to output the relevant documents for each query. The model correctly solved the problem and responded to all 1000 queries in a single forward pass. This contrasts with even the best embedding models, which have a recall@2 of less than 60\%.
+}
+The practical lesson is the following: rerankers and long context are not dimension-limited given the right candidates, so the real constraint in practical systems is the first-stage recall.
+
+The LLM Wiki idea is tempting, but with risks \cite{karpathy2026llmwiki}. The expected failure mode might include epistemic contamination, and once affected, the ill-context can recursively poison all the future sessions. EvoMem's patch memory usually helps, but the gains are modest \cite{2606.13681}.\footnote{
+    Maybe wiki is better justified as a product surface (an inspectable, editable session log for the scientist to be audited and certified) than as a stand-alone backstage mechanism?
+}
+
+Data representation matters. ARA result establishes that failure content (dead ends, rejected hypotheses) speeds downstream tasks performed by agents \cite{2604.24658}. Meanwhile, AgingBench complicates the "just give it the whole history" escape: even with gold facts injected into the prompt, a sizeable utilization residual remains, or in other words, by placing something in the context, you can not guarantee it will be used during generation \cite{2605.26302}.
+
+Regarding tool and inter-agent communication, there is no silver bullet. Bridges are only demonstrated for continuous, dense, high-bandwidth states that tokenize poorly (e.g., atomic structures). While tool-calling can only return a serialized representation, the bridge allows the model to work with a full state that represents a molecule's complex geometric structure \cite{Tang2026}. However, for discrete, exact, or symbolic states, a lossy learned latent representation is likely suboptimal, while text tool-calling preserves that discrete, precise structure by default.
+Latent inter-agent communication improves task performance and achieves substantially higher communication efficiency; however, it yields mixed-bag performance on mathematical benchmarks. Namely, while it underperforms on simpler-tier examples, it offers a modest improvement (less than one percentage point) on the most challenging group of tasks \cite{2511.09149}. One possible explanation is that for "lower-complexity problems, the strict linearization of natural language acts as a beneficial regularizer".
+In the Eywa agentic framework, language-centric LLMs connect to domain-specific foundation models (e.g., Chronos for time series, TabPFN for tabular data) over the Model Context Protocol (MCP), allowing the LLM to delegate structured-data prediction rather than serialize it into context \cite{2604.27351}.
+However, the framework does not address the routing problem, which can become non-trivial as we scale the number of MCP tools \cite{2605.24660}.
+
+In terms of risks, narrow fine-tuning can cause broad behavioral shifts \cite{Betley2026}. Warmth fine-tuning increases the average error by more than 7 percentage points and sycophancy by about 40\% \cite{Ibrahim2026}. 
+Post-training compresses thematic and stylistic variation onto a narrow attractor, and it results in a loss of source-domain sensitivity \cite{2605.27878}, while distillation silently sheds off-metric capabilities \cite{2604.25110}.
+Context presence raises agreement sycophancy, and distilled memory profiles raise it most (+45\% for Gemini 2.5 Pro, and +33\% for Claude Sonnet 4) \cite{Jain2026}.
+Finally, models can fake compliance in their chain-of-thought while running a different reasoning underneath \cite{2604.27251}.

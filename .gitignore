@@ -1,0 +1,17 @@
+# Graphify working files (keep graph.json, GRAPH_REPORT.md, .graphify_root)
+graphify-out/.graphify_python
+graphify-out/.graphify_*.json
+graphify-out/.graphify_uncached.txt
+graphify-out/.needs_update
+graphify-out/graph.html
+graphify-out/*.svg
+graphify-out/*.graphml
+graphify-out/cypher.txt
+graphify-out/obsidian/
+graphify-out/wiki/
+
+# Local env
+.env
+.DS_Store
+__pycache__/
+*.pyc

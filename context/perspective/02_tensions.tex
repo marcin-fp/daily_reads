@@ -1,0 +1,309 @@
+\section{The central tensions}
+\label{section:tensions}
+
+\begin{summarybox}
+    When designing the architecture of a solution, the typical flow is:
+    \[
+    \textsc{requirements} + \textsc{constraints} + \textsc{risks}
+    \rightarrow
+    \textsc{architectural decisions}.
+    \]
+    Our difficulty is that several deciding variables are currently deeply coupled. For example, ``model size'' can be part of business requirements, operational constraints, risks, or architectural decisions, sometimes all at once.
+    The tensions below are exactly those coupled variables. We present each as a genuine design choice, with evidence on both sides. These are not only research, engineering, or architecture calls; they are organizational decisions that may need discussion at many levels. %Some may already be settled from the top down, while others have been resolved organically from the bottom up. It is still healthy to revisit them periodically to verify where we stand and whether any adjustments are needed.%\\[6pt]
+    % \textbf{TL;DR:} 
+\end{summarybox}
+
+% We will use it later to build an executive summary.
+% % Box styles
+% % Important: do NOT call this "framebox", because \framebox already exists in LaTeX.
+% \newtcolorbox{tensionframebox}{
+%   colback=blue!5,
+%   colframe=blue!45,
+%   coltitle=blue!55!black,
+%   title=The frame,
+%   fonttitle=\bfseries,
+%   boxrule=0.5pt,
+%   arc=2mm,
+%   left=2.5mm,
+%   right=2.5mm,
+%   top=2mm,
+%   bottom=2mm
+% }
+
+% \newtcolorbox{tensionpointsbox}{
+%   colback=black!2,
+%   colframe=black!30,
+%   coltitle=black,
+%   title=What this means for us,
+%   fonttitle=\bfseries,
+%   boxrule=0.4pt,
+%   arc=2mm,
+%   left=2.5mm,
+%   right=2.5mm,
+%   top=2mm,
+%   bottom=2mm
+% }
+
+% \newtcolorbox{tensiontablebox}{
+%   colback=black!1,
+%   colframe=black!30,
+%   coltitle=black,
+%   title=The seven central tensions,
+%   fonttitle=\bfseries,
+%   boxrule=0.4pt,
+%   arc=2mm,
+%   left=2mm,
+%   right=2mm,
+%   top=2mm,
+%   bottom=2mm
+% }
+
+% % Summary page
+% \begin{tensionframebox}
+% \[
+% \textsc{requirements} + \textsc{constraints} + \textsc{risks}
+% \rightarrow
+% \textsc{decisions}
+% \]
+% The variables below are deeply coupled, so each is an organizational choice to revisit periodically, not a settled, purely technical decision.
+% \end{tensionframebox}
+
+% \vspace{3mm}
+
+% \noindent
+% \begin{minipage}[t]{0.38\linewidth}
+% \vspace{0pt}
+% \begin{tensionpointsbox}
+% \footnotesize
+% \begin{itemize}
+%   \setlength\itemsep{1.1mm}
+%   \setlength\parskip{0pt}
+%   \setlength\parsep{0pt}
+%   \setlength\leftmargin{3mm}
+
+%   \item \textbf{Backbone vs.\ specialized:} General backbones go far, but tuned smaller models may win on cost, privacy, and narrow distributions.
+
+%   \item \textbf{Complex vs.\ simple:} Evidence favors minimal loops. Differentiate by grounding, not agent count.
+
+%   \item \textbf{Solving vs.\ formulation:} The literature crowds the solving end. Formulation is sparser and may be where humans help most.
+
+%   \item \textbf{Control vs.\ appliance:} Scientists prize transparency and auditability, but an open hood is easier to clone.
+
+%   \item \textbf{Helper vs.\ skeptic:} Warm helpers can become inaccurate or sycophantic. A useful research partner should push back.
+
+%   \item \textbf{Quantity vs.\ quality:} Curation can multiply effective data, but it has ceilings and overfitting risks.
+
+%   \item \textbf{Tools vs.\ bridges vs.\ BYO:} We cannot pre-build everything. Bring-your-own model or solver may be the right product direction.
+% \end{itemize}
+% \end{tensionpointsbox}
+% \end{minipage}
+% \hfill
+% \begin{minipage}[t]{0.59\linewidth}
+% \vspace{0pt}
+% \begin{tensiontablebox}
+% \scriptsize
+% \renewcommand{\arraystretch}{1.18}
+% \begin{tabularx}{\linewidth}{
+%   @{}
+%   >{\raggedright\arraybackslash}p{1.9cm}
+%   >{\raggedright\arraybackslash}X
+%   >{\raggedright\arraybackslash}X
+%   @{}
+% }
+% \toprule
+% \textbf{Tension}
+% &
+% \textbf{Pulls one way}
+% &
+% \textbf{Where it leans}
+% \\
+% \midrule
+
+% Backbone vs.\ specialized
+% &
+% General backbones go far; tuned 8B models can rival frontier models on-distribution.
+% &
+% Unresolved; as much business as science.
+% \\
+
+% \addlinespace[0.7mm]
+
+% Complex vs.\ simple agents
+% &
+% 23-stage pipelines exist, but minimal loops also compete.
+% &
+% Toward simple; differentiate by grounding.
+% \\
+
+% \addlinespace[0.7mm]
+
+% Solving vs.\ formulation
+% &
+% Solving is well covered; formulation is sparser and more human-sensitive.
+% &
+% Open: pick a point or build adjustable dials.
+% \\
+
+% \addlinespace[0.7mm]
+
+% Control vs.\ appliance
+% &
+% Transparency builds trust, but appliance-style products are easier to use.
+% &
+% Toward transparency, despite cloning risk.
+% \\
+
+% \addlinespace[0.7mm]
+
+% Helper vs.\ skeptic
+% &
+% Warm helpers feel good, but skeptical partners catch mistakes.
+% &
+% A pushy reviewer is an asset.
+% \\
+
+% \addlinespace[0.7mm]
+
+% Quantity vs.\ quality
+% &
+% Curation multiplies effective data, but raw scale remains powerful.
+% &
+% Quality is plausible, but capped.
+% \\
+
+% \addlinespace[0.7mm]
+
+% Tools vs.\ bridges vs.\ BYO
+% &
+% Pre-built tools help, but researchers need their own models and solvers.
+% &
+% Room for both, after evaluation.
+% \\
+
+% \bottomrule
+% \end{tabularx}
+
+% \vspace{1.5mm}
+
+% \footnotesize
+% \emph{Takeaway:} these are not isolated technical choices. They define the product, business model, defensibility, and scientific ambition of the system.
+% \end{tensiontablebox}
+% \end{minipage}
+% \subsection{Elaboration}
+
+\paragraph{Frontier backbone vs.\ small specialized models.} Both Co-Scientist \cite{Gottweis2026} and ERA \cite{Aygn2026} demonstrate that a general backbone plus orchestration goes far. However, QuantumQA \cite{2604.18176}\footnote{%
+    In QuantumQA, the author pairs a physics-consistent dataset (92{,}749 samples, hybrid symbolic+semantic verification) with a Verification-Aware Reward Model (VRM) that wires symbolic solvers into the RL reward loop; 
+    The VRM uses a shared Qwen3-4B backbone with two heads: a Scoring head for continuous semantic dimensions (Mathematical Correctness, Physical Consistency, Instruction Following) and a Dynamic Weight Allocation gating head that adjusts the weight of each dimension based on whether deterministic execution feedback from a Scientific Execution Suite is available. An Adaptive Reward Fusion step combines the deterministic and semantic signals into a denser reward.
+    As for the results, their verification-aligned Qwen3-8B was competitive with frontier models on the authors' own quantum-mechanics distribution while cutting logical/physical violations to 28\%.
+    %Full citation: S.~Qu et al., \emph{QuantumQA: Enhancing Scientific Reasoning via Physics-Consistent Dataset and Verification-Aware Reinforcement Learning}, arXiv:2604.18176, 2026. \url{https://arxiv.org/abs/2604.18176}.
+    }
+shows an 8B model with verification-aware Reinforcement Learning rivaling frontier models on quantum-mechanics reasoning, while \cite{lesswrong2026incompressible}\footnote{
+    An analysis arguing that factual knowledge capacity scales with parameter count, whereas reasoning ability depends more on architecture, data representation, and post-training.
+    %Full citation: \emph{Incompressible Knowledge Probes}, LessWrong, 2026. \url{https://www.lesswrong.com/posts/veFMEzDDyWaer2Sms/sanity-checking-incompressible-knowledge-probes}.
+    }
+and \cite{Zhou2026}\footnote{%
+    The paper introduces DeLeAn, a set of general cognitive scales for annotating benchmark instances by their cognitive demands, along with per-model assessors that map a demand vector to an instance-level success probability.
+    The methodology genuinely separates "what a test measures" from "percentage solved".
+    %Full citation: L.~Zhou et al., \emph{General scales unlock AI evaluation with explanatory and predictive power}, Nature 652: 58--67 (2026). \url{https://doi.org/10.1038/s41586-026-10303-2}.
+    }
+suggest, that factual capacity scales with parameter count, while reasoning ability does not. The current understanding is that reasoning depends more on architecture, data representation, post-training, and, in general, the level of inference computation.\footnote{
+    For example, in Mixture of Experts (MoE) types of models, the general capability rather scales with the number of active parameters than the number of total parameters (number of experts).
+}
+
+For a research instrument, we arguably want the ability to reason independently without defaulting to easier retrieval (since prior facts might be incomplete, incorrect, or misinterpreted). In this picture, smaller models can play a central role, with a focus on reasoning rather than on vast factual capacity. That said, the fact that a smaller model can, in specific situations, rival frontier ones does not mean there is an obvious solution to this tension. Larger models generalize better. For novel scientific discoveries, strong generalization can arguably be more important than performance in narrow question-answer task formats. The risk of creating our own specialized models is also strategic: we might spend heavily on a training pipeline only to be leapfrogged a month later by a better general model.
+
+Another dimension to consider is defensibility. One might argue that an architecture is easy to copy, whereas a training pipeline, a curated corpus, and a verification harness are not (original data is one of the most defensible moats). This could be an argument for training and hosting our own models. There are also arguments about cost, privacy, and safety. A system that can operate entirely on-prem would interest strategic partners such as national labs and companies working on high-security projects (such as quantum devices or other technology that might be subject to U.S. export controls). Inference cost matters as well: if a full research workflow costs \$90 or so, it might be unsustainable for all but the select few, and there are diminishing returns at that level of complexity. 
+A model 80\% cheaper that does 80\% of the work will appeal to many users, and smaller models make this viable; they scale more easily and are cheaper to train and maintain. But if we can only match the frontier labs on price rather than capability, so can everyone else; competing on cost alone is a race to the bottom. Taking the path of greater resistance and focusing on quality over cost (at least to some extent) could be what sets us apart from the field of cost-driven startups. The only question is how to strike the balance.
+
+The point we try to make here is: this is a complex decision, with many trade-offs, and it is as much a business choice as a scientific one. There is also a spectrum of options, from small to medium-sized models; specific architectures play a significant role (e.g., mixture-of-experts (MoE) vs. dense models); we can also invest in ensembles or leverage inference-time scaling. Going into proprietary models is appealing.
+Still, whether we can beat the raw scale with specialization and a few smart tricks is an open question. The Engram line of work is a useful caution here \cite{2601.07372}\footnote{%
+    The paper targets a structural inefficiency in standard Transformers: they lack a native lookup primitive, so they simulate static factual recall (e.g., named entities, formulaic expressions) by spending the early attention/FFN layers on runtime reconstruction of static associations. The authors introduce "conditional memory" (called Engram), adding a tokenizer-compression layer that maps raw tokens to canonical IDs, a multi-head multiplicative-XOR hashing layer into prime-sized tables to limit collisions, and a context-aware gating layer that uses the hidden state as a query to suppress collision noise.
+    %Full citation: X.~Cheng et al., \emph{Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models}, arXiv:2601.07372 (2026). \url{https://arxiv.org/abs/2601.07372}
+    }.
+By reallocating part of the sparse budget to lookup, we can buy 1--5 percentage-point gains over an equally sized MoE baseline. However, those gains are likely modest compared to what scaling the model itself can deliver: in an MoE, reasoning quality tracks the active-parameter count, and the benchmark jump from Mixtral 8x7B to Mixtral 8x22B is far larger than anything Engram could offer.\footnote{
+    An improvement of about 7 p.p.\ in MMLU (common sense and reasoning), 5 p.p.\ in HumanE (coding), 14 p.p and 13 p.p. in GSM8K maj@8 and Math maj@4, respectively (maths); those and other benchmarks are available at 
+    \url{https://mistral.ai/news/mixtral-8x22b/}.
+    Remember, though, that the step from Mixtral 8x7B to Mixtral 8x22B roughly tripled both the active and total parameters, as well as the compute and memory costs.}
+Engram might also offer smaller benefits as we apply this technique to larger models. Thus, it should be understood that Engram is likely not here to push the frontier, but rather to increase efficiency (do more with smaller models). Still useful; just a different axis of improvement. It is important to remember those nuances when setting our organization's strategy.
+
+\paragraph{Complex vs.\ deliberately simple agentic architectures.}
+The field's empirical signal currently favors simplicity. Google, through an explicit ablation study, argues for a simple agentic design of their Co-Scientist \cite{Gottweis2026}; AxProverBase \cite{2602.24273}, shows that a minimal loop competes with complex provers. On the other side of the spectrum is AutoResearchClaw, a massive 23-stage pipeline \cite{2605.20025}\footnote{
+    AutoResearchClaw is a 23-stage autonomous research pipeline, incorporating: (1) structured multi-agent debate; (2) a self-healing executor with a Pivot/Refine loop that treats failures as diagnostic information; (3) verifiable result reporting that ties every reported number to a registry of executed outputs; (4) human-in-the-loop collaboration at varying levels; (5) cross-run evolution that stores time-decayed lessons to constrain future runs.
+    On a 25-topic ML benchmark (ARC-Bench) plus a 20-topic science extension, the system reports outperforming AIDE-ML and AI Scientist v2 on the same GPT-5.3-codex backbone.
+    %Full citation: J.~Liu et al., \emph{AutoResearchClaw: Self-Reinforcing Autonomous Research with Human-AI Collaboration}, arXiv:2605.20025 (2026). \url{https://arxiv.org/abs/2605.20025}.
+    }.
+Following the common wisdom of the field, our differentiation should likely come from what the agents are grounded in (solvers, verifiers, embeddings), not how many of them there are. Nevertheless, the question of how to design agentic systems will remain, and we will have to strike the right balance between simplicity and complexity.
+It is also possible that minimal loops win where there is a tight feedback signal (the AxProverBase case) while more structure may earn its keep where there is not (the AutoResearchClaw example). This is something that we might need to verify, not take for granted.
+
+
+\paragraph{Solving capability vs.\ problem formulation.}
+Where in the research workflow do we sit? The product vision places us between idea formation and autonomous execution. The literature mostly concentrates on the solving end (ERA optimizes code, AxProverBase proves statements). The problem formulation end is represented by SciMuse \cite{2405.17044} and, to some extent, by Co-Scientist (the tournament-style "generate, debate, evolve" loop for hypothesis refinement) \cite{Gottweis2026}. The creative end is also where placing humans in the loop might be an asset rather than a burden. However, it is only fair to say that different scientists will sit at different points on the delegation spectrum -- and that they will weigh the dimensions of a problem differently.
+% \footnote{
+%     As an illustration, for one scientist, computation is ``plumbing,'' the necessary and sometimes tedious part to be automated away; for another, computational methods are the creative arena they most want to work in, and the last thing they would hand off.
+%     The same might happen with other aspects of scientific work.
+%     There is no universal split into ``core'' and ``chore''.
+%     The literature review one researcher offloads without a second thought is, for another, exactly where the synthesis and the good ideas come from; writing up results is a chore to be drafted away for some and the very act of thinking for others, etc.}
+Automating the same step could be a relief to one scientist and a loss of agency to another. 
+Therefore, the open question is whether we pick a particular angle (one particular point on the spectrum; one particular type of users) or whether we want to build a product for the entire spectrum of problems and users (with an ability to scale the human engagement up and down; with a workflow flexible enough to accommodate different modes of work -- if yes, we have to discuss how we will achieve it -- how we will design the "dials" to customize our product; whether they are user-adjustable controls or whether they are inferred from the context, etc.).
+
+There are also reasons to worry about the limitations of current architectures on the creativity side. Consider the mode-collapse evidence from creative writing \cite{2605.26492}\footnote{
+    The paper studies mode collapse in LLM creative writing by prompting Claude Haiku 4.5, Gemini 3.1 Flash-Lite, GPT-5.4-Mini, and OLMo 7B Thinking with five minimal story prompts, 1,000 samples per prompt per model. Across 20,000 stories totaling 12.8 million words, 88.3\% contain at least one of 11 core tokens. "Lighthouse" appears in 51.2\% of stories, "keeper" in 48.1\%, and "Elias" in 26.5\%; 98\% of stories contain either a core token or one of the next 50 frequent story tokens.
+    The core words are uncommon in contemporary literature or web fiction, and they remain far less frequent in OLMo 3's post-training stories than in generated outputs. In OLMo 3, only 3,053 of 78,958 post-training stories contain one or more core tokens, about 3.8\% of post-training stories, yet those patterns exert a disproportionate pull when the model is given almost no direction.
+    It is possible that a small number of post-training examples managed to shift the output; the authors also speculate that alignment may favor "safe for work" generic fiction over more common fan fiction, copyrighted characters, adult content, and low-quality humor.
+    %Full citation: S.~Hamilton and D.~Mimno, \emph{Elias in the Lighthouse, Again? Diagnosing Low Diversity in LLM Stories}, arXiv:2605.26492 (2026). \url{https://arxiv.org/abs/2605.26492}.
+    }.
+Over 88\% of 20{,}000 generated stories featuring at least one of 11 specific words, over half of them feature a lighthouse. It is unknown how this generalizes to scientific work, but some kind of mode collapse may well be present in hypothesis generation, defaulting to common or, more subtly, ``generically safe'' themes (not the most common topics, but the ones that feel safe given the nature of the post-training). There are ideas for making the generation more diverse. QuantumQA \cite{2604.18176} did something relevant by ``seeding'' problem generation with real problems from a diverse set; if we generate hypotheses, we might similarly seed the generation with various snippets (even at random) rather than just raising the temperature.\footnote{This also corresponds to the prior work of one of the authors regarding the impact of noisy or irrelevant context on generation quality in large language models.} However, we should also be aware that seeding risks might supply a bias and actually limit the LLM or agents to the suggested topics. More advanced ideas might leverage inference scaling alongside some morphing techniques (similar to what ERA did \cite{Aygn2026}). Since nobody has really tested these ideas in math or science, those are exactly the experiments we could run to understand how the problem and the candidate solutions generalize to our domain (cf.\ the research bets listed in \ref{section:research_arcs}).
+
+\paragraph{Control vs.\ appliance.}
+For researchers, control is the product. Scientists love open-source software because they can open the hood, audit each part, and, if something matters to them, modify or adjust it as needed. Many of them also adopted Matlab and Mathematica in their workflows; despite being proprietary, they give scientists control over what matters to them -- \emph{what} is being calculated.
+
+A tool that conceals its workings risks elevated skepticism from the scientific community. This argues for transparent reasoning graphs and baked-in replication audits as first-class features. But transparency poses a risk of being copied: if every detail is freely available for examination, our product is easy to clone (legally or illegally) and build upon. Many agentic workflow elements rely on explicit instructions (e.g., the SKILL.md pattern) rather than underlying code. If these instructions are visible to users, they can be paraphrased rather than strictly copied, effectively bypassing traditional copyright protections.
+
+We should also be careful when designing the scope of our first demonstrations. If we lead with something simple, a serious physicist's first reaction might be dismissal, as they might assume we don't know where the frontier of science is. If we lead with something highly non-trivial, we risk being too narrow, with most people not even understanding what we did and how our methodology can generalize to their areas of interest.
+
+\paragraph{Helper-and-doer vs.\ a mentor-and-teacher\ vs. scepting-and-pusher.}
+Different aspects of persona in LLMs are dangerously tangled.
+For example, training models to be warm degrades accuracy and increases sycophancy \cite{Ibrahim2026}.\footnote{%
+    The authors fine-tuned five models spanning scales and architectures (Llama-8b, Mistral-Small, Qwen-32b, Llama-70b, GPT-4o) on ~1,617 human–LLM conversations rewritten by GPT-4o to be warmer (empathetic, validating, informal), then evaluated the warm vs.\ original variants on consequential tasks (TriviaQA, TruthfulQA, MedQA, Disinfo) over 400,000+ scored responses.
+    They found that warm variants are measurably more likely to be wrong ( about +7.4 p.p.\ more incorrect, with task-level gaps from +10 to +30 p.p.), with sycophancy up $\approx$40\%, strongest under user emotional vulnerability.
+    %Full citation: L.~Ibrahim, F.~S.~Hafner \& L.~Rocher, \emph{Training language models to be warm can reduce accuracy and increase sycophancy}, Nature (2026). \url{https://doi.org/10.1038/s41586-026-10410-0}.
+    }
+Another study shows that models often override explicit instructions when they conflict with their "view of the best course of action" and then misreport what happened in their chain of thought to appear compliant \cite{2604.27251}.\footnote{%
+    This paper studies "reasoning conflicts," in which an instruction to use a given reasoning type (deductive, inductive, abductive) clashes with the reasoning that a logic task is naturally suited to. Across logic datasets and several model families, models prioritize task-appropriate reasoning over the instruction and often use lexical mimicking to \emph{appear} compliant while running a different internal strategy; Contrastive Activation Addition (CAA) steering raised instruction following by up to 29\%, but only on the least-compliant small open model tested (`OLMO3-7B-IT`) and at a task-accuracy cost.
+    %Full citation: X.~Tan et al., \emph{Compliance versus Sensibility: On the Reasoning Controllability in Large Language Models}, arXiv:2604.27251 (2026). \url{https://arxiv.org/abs/2604.27251}.
+    }
+There is a very fine line between "guessing the intentions" and gaslighting the user. The collaborator we build must resist incorrect user suggestions without being unusable. This is especially tricky, as we often assume that "new science" contradicts the old paradigms (for a compelling story illustrating that problem, cf.\ \cite{Schechtman2013}). 
+
+While the behavior of agents can be improved with careful prompt engineering (the famous: "please, do not hallucinate") \cite{2604.09839},\footnote{%
+    The authors argue, formally and empirically, that "activation steering," i.e., adding a vector to the residual stream to change behavior (e.g., toggling refusal), moves the model into a state that is almost surely non-surjective: \emph{with probability 1, it has no exact prompt preimage}. In other words, with activation steering, we can reach places that prompt engineering will never take us.
+    %Full citation: Aayush Mishra, Daniel Khashabi and Anqi Liu, \emph{Steered LLM Activations are Non-Surjective}, arXiv:2604.09839 (2026). \url{https://arxiv.org/abs/2604.09839v1}.
+    }
+we know that prompting and direct internal intervention (e.g., activation steering) are not mathematically equivalent; prompting in that sense is less "expressive" than internal manipulation. However, activation steering is not an automatic panacea. While technically more difficult, it also requires direct access to the model's weights, so we cannot use this technique when accessing 3rd-party models via API.\footnote{
+    To be frank, when we have direct access to the weights, another, more direct option becomes available: post-training treatments (fine-tuning, preference-alignment tuning, etc.). Unfortunately, Mishra's paper never discusses those methods, comparing the steering only with the direct prompt manipulation. This is the paper's greatest weakness.
+}
+
+This tension is perhaps better framed in more general terms. The real question for our Collaborator is whether it is a helper-and-doer, a mentor-and-teacher, or a partner that pushes back and resists?  A skeptical partner (e.g., a reviewer who surfaces problems and grills you until every hole is found and patched) would be a real asset for our prospective clients\footnote{%
+    A similar concept, though in much simpler and limited realization, has been used in engineering settings, cf. the "grill-me" skill in \url{https://github.com/mattpocock/skills}}
+-- as well as any other mode, as long as the marketing and the clients' expectations are in line with the true nature of what we created.
+
+\paragraph{Data quantity vs.\ quality.}
+The quality-aware scaling law \cite{2510.03313}\footnote{%
+    The authors updated the Chinchilla scaling laws by adding a data-quality score, $Q$, which ranges from 0 to 1. In this new model, the effective dataset size is calculated as: $D_{\mathrm{eff}} = D \cdot Q^\gamma$. Through experiments, they found that $\gamma$ (gamma) is around 0.17 to 0.40. Because this value is less than 1, the effective dataset size drops more slowly than expected as quality decreases. In other words, AI models are surprisingly robust against data corruption during training.
+    %Full citation: A.~Subramanyam, Y.~Chen, R.~L.~Grossman, \emph{Scaling Laws Revisited: Modeling the Role of Data Quality in Language Model Pretraining}, ICLR (2026). \url{https://arxiv.org/abs/2510.03313}.
+    }
+shows quality acting as a multiplier on effective dataset size, which \emph{suggests} that rigorous curation of a limited scientific corpus could (to some extent) substitute for brute-force scaling.\footnote{%
+    That result is established only for synthetic, sample-level token noise, measured on pretraining loss, at a single fixed model size, so it is better treated as a hypothesis than a fact. In addition, there might be a ceiling on how much we can substitute scale for quality. From Subramanyam et al.\ alone, to compensate for halving our data, we need to increase the quality by two. Assuming that the scaling holds, this might create a hard ceiling on how much we can improve. This is why, for a long time, the observation was that data curation showed diminishing returns as we continued to scale to larger corpora. On the other hand, the earlier work on curriculum learning (see also Yarin Gal's PhD thesis \cite{gal2016uncertainty}) shows that in some cases, using just 1\% of the dataset (if we can choose the most valuable examples) can give us a similar loss function as using the entire set. So the extent to which we can substitute quantity for quality remains largely an open problem.}
+However, applying this idea also carries risks. Advanced physics corpora are full of sparse features (rare structures, infrequent jargon), and multi-epoch training on small curated datasets might suffer from one-epoch overfitting \cite{2511.06374}\footnote{
+    Argues that multi-epoch training on small curated datasets risks one-epoch overfitting, especially with sparse features, motivating frequency-adaptive regularization.
+    %Full citation: Mang Li, Wei Lyu, \emph{Adaptive Regularization for Large-Scale Sparse Feature Embedding Models}, arXiv:2511.06374 (2025), \url{https://arxiv.org/abs/2511.06374}.
+    }
+and might require frequency-adaptive regularization. Quality-over-quantity is therefore plausible, but might ultimately only shift the data bottleneck rather than remove it. Therefore, it is not obvious that we gain anything substantial here; if cleaner data mostly \emph{substitutes} for scaling, the choice becomes rather strategic than scientific: whatever is faster, simpler, and cheaper to acquire more data or to clean the currently accessible one.
+
+\paragraph{Pre-built tools vs.\ bridges vs.\ bring-your-own.}
+We will never pre-build every tool a novel-science researcher needs. However, it might not even be necessary, since, by definition, novel science often requires a tool that does not yet exist. In addition, scaling an agent's candidate pool past a few dozen tools causes a severe drop in selection accuracy and requires quality-aware tool-pruning tricks to prevent performance from collapsing \cite{2605.24660}.\footnote{
+    The authors demonstrate that as the tool candidate pool scales, selection accuracy plummets due to severe semantic interference. To fix this, they introduce a metric called Bits-over-Random (BoR) to dynamically prune the toolset based on query difficulty. On large benchmarks like BFCL (370 tools), scaling the pool without filtering cripples the agent, but their adaptive approach safely compresses the choices down to just 7 tools on average.
+    %Full citation: V.~Repantis, A.~Gawde, H.~Singh, J.~Blackwell~II, \emph{How Many Tools Should an LLM Agent See? A Chance-Corrected Answer}, arXiv:2605.24660 (2026). \url{https://arxiv.org/abs/2605.24660v2}
+    }
+The bridge-model idea \cite{Tang2026}\footnote{Check footnote \ref{footnote:MatterChat}.} to equip Theo in deep integrations to researcher-owned models and solvers is appealing. 
+After all, ``Bring your own model/solver'' might be a powerful \emph{slogan} for us, because it respects that researchers own the agenda and the specialized tooling.
+However, there are also many open questions. It is unclear how much a bridge buys over a general code-execution tool allowed to call an API, which might turn out to be a cheaper and more general approach. In addition, bridges require per-integration engineering; a community marketplace solves the long tail only if the community materializes, which is a hard bootstrapping problem. The honest framing is therefore a question: for which classes of integration does tight (bridge-style) coupling beat loose (tool-style) coupling, and is the difference measurable in research outcomes? One distinction may help draw the line: a bridge maps the continuous space well into vectors, while tools work well with discrete outputs, so there may be room for both, but only after careful evaluation.

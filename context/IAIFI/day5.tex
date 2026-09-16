@@ -1,0 +1,172 @@
+\documentclass[11pt]{article}
+
+% --- Packages ---
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+]{hyperref}
+
+% --- Title Information ---
+\title{IAIFI Industry Day\\[12pt]
+\large{Notes, Insights and Learnings -- Day 5}\\[3pt]
+\large{\url{https://iaifi.org/industry-day}}}
+\author{Marcin Abram and Moinul Hossain Rahat}
+\date{Friday, Aug 14, 2026}
+
+\begin{document}
+\maketitle
+
+\section*{The Shape of the Day}
+
+The distribution: Of thirteen organisations, exactly \emph{two} build AI systems for fundamental science: Physical Superintelligence and ourselves. MERL is an industrial research lab that looks like an ideal customer and, in a private conversation, specified its requirements in unusual detail.
+
+Room's reaction: Physical Superintelligence opened the day by claiming that all of physics gets solved on a timeline whose \emph{over} is ten years (and likely shorter, maybe in a year), that the post-war academic--government--industrial structure of physics is therefore ending, and that PSI exists to ``ease the transition.'' This was not received by the audience well, audience that had just spent four days listening to careful people explain why their problems are hard: mode collapse nobody can fix, encodings nobody knows how to choose, a collaboration that cannot adopt a tool faster than the tool goes obsolete, and three senior researchers saying in public that they do not understand something central to their own work. The talk was not received well. That reaction is worth more to us than any slide -- it shows how we should speak to physicists -- and how we should not.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{5.6cm}>{\raggedright\arraybackslash}p{5.4cm}@{}}
+\toprule
+\textbf{Organisation} & \textbf{What it actually is} & \textbf{Relevance to us} \\
+\midrule
+Physical Superintelligence & AI-for-physics startup, $\sim$20 people, Boston/SF, PBC & \textbf{Direct competitor.} See \S1 \\[18pt]
+MERL & Open industrial lab, $\sim$60 researchers, Cambridge & \textbf{Ideal client.} See \S2 \\[18pt]
+Draper & Non-profit defence/space lab, $\sim$2{,}000 staff & Buyer archetype; validates the retrieval thesis (\S3) \\[18pt]
+Amazon AGI & Responsible-AI org inside Amazon's model lab & Evaluation methodology (\S3) \\[18pt]
+Stripe & Payments infrastructure; internal dev-productivity AI & Harness and benchmark discipline (\S3) \\[18pt]
+Agentoid & Seed-stage high-stakes retrieval, live in legal & Adjacent competitor on retrieval (\S3) \\[18pt]
+Centaur AI Institute & Non-profit for neuro-symbolic AI; speaker at IBM Research & One real technical result (\S4) \\[18pt]
+Extropic & Thermodynamic sampling hardware & Watch item for EBM architectures (\S5) \\[18pt]
+QuEra & Neutral-atom quantum computing & Potential collaborator, not competitor (\S5) \\[18pt]
+Glasswing Ventures & Pre-seed/seed, enterprise + security AI & Orthogonal (\S6) \\[18pt]
+Engine Ventures & MIT-spinout tough-tech VC & Only investor to name AI-for-science (\S6) \\[18pt]
+Fine Structure Ventures & F-Prime/Fidelity-affiliated deep-tech VC & Orthogonal: hardware only (\S6) \\[18pt]
+FirstPrinciples & Us & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---
+\section{Physical Superintelligence\\
+{\large Alex Wissner-Gross, Founder and Chief Scientist}}
+
+\emph{PSI is a public benefit corporation founded in 2025, with roughly twenty physicists, engineers and AI researchers across Boston and San Francisco. It is backed by SV Angel, Valkyrie, Balaji Srinivasan, Solari Capital and 021T, plus angels from OpenAI, SoftBank, NVIDIA, Hugging Face, Google DeepMind and World. Wissner-Gross is an MIT/Harvard physicist, co-author with Peter Diamandis of the essay "Solve Everything"}.
+
+\subsection*{Summary}
+The stage claim: physics will ``get solved soon'' -- meaning that for any solvable open problem one could confidently point resources at it and get a solution in a reasonable time (no more hard questions); the institutional structure of physics ends with it; a data centre becomes a thousand universities of agents supporting a single principal investigator; entire subdisciplines get re-created from scratch, etc. 
+
+What PSI has actually shipped is narrower and much more interesting. \textbf{Get Physics Done} (GPD) is open source under Apache~2.0, and it is not a model and not an application. It is a package that installs physics-research \emph{commands} into somebody else's coding agent -- Claude Code, Codex, Gemini CLI, GitHub Copilot CLI, or OpenCode. It structures a project as Project $\to$ Milestone $\to$ Phase $\to$ Plan $\to$ Task, executes plans in dependency waves, and runs a four-stage loop: \emph{formulate} (pin down scope, assumptions, notation, and what would count as verification), \emph{plan}, \emph{execute} via specialist sub-agents, \emph{verify}. Verification means dimensional consistency, limiting cases, symmetry constraints, conservation laws and numerical stability. It locks notation and sign conventions across several physics subfields. It has \texttt{branch-hypothesis}, \texttt{tangent} and \texttt{compare-branches} for alternative research paths; \texttt{peer-review}, \texttt{respond-to-referees} and \texttt{arxiv-submission} for publication; a three-tier model abstraction with named profiles (\emph{deep-theory}, \emph{numerical}, \emph{exploratory}, \emph{review}, \emph{paper-writing}); autonomy modes; and a local observability and trace store. At the time of the workshop: 831 stars (now 900+), 124 forks, 1{,}468 commits, four papers acknowledging it.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item GPD's own documentation says it is ``a scalpel, not an autopilot,'' that each agent turn should be treated ``like a graduate student's work,'' that the user should stay in the loop to verify and redirect, and that it is built ``to favor scientific rigor and critical thinking over agreeability.'' That is a defensible, correct, and rather humble position -- and it is the exact opposite of what was said on stage. Somebody at PSI understands this audience. The founder's public voice does not.
+    \item Their scientific-workflow layer is free, open source, and installs into Claude Code with one command. Branching a line of reasoning, keeping provenance across a research session, multi-model review, and tool-calling verification -- the things on our own flash-talk slide -- are all present in a competitor's package. Were we are better than PSI is the model layer (fine-tuned physics models, curated corpus, council mode extensions, calibration, etc.) and Conjecture's novelty search.
+    \item They have real adoption inside IAIFI's own leadership. Two of the four papers acknowledging GPD are by Jim Halverson, an IAIFI co-PI and institute board member at Northeastern; the others are from the same string/holography community (Ferko, Jejjala, Eberhardt, Filev). Theoretical high-energy physics is exactly the segment our beta targets. Open-sourcing into the coding agents these researchers already run might be a defendable strategy.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item GPD fixes notation, sign conventions and verification assumptions per subfield at project creation and enforces them across phases. Long research sessions drift precisely here, and the resulting errors are silent -- the same failure class as Watts's jet-calibration bug on Day 4. We might adapt the same strategy in our system.
+    \item Rather than exposing model names, GPD exposes capability tiers and task profiles, and maps them onto whatever runtime the user has. Our Ensemble routing solves a harder version of the same problem; presenting it as profiles (\emph{deep-theory}, \emph{numerical}, \emph{review}) rather than as model selection is a usability idea worth copying.
+    \item Dimensional consistency, limiting cases, symmetry, conservation laws, numerical stability -- plus standalone \texttt{dimensional-analysis}, \texttt{limiting-cases}, \texttt{error-propagation} and \texttt{sensitivity-analysis} commands. No formal methods anywhere. As \S2 shows, this converges exactly with what MERL asked us for, independently.
+\end{itemize}
+
+% ---
+\section{Mitsubishi Electric Research Laboratories\\
+{\large Petros Boufounos}}
+
+\emph{MERL is the North American corporate research organisation of Mitsubishi Electric, in Kendall Square for about thirty-five years. Roughly 60 researchers, doubling each summer with about 60 interns. It is an open lab: it publishes everything, runs postdoctoral fellowship, visiting-faculty and sabbatical programmes, and measures itself on impact rather than revenue. Research spans applied physics, multi-physical modelling, control, optimisation, signal processing, computer vision, speech, robotics and, recently, quantum.}
+
+\subsection*{Summary}
+The flash talk was a recruiting talk, but the substance is in what MERL is and in a longer private conversation at the expo. The lab does application-motivated fundamental research from theoretical mathematics through physical modelling to quantum algorithms, and is explicitly interested both in \emph{using} AI for those problems and in \emph{developing} AI for them -- physics-informed networks were named. On quantum they have no experimental capacity in the US; the parent company is part of a large Japanese quantum initiative, and MERL funds the MIT quantum centre for access. Their work is done by people with genuine domain knowledge, they already build LLM-plus-simulator systems, and they are critical of off-the-shelf models in a specific, actionable way.
+
+Asked what they miss, they said current systems (Claude, Gemini, GPT) lack ``physics intuition'' and are ``overly mathematical in their approach.'' The worked example: modelling airflow in a room, with theory papers in hand, they asked a frontier model to verify an output. It produced a long, convincing mathematical derivation that was ``too much and overwhelming'' and ``frankly useless in practice.'' Their concern, stated plainly, is that these systems are ``too good in convincing the user.''
+
+\subsection*{Insights}
+\begin{itemize}
+    \item The requirement is a three-part specification. (1) A verdict: is this right or not, without the verbosity. (2) An explanation in the language physicists and engineers actually use -- not a proof, but a physical intuition. (3) A minimal working example: nothing fancy, small educational code that demonstrates the method or property.
+    \item ``AI is Too good at convincing the user''. This is the same complaint in different clothes as Day~4's ``models defer where a human collaborator would push back'' and Day~3's ``plausible shortcut at an intermediate step.'' Three independent instances descring persuasiveness-without-calibration as the central defect. A product whose headline claim is calibration can win with model that wins on capability.
+    \item The airflow example is not a toy -- it is the company's core business. Mitsubishi Electric is a major HVAC manufacturer, and MERL's multi-physical modelling group runs an entire line on thermofluid systems, vapour-compression cycles, and co-simulation of HVAC equipment with airflow, alongside Modelica- and Julia-based system modelling. When they say a frontier model was useless on room airflow, they are describing a failure on the problem their lab exists to solve. That is the demo to build if we have a simulation team.
+    \item Their open positions tells what they want. The \emph{Postdoctoral Research Fellow -- AI for Science} posting asks for ``hypothesis formation, sequential experiment design, analysis and deductive discovery,'' ``theorem development and proving, and algorithm discovery,'' ``discovery of emergent laws and governing equations in complex physical systems,'' ``differentiable simulators,'' and ``foundational models for thermodynamics and electro-magnetics.'' The first of those is Theo Conjecture's remit almost verbatim. A parallel \emph{Agentic AI} postdoc asks for multi-agent reasoning and self-improving agents. They are trying to hire the capability we already have (or will soon have).
+    \item They said they have only just started exploring direct external funding, that intellectual-property constraints make them prefer to bring people on-site, and that they run internship, postdoc, visiting-faculty and sabbatical programmes plus a sister Innovation Center in the same building that scouts ventures for the parent. The realistic entry is a co-authored paper, a jointly supervised postdoc, or a visiting arrangement. Note also that employment there is conditioned on US work authorisation and export-control clearance.
+\end{itemize}
+
+\subsection*{Additional Learnings}
+\begin{itemize}
+    \item Their stack is not Python-first. Modelica, Julia, C/C++, MATLAB, DAEs and PDEs, hybrid discrete--continuous system models.
+    \item A joint MERL/Mitsubishi team took first place in two of three categories in the GalFer contest, an international comparison of data-driven methods for multi-physics simulation of traction electric machines, against 26 teams; their speech group won a 51-team DCASE challenge task this summer. They will evaluate us empirically and they know how.
+\end{itemize}
+
+% ---
+\section{The Practitioners: Draper, Amazon AGI, Stripe, Agentoid}
+
+\subsection*{Summary}
+\textbf{Draper} (Loyd Waites) is a $\sim$2{,}000-person non-profit lab in Technology Square doing guidance, navigation, autonomy, biotech and, as he put it, ``threats in general'' -- including pandemic prevention and utility-grid resilience. Their internal AI effort runs in a closed environment. Asked how they compete without compute, the answer was unusually direct: they use frontier models off the shelf, ``we're not building our own models,'' ``we don't actually need fine tuning either,'' and ``we do a lot of RAG work.''
+
+\textbf{Amazon AGI} (Rahul Gupta) leads responsible-AI science for Amazon's model organisation, and described a three-stage evaluation ladder: static assets scored on outcomes; targeted red-teaming to map a \emph{specific} model's weaknesses and place guardrails accordingly; and limited deployment to trusted domain experts -- measuring how much the model raises a non-expert's capability.
+
+\textbf{Stripe} (Shankar Krishnan) works on AI for internal developer productivity across $\$1.9$T of 2025 payment volume. His summary: ``the model is not the be-all,'' the key is the harness. Their code path has six or seven gated steps -- static checks, a code-review agent carrying in-house rules, a human -- with one or two agents inside each step; the pipeline is deterministic and the agents fill the slots.
+
+\textbf{Agentoid} (Praneeth Vepakomma, MIT/MBZUAI) sells retrieval for high-stakes verticals: law firms, expanding into health and finance. The analogy offered: organisations are fortresses with data scattered everywhere, and answer quality is bounded by whether the right peripheral context was found.
+
+% ---
+\section{Centaur AI Institute\\
+{\large Dongsung Huh}}
+
+\emph{The Centaur AI Institute is a non-profit promoting neuro-symbolic AI research and education. Huh is a research scientist at IBM Research, previously MIT-IBM Watson AI Lab.}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item Our mathematical-embedding stream is about representing mathematical objects in a way a model can reason over; Huh demonstreted that the \emph{type} of the embedding determines which structures are learnable at all. Day 3 concluded that the intellectual work lives in the representation and that choosing among representations is an open problem. This is one case where the choice is not a matter of taste but is provably forced by the structure being learned.
+\end{itemize}
+
+% ---
+\section{Compute Substrates: Extropic and QuEra}
+
+\subsection*{Summary}
+\textbf{Extropic} (Nahuel Freitas) builds thermodynamic sampling hardware: circuits that draw samples from programmable probability distributions by exploiting intrinsic thermal noise in ordinary CMOS, rather than computing deterministically and then adding noise.
+
+\textbf{QuEra} (Tommaso Macrì, Alan Bidart) is the neutral-atom quantum computing company spun out of Harvard and MIT, backed by Google, NVIDIA and SoftBank. Aquila, a 256-qubit analog processor, has been open on Amazon Braket since 2022; Gemini is a digital error-correction testbed co-located with the ABCI-Q supercomputer in Japan; Libra, announced for 2028 on Braket, targets over 256 logical qubits at a $10^{-6}$ logical error rate from more than 10{,}000 physical qubits.
+
+% ---
+\section{Capital: Glasswing, Engine Ventures, Fine Structure}
+
+\textbf{Glasswing Ventures} is a first-check pre-seed and seed firm founded in 2016, roughly \$500M under management, with 70-plus investments to date. Named theses: vertical AI, physical AI, AI-adaptive infrastructure, intelligent enterprise defence, collaborative intelligence platforms, next-gen compute.
+
+\textbf{Engine Ventures} invests pre-seed to Series A and requires that an idea fundamentally rethink how an industry works. Historically a hardware bias -- chips, packaging, interconnect, memory, power electronics, data-centre generation -- but they were the only investor in the room to say ``AI for science'' out loud.
+
+\textbf{Fine Structure Ventures} is an F-Prime Capital fund affiliated with FMR, Fidelity's parent, named for the fine-structure constant, investing seed to Series B globally in deep tech. Focus areas are compute and semiconductors, advanced packaging, photonics, data-centre power, and advanced materials and critical minerals. Portfolio: Commonwealth Fusion Systems, Boston Metal, Ambient Photonics, iPronics, Finwave, Aalo Atomics. Entirely hardware; no software-for-science position.
+
+% ---
+\section*{Sources and Links}
+
+\begingroup
+\sloppy
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Agenda and slides:} \href{https://iaifi.org/industry-day}{iaifi.org/industry-day}
+    \item \textbf{Physical Superintelligence:} \href{https://www.psi.inc/}{psi.inc}; Get Physics Done, Apache-2.0, \href{https://github.com/psi-oss/get-physics-done}{psi-oss/get-physics-done}; founder's announcement, \emph{The Innermost Loop}, 15 Feb 2026; \emph{Solve Everything} (Wissner-Gross and Diamandis), \href{https://solveeverything.org/}{solveeverything.org}\@. Papers acknowledging GPD: \href{https://arxiv.org/abs/2605.12488}{2605.12488}, \href{https://arxiv.org/abs/2604.26038}{2604.26038}, \href{https://arxiv.org/abs/2604.05970}{2604.05970}, \href{https://arxiv.org/abs/2604.02313}{2604.02313} (all arXiv)
+    \item \textbf{MERL:} \href{https://www.merl.com/}{merl.com}; \href{https://www.merl.com/research/multi-physical-modeling}{Multi-Physical Modeling group}; \href{https://www.merl.com/research/highlights/LLMPhy}{LLMPhy} (Cherian, Corcodel, Jain, Romeres, AISTATS 2026; \href{https://github.com/merlresearch/llmphy}{code}); open positions \href{https://www.merl.com/employment/employment}{SA0297 (AI for Science)}, CI0177 (Agentic AI), ST0175 (Quantum Technologies)
+    \item \textbf{Centaur AI Institute / Huh:} \href{https://arxiv.org/abs/2511.23152}{arXiv:2511.23152} (differentiable measure of algebraic complexity), \href{https://arxiv.org/abs/2605.29885}{arXiv:2605.29885} (open problem: Cayley-table completion), \href{https://arxiv.org/abs/2402.17002}{arXiv:2402.17002} (unitary group representations); talk materials at \href{https://benhuh.github.io/IAIFI_talk/}{benhuh.github.io/IAIFI\_talk}
+    \item \textbf{Extropic:} \href{https://extropic.ai/software}{extropic.ai}; THRML \href{https://github.com/extropic-ai/thrml}{(GitHub)}, \href{https://docs.thrml.ai/}{docs}; Denoising Thermodynamic Models and Torx whitepapers
+    \item \textbf{QuEra:} \href{https://www.quera.com/press-releases/quera-announces-2028-fault-tolerant-quantum-computer-and-expanded-multi-year-strategic-collaboration-with-aws}{Libra announcement}; Aquila on Amazon Braket
+    \item \textbf{Agentoid:} \href{https://www.agentoid.io/}{agentoid.io}
+    \item \textbf{Amazon AGI:} \href{https://www.amazon.science/blog/building-trust-into-ai}{Building trust into AI}; FLIRT (feedback-loop in-context red-teaming, EMNLP 2024); AutoSUIT Bench (ACL Findings 2026); CBRN uplift evaluation (NeurIPS 2026 submission, per slide)
+    \item \textbf{Capital:} \href{https://glasswing.vc/blog/funding/announcing-glasswing-ventures-200m-fund-iii/}{Glasswing Fund III}; \href{https://www.engineventures.com/}{Engine Ventures} Fund III (\$398M); \href{https://finestructure.vc/}{Fine Structure Ventures} (F-Prime / FMR)
+\end{itemize}
+\endgroup
+
+\end{document}

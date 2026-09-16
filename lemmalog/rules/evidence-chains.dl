@@ -1,0 +1,29 @@
+% Batch id: evidence-chains
+% Bodies must use current(S, Rel, O), not Rel(S, O).
+
+supported_by(X, Y, P) :-
+  current(E, from, X),
+  current(E, to, Y),
+  current(E, source_paper, P).
+
+two_hop(X, Z, P1, P2) :-
+  current(X, implies, Y),
+  current(Y, implies, Z),
+  X \= Z,
+  supported_by(X, Y, P1),
+  supported_by(Y, Z, P2),
+  P1 \= P2.
+
+three_hop(X, W, P1, P2, P3) :-
+  current(X, implies, Y),
+  current(Y, implies, Z),
+  current(Z, implies, W),
+  X \= Z,
+  Y \= W,
+  X \= W,
+  supported_by(X, Y, P1),
+  supported_by(Y, Z, P2),
+  supported_by(Z, W, P3),
+  P1 \= P2,
+  P2 \= P3,
+  P1 \= P3.

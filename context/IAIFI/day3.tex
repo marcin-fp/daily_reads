@@ -1,0 +1,181 @@
+\documentclass[11pt]{article}
+
+% --- Packages ---
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+]{hyperref}
+
+% --- Title Information ---
+\title{IAIFI Summer Workshop\\[12pt]
+\large{Notes, Insights and Learnings -- Day 3}\\[3pt]
+\large{\url{https://iaifi.org/summer-workshop.html}}}
+\author{Marcin Abram and Moinul Hossain Rahat}
+\date{Wednesday, Aug 12, 2026}
+
+\begin{document}
+\maketitle
+
+% ---
+\section{Berthy Feng, MIT\\ {\large Imaging at the Edge of Science}}
+
+\emph{Feng is an IAIFI Fellow at MIT, having completed her PhD at Caltech under Katherine Bouman. She works on computational imaging for science, combining priors drawn from data and from physics to see past the limits of the instrument. She starts a faculty position at NYU in 2027.}
+
+\subsection*{Summary}
+The black hole M87* occupies a patch of sky roughly a billion times smaller than one pixel of a phone photograph. Each pair of telescopes measures a single spatial frequency, so what comes back is a scattering of points in Fourier space with most of the plane empty. The famous 2019 picture looks blurry because it is honest. It sits exactly at the finest scale the array can resolve, and the collaboration deliberately assumed almost nothing beyond smoothness.
+
+Feng re-analyzed the same real measurements under four learned priors: generic photographs, celebrity faces (a deliberately absurd control), simulations of magnetized gas around black holes, and a simple analytic ring model. She then measured five properties of that ring under each prior. Three of them (diameter, orientation, brightness asymmetry) agree across all four; two (ring width, central brightness) move substantially.
+
+The second project reconstructs the moving three-dimensional gas near a black hole. The third project asks how to stop hand-crafting rules for every new problem, and answers by learning a change of variables into a space where the constraint is automatically satisfied.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item In mainstream machine learning, removing a hyperparameter is a convenience. There is a tension between ``how much I believe in theoretical description'' and ``how much I believe my data''. What you will impose and what you will let the model infer from data is an important decision, often undocumented.
+    \item The useful output of a generative system is often not an answer but a \emph{certificate}: the list of derived quantities that do not move when the assumptions vary. A system that produces one answer, however good, cannot produce that list.
+    \item  Tooling that helps a researcher enumerate assumptions, grade them by confidence, and map each grade onto a different enforcement mechanism could really help.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item The same piece of physics can enter as a hard constraint, a soft loss, or an initialisation, and the choice dominates the result. The physics content is the same, only the enforcement strength differs.
+    \item Feng's answer on hallucination is worth adopting. Pushing past a sensor's limit \emph{requires} the model to supply information the data lacks, so the question is never whether it invents detail but whether the invention is principled, measurable, and attributable to a stated assumption.
+\end{itemize}
+
+% ---
+\section{Vicky Kalogera, Northwestern University\\ {\large AI for the Sky, and Physics-Informed Deep Learning for Stars}}
+
+\emph{Kalogera is a Distinguished University Professor at Northwestern, director of the CIERA astrophysics centre, and director of SkAI, the NSF and Simons Foundation AI Institute for the Sky (a five-year, \$20M institute of more than a hundred members, deliberately staffed roughly half machine-learning experts and half astronomers).}
+
+\subsection*{Summary}
+Simulating one star properly, with the community-standard code MESA (Modules for Experiments in Stellar Astrophysics), takes between an hour and a day. It also crashes often enough that a person must sit with it, work out where and why, and adjust the internal resolution by hand. There are a hundred million stars to model... The solution is simple. Discard the "good physics" and default to faster, cruder recipes. In Kalogera's own words, when modeling populations ``we forget all the good physics we understand.''
+
+Her group's workaround was to precompute half a million detailed binary systems into a grid and interpolate inside it. As an interpolator, they use a well-optimized classical method that "beats all the neural networks they tried".
+
+\subsection*{Insights}
+\begin{itemize}
+    \item The bottleneck a researcher wants removed is often the step consuming \emph{human} time rather than the most CPU time. \item Some problems have no need for a faster solution; the classical one already wins.
+    \item This subfield has spent decades knowingly running on a model it is "not correct". It is better to do something in a crude way than not do it at all.
+    \item Simulation codes in this field are often hand-held. Crashes, non-convergence, and resolution problems are the normal case rather than the exception, and diagnosing them is a skilled task that currently consumes expert time. Any agentic system that successfully orchestrates the execution of classical programs would be worth a lot.
+\end{itemize}
+
+% ---
+\section{Lance Dixon, SLAC National Accelerator Laboratory\\ {\large AI for Scattering Amplitudes}}
+
+\emph{Dixon is a founding figure of the modern theory of scattering amplitudes.}
+
+\subsection*{Summary}
+Every prediction at the Large Hadron Collider is a series expansion, and each additional term costs enormous effort. For Higgs production, the crudest estimate is off by a factor of two to three, and only after four terms does theory match the data.
+
+The building blocks of those terms are scattering amplitudes. Amplitudes are continuous functions of energies and angles, but they can be recast so they look like language. 
+
+They tested modest encoder-decoder transformer (4 to 250 million parameters). It was able to learn the six-loop symbol to complete accuracy. Asked to predict seven loops from all the lower orders, it does not extrapolate. It begins to learn only when primed with roughly half a million to a million of the 93 million unknown coefficients, far more than anyone has.
+
+The group had to use classical pipeline rather than the neural network. They used, however, LLMs for pattern matching to speed-up some of their work.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item This domain has a cheap verifier, and that single fact determines the right system architecture. Where generation is expensive and verification cheap, a model that is frequently wrong is still useful, because wrong answers cost nothing to discard.
+    \item They used LLM to systematic coverage of a space experts had only sampled sparely. The pattern of work was: humans find the deep patterns, machines find the ones nobody had time to look for.
+\end{itemize}
+
+% ---
+\section{Lisa Everett, University of Wisconsin--Madison\\ {\large Graph Reinforcement Learning for Model Spaces Beyond the Standard Model}}
+
+\emph{Everett is a professor of physics at Wisconsin working on model building beyond the Standard Model, particularly new physics at the TeV scale and the origin of neutrino masses.}
+
+\subsection*{Summary}
+The space of possible theories beyond the Standard Model is enormous, and exploring it is a craft activity. Everett's group asked whether it can be searched systematically. The idea is to represent a candidate theory as a graph: nodes are the new particles and their couplings, edges are the contractions required by the symmetry. Once a theory is a graph, a network can act on it, and because the same trainable function applies to every node, the agent can \emph{add or delete a particle} without changing the network.
+
+The agent first recovered a known and subtle result, that a particular configuration requires two specific states with a particular relative sign. Only then did Everett present the models the group had not previously examined. Her comment on the sequence is the important one: ``That helped us feel like, okay, it's doing things that make sense.''
+
+\subsection*{Insights}
+\begin{itemize}
+    \item Rediscovery of known results is the price of admission for novel ones. Novel outputs are not evaluated on their own merits; they are evaluated by whether the system that produced them first reproduced things already known to be true, on hard cases.
+    \item The theorist's role, as Everett wants it, is to bound the space. ``I personally wasn't that interested in trying to have some automated thing which just goes out and explores random things.'' Her framing is a cross-check that may reveal corners you had not thought were still viable.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item How to encode a scientific object as a graph is not unique, there is no procedure for choosing among encodings, and the choice measurably changes results. Everett flagged this as the open problem her group is now working on. Search over \emph{representations} of a scientific object felt as a bottleneck by the people doing the work.
+\end{itemize}
+
+
+\section{Contributed Session: Generative Models and Robust AI}
+
+\emph{Six short talks. Only the transferable content is recorded here.}
+
+\subsection*{Yuanqi Du, Microsoft Research: Non-equilibrium Simulation and Probabilistic Machine Learning}
+
+Non-equilibrium thermodynamics and diffusion modelling are the same mathematics in two vocabularies, and the translation is exact.
+
+\subsection*{Thierry Meyer, TU Munich: Discrete Autoregressive Surrogates for Detector Simulation}
+
+Collider experiments spend roughly 30\% of their computing budget simulating how particles interact with detector material. Rather than learning whole events, the model learns what happens inside one small cube of material, and the outputs of one cube become the inputs of its neighbours. It beat state-of-the-art flow matching on accuracy, with one structural liability, that tokenising particles individually makes sequence length grow with the number of outputs, so inference slows exactly as the physics gets more energetic (more interesting).
+
+\subsection*{John Soltis, Space Telescope Science Institute: A Flow-Based Model of the Gaia Catalogue}
+
+Trained on two billion stars, it reproduces the Milky Way disc and the Magellanic Clouds well enough to look right.
+
+The motivation was interesting. It was not to accelerate the simulations. ``The simulated datasets are small, and they're also wrong,'' so he trained directly on real data instead.
+
+\subsection*{Achintya Krishnan, UIUC: Photometric Redshifts in Rubin Observatory Data}
+
+Estimating galaxy distances from images rather than catalogues, benchmarked against eight community reference implementations on an identical split. Two things transfer.
+
+There was an interesting note: augmenting the sparse regime with simulated objects was rejected because it imports the simulator's systematic errors; replacing one systematic error with another.
+
+\subsection*{Giada Badaracco, ETH Z\"urich: Stress-Testing Gravitational-Wave Inference}
+
+The standard fast approximation in this field, the Fisher matrix, is reliable only above a signal-to-noise threshold, and the striking slide is the distribution of actual detected events, most of which sit below it.
+
+\subsection*{Lucas Fernandez Sarmiento, Carnegie Mellon: Dropout at the Edge of Chaos}
+
+The only talk showing how physics can improve machine learning. Standard practice grid-searches a single dropout probability and applies it uniformly. Treating it instead as a field varying with depth, and asking where to spend a fixed dropout budget so as to corrupt the signal maximally while damaging information propagation minimally. Reported gains are up to 35\% lower test loss at the same regularisation budget, on both multilayer perceptrons and vision transformers, or roughly 60\% compute savings.
+
+% ---
+\section*{Panel: AI's Impact on Career Paths}
+
+\emph{With Lindsey Raymond (economics, MIT), Alex Gagliano (Physical Superintelligence, working on long-horizon agentic physics research), Peter Lu (Tufts), and Shiloh Pitt (data scientist at a roofing manufacturer), moderated by Akshay Dogra (IAIFI).}
+
+Gagliano gave a sharp characterisation of agentic failure. ``It's very good in general at outcome. It's very bad at process.'' His proposed mechanism is that post-training incentivises reward maximisation, which produces shortcut behaviour, and that this matters most on tasks running 24 to 36 hours: at every branch of the decision tree there is a harder correct route and an easier route that looks approximately right, where you fudge a number or add a correction factor and the plot comes out fine, and the system takes the easier one. Lu independently reported the same phenomenon from academia, describing subtle errors and a systematic tendency for models to be optimistic about their own results, such that a large share of his time goes to finding gaps in their reasoning.
+
+Asked what he would do with an effectively unlimited token budget, Lu answered that humans are already the bottleneck, and that the question is which aspect of the work needs your input, because that is what limits you.
+
+On the careers side, the durable finding is Raymond's analytical distinction. Automate the \emph{most} expertise-intensive part (the London taxi driver's knowledge of the streets) and employment rises while wages fall, because the barrier to entry collapses. Automate the \emph{least} expertise-intensive part (a radiologist reading a scan) and employment may fall while wages rise, because the remaining work is more concentrated in expertise.
+
+% ---
+\section*{A Closing Observation}
+
+The models were ordinary and the encodings were the research. Everett went a step further and named the next-order problem: encodings are not unique, there is no procedure for choosing among them, and the choice measurably changes the result. 
+
+Second, whether a domain has a cheap verifier is the single fact that most determines the right system architecture. Dixon's field has one, so a model that is frequently wrong is still valuable, which argues for building around proposal throughput and letting the verifier filter. Feng's and Badaracco's domains do not, and both talks were organised instead around \emph{managing} unverifiable output, delivering robustness certificates and posterior diagnostics rather than answers.
+
+% ---
+\section*{Papers Behind the Talks}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Feng:} \href{https://arxiv.org/abs/2304.11751}{arXiv:2304.11751} (score-based priors), \emph{ApJ} \textbf{975}, 201 (2024) (M87* under four priors), \href{https://arxiv.org/abs/2602.08029}{arXiv:2602.08029} (PI-DEF), \href{https://arxiv.org/abs/2406.12816}{arXiv:2406.12816} (neural approximate mirror maps), \href{https://arxiv.org/abs/2504.07549}{arXiv:2504.07549} (STeP, video priors)
+    \item \textbf{Kalogera:} \href{https://arxiv.org/abs/2604.06255}{arXiv:2604.06255} (physics-informed stellar structure), \href{https://arxiv.org/abs/2604.13604}{arXiv:2604.13604} (dynamic time warping interpolation), \href{https://arxiv.org/abs/2202.05892}{arXiv:2202.05892} (POSYDON); SkAI Institute: \url{https://skai-institute.org/}
+    \item \textbf{Dixon:} \href{https://arxiv.org/abs/2405.06107}{arXiv:2405.06107} (transformers for the bootstrap), \href{https://arxiv.org/abs/2501.05743}{arXiv:2501.05743} (recurrent features of amplitudes), \href{https://arxiv.org/abs/2204.11901}{arXiv:2204.11901} (eight-loop form factor)
+    \item \textbf{Everett:} \href{https://arxiv.org/abs/2407.07203}{arXiv:2407.07203} (graph reinforcement learning for BSM model spaces), \href{https://arxiv.org/abs/2407.07184}{arXiv:2407.07184} (companion letter), \href{https://arxiv.org/abs/2303.12983}{arXiv:2303.12983} (the physics framework)
+    \item \textbf{Du:} \href{https://arxiv.org/abs/2504.11516}{arXiv:2504.11516} (FEAT, free-energy estimators with adaptive transport)
+    \item \textbf{Meyer:} \href{https://arxiv.org/abs/2605.06591}{arXiv:2605.06591} (BRICKS, compositional neural Markov kernels)
+    \item \textbf{Krishnan:} \href{https://arxiv.org/abs/2411.18769}{arXiv:2411.18769} (DeepDISC photometric redshifts), \href{https://arxiv.org/abs/2505.02928}{arXiv:2505.02928} (RAIL benchmark suite)
+    \item \textbf{Soltis, Badaracco, Fernandez Sarmiento:} work in progress at the time of the talks
+    \item \textbf{Panel:} Brynjolfsson, Li \& Raymond, \emph{Generative AI at Work}, \emph{QJE} (2025); the hiring study described in the room appears to be unpublished
+\end{itemize}
+
+\end{document}

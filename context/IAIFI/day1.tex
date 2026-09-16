@@ -1,0 +1,203 @@
+\documentclass[11pt]{article}
+
+% -- Packages --
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{graphicx} 
+\usepackage{parskip}
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+]{hyperref}
+
+% -- Title Information --
+\title{IAIFI Summer Workshop\\[12pt]
+\large{Notes, Insights and Learnings -- Day 1}\\[3pt]
+\large{\url{https://iaifi.org/summer-workshop.html}}}
+\author{Marcin Abram and Moinul Hossain Rahat}
+\date{Monday, Aug 10, 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Opening Remarks}
+
+\begin{itemize}
+    \item \textbf{Jesse Thaler} (outgoing director) warned that anyone with a \$20 subscription can now produce a plausible-looking scientific paper in minutes. He has personally received papers citing hallucinated versions of his own work, and he sees AI systems taking credit for discoveries made by other researchers. His conclusion is the opposite of despair: precisely because generating plausible text has become free, the deep domain expertise of physicists matters \emph{more}, not less.
+    \item \textbf{Mike Williams} (incoming director) described how the field has quietly reorganized itself. Researchers no longer group by topic (particle physics, astrophysics, cosmology) but by \emph{method} (reinforcement learning, simulation-based inference, generative models). Communities that could not previously understand each other now share a common language whenever they share a method. For us, this means the natural unit of a product is a method, not a discipline: a tool that serves one method serves several fields at once.
+\end{itemize}
+
+% --
+\section{Rahul Kulkarni, University of Massachusetts Boston\\ {\large Statistical Mechanics for Reinforcement Learning \& GFlowNets}}
+
+\emph{Kulkarni is a professor of physics at UMass Boston. He trained as a statistical physicist studying rare events in biology, and in recent years has turned that machinery into an analytical theory of reinforcement learning.}
+
+\subsection*{Summary}
+Reinforcement learning teaches an agent to act so that high-reward outcomes become typical. GFlowNets (generative flow networks) sample candidate objects -- say, drug molecules -- in proportion to how good they are. Kulkarni's point is that these are the same problem in different clothes: in both cases the outcomes you want are extremely rare under any naive behavior, and the real task is to reshape the dynamics until the rare becomes typical. Physics has spent decades on exactly this question, under the name of rare-event conditioning and large deviation theory.
+
+Translating machine learning into that language pays off concretely. The full solution of an entropy-regularized reinforcement learning problem can be read off from a single eigenvector of a reward-weighted transition matrix; quantities that are normally estimated by sampling get closed formulas; and two new algorithms (EVAL and ASAC) emerge naturally and automatically. Even the celebrated training condition of GFlowNets turns out to be nothing more than the steady-state condition of a Markov chain.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item Reasoning about machine-learning objects \emph{as a physicist} produces algorithms that pure ML practice does not find. Once you recognize that the value functions of reinforcement learning are free energies in disguise, decades of physics results -- including rigorous bounds -- become available and convert directly into new training methods.
+    \item The bridge runs both ways. Kulkarni's stated goal is to use GFlowNets to replace Markov chain Monte Carlo (MCMC), the workhorse sampling method of computational physics, which is notorious for getting stuck in one mode of a complicated landscape. A generative sampler that provably reaches all the modes would relieve a bottleneck that a large fraction of physicists hits daily.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item In any long-running stochastic system (e.g., an agent or an evolving population of candidate solutions), the long-term behavior is controlled by a single number: the gap between the two largest eigenvalues of the transition operator. Everything else in the spectrum only shapes short-lived transients. That one gap sets how long the system needs to explore all its options, and how fast its diversity collapses. If you want to know whether a system will keep exploring or freeze, this is the number to check.
+    \item Discounting (the standard trick of down-weighting future rewards) is usually introduced for numerical convenience, yet it can silently flip which strategy looks best. In a toy ``Heaven or Hell'' example (heaven has infinite later payoff but initial cost, while hell has initial reward but later infinite cost), any discount factor below about $0.98$ (higher than what is used in practice) makes the agent literally choose Hell, because the immediate rewards on that path outweigh the discounted eternity of the other. Relatedly: an average-reward agent trained on 500-step CartPole episodes keeps the pole balanced for billions of steps, while a standard agent with the same training score eventually drops it. Short-horizon benchmarks can hide these differences entirely -- a real concern for any long-horizon RL agent we might build.
+\end{itemize}
+
+% --
+\section{Sung Hak Lim, IBS CTPU-PTC\\
+{\large Physics-Informed Machine Learning}}
+
+\emph{Lim is a postdoctoral researcher at the Institute for Basic Science in Korea (previously Rutgers), working across two very different scales: machine learning for particle collisions and for the dynamics of galaxies.}
+
+\subsection*{Summary}
+Physics knowledge can enter a machine-learning system at three points: the inputs, the architecture, or the training objective. At the Large Hadron Collider, the best jet classifiers are not the biggest transformers but transformers combined with physical symmetries -- and Lim goes a step further, replacing the black box entirely with a handful of physically meaningful features that match state-of-the-art performance. In galactic astrophysics, he measures the local density of dark matter by fitting the unknown distribution of stars in position--velocity space with a flexible neural model, while forcing it to satisfy the known equation of motion (the Boltzmann equation) inside the training loss.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item Both halves of the talk -- and most of the day -- share one template: \emph{there is a function I cannot derive, and an equation it must satisfy}. The neural network supplies the unknown function; physics supplies the constraint. This, not ``predict $y$ from $x$,'' is the canonical shape of a machine-learning problem in physics. A system that recognizes and serves this shape covers an enormous share of the field.
+    \item The kind of interpretability physicists accept is built in, not bolted on. Lim did not explain his black box; he replaced it with a small model whose inputs are physical observables -- and those observables then became community infrastructure, with other groups adopting them and running attribution analyses on them, \emph{because the axes mean something}. An explanation layer on top of an opaque model does not satisfy this audience; a small model made of recognizable parts does.
+    \item Physicists will happily accept \emph{worse} error bars in exchange for fewer assumptions. Lim's dark-matter estimate is less precise than conventional methods -- and he presented that as the selling point, because the conventional precision is partly an artifact of strong, unvalidated assumptions. A system optimized to sound confident optimizes for exactly the thing this audience distrusts. Uncertainty, and an honest account of what was assumed, must be first-class outputs.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item The parton distribution function -- the description of the proton's interior that every LHC prediction depends on -- cannot be computed from first principles. Proton structure lives in the regime of quantum chromodynamics where the coupling is too strong for any analytic expansion, and its real-time dynamics cannot be simulated on the standard (Euclidean) computational lattice. So the function is fit from experimental data, constrained by its exactly known evolution equations -- neural networks have filled this role since 2002, long before ``physics-informed ML'' had a name.
+    \item Incomplete data is the normal case -- not a nuance, and the working fix is always structural (not imputation), e.g. a selection function learned inside the physics loss (for dust-obscured regions of the sky), or a differentiable projection between the model's six-dimensional space and the three observable dimensions (for distant dwarf galaxies).
+\end{itemize}
+
+% --
+\section{Christoph Weniger, University of Amsterdam\\
+{\large Dynamic Simulation-Based Inference}}
+
+\emph{Weniger is a professor of astroparticle physics at the GRAPPA institute in Amsterdam and one of the central tool-builders of the simulation-based-inference community; his group stress-tests its own methods on hard problems in gravitational waves and dark matter.}
+
+\subsection*{Summary}
+Much of physics knowledge lives inside simulators: forward models you can run, but whose likelihood -- the quantity classical statistics needs -- cannot be written down. Simulation-based inference (SBI) sidesteps this by training neural networks to map simulated data directly to posterior distributions over parameters. The standard approach is \emph{amortized}: train once over the entire prior range, then answer any future observation instantly. Weniger argued this is enormously wasteful when you have only one hard observation, and presented the alternative: run simulation and training \emph{concurrently} in a distributed loop, where the partially trained network continuously steers the simulator toward the regions that matter for your observation. His \texttt{FALCON} framework extends this to realistic simulators, which are not single functions but computation graphs of many components -- one inference network per component, all trained in parallel.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item In real physics problems, the data shrinks the parameter space by factors of $10^{-10}$ to $10^{-30}$ (see \href{https://arxiv.org/abs/1903.06682}{arXiv:1903.06682}). At $10^{-20}$, one random draw in $10^{20}$ lands where the answer lives -- so sampling more, however long, yields nothing, and every working method is an iterative contraction of the search region that must survive twenty orders of magnitude without cutting off the truth. Meanwhile, the SBI benchmarks in the ML literature sit at $10^{-2}$ to $10^{-5}$: five to twenty-five orders of magnitude easier than production. Any benchmark we build or trust should be graded by this ratio.
+    \item Concurrent simulation and training present an unowned engineering bottleneck. Characterized by Weniger as "an annoying dynamical system with no established validation methods", it introduces unfamiliar failure modes that force physicists to construct their own orchestration infrastructure from scratch over and over.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item Replacing an explicit likelihood with a learned model changes the nature of the problem. With a likelihood, all the information is provably in it, and inference is a search problem. With SBI, the information must be \emph{extracted} from raw data by an embedding network -- and nothing guarantees it was. The characteristic failure is not a wrong answer but a valid, well-calibrated, \emph{too-wide} posterior that silently left information on the table. Any pipeline that swaps derivation for learning needs an answer to: how do we know the model saw everything?
+    \item Amortization is a cost--benefit decision with concrete numbers. Train once on $10^{7}$--$10^{8}$ simulations and get twenty thousand posterior samples in under a minute forever after (versus days to a month per source classically); or spend roughly a hundred times less on the one observation you actually have. Many observations, real-time alerts, or large calibration studies favor amortizing; one hard observation and an expensive simulator favor the sequential route.
+    \item How SBI scales with the number of parameters depends on \emph{isolability}: nearly flat when parameters affect separable parts of the data, degrading when contributions overlap. \texttt{FALCON}'s graph factorization exists precisely to exploit this structure.
+\end{itemize}
+
+% --
+\section{Surya Ganguli, Stanford\\
+{\large Simple Predictive Theories of Generative AI}}
+
+\emph{Ganguli is a professor of applied physics at Stanford. His lab's 2015 paper is the literal origin of diffusion models, and he directs the Simons Collaboration on the Physics of Learning -- the program of explaining large AI systems with small, solvable models.}
+
+\subsection*{Summary}
+Two analytic theories, each predicting the behavior of real generative models. First, diffusion models: the mathematically exact reversal of the diffusion process would only reproduce training images, so creativity must come from a useful \emph{failure}. The failure is information restriction -- each pixel effectively sees only a local patch, guesses which training image it came from, and different pixels guess differently, so the output is a novel mosaic of training patches. This training-free theory (the ``BIRD'' model) predicts the individual outputs of trained diffusion models with $R^2 \approx 0.9$, image by image. Second, the first theory of neural scaling-law exponents for real language models on real corpora: in the data-limited regime, the exponent is $\gamma / 2\beta$, where $\gamma$ measures how fast next-token uncertainty decays with longer context and $\beta$ measures how fast correlations between tokens decay with distance -- both properties of the \emph{dataset}, not the model.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item A corpus's scaling behavior can be measured \emph{before} anyone trains on it. Since $\gamma$ and $\beta$ are cheap dataset statistics, one can predict how much data a foundation model for a new domain will need in advance. Ganguli raised mathematics as the open case unprompted, and his group is running exactly this analysis on DNA; his stated intuition is that English, math, and code resemble each other far more than any of them resembles DNA -- but for math this remains unmeasured. For us this is a concrete, high-value experiment: measure $\gamma$ and $\beta$ on our scientific corpus and predict the data requirements of a physics or math foundation model before committing a training budget. (One dependency: the entropy statistic cannot be counted from raw frequencies; it must be estimated with a model already strong in the domain.)
+    \item Whenever a model beats the curse of dimensionality, the data had a hidden simplicity -- and naming it is the key question for every new domain. For images it is approximate scale invariance (equal structure at all length scales), which collapses the data requirement from exponential in image size to nearly nothing. For language it is the power-law decay of correlations. For mathematics and physics literature, the hidden simplicity is unknown -- and it determines whether a fundamental-science foundation model is tractable at all. This is a research question worth putting time to.
+    \item Ganguli's closing thesis: for understanding today's frontier models, theorem-proving ``is absolutely not going to get us there.'' These systems are complex artifacts, and the productive path is the physicist's loop -- extract the essence, build a toy model, refine it until theory matches experiment. If he is right, the expertise that matters for understanding AI is statistical physics, and the working method is modeling, not verification.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item There is a sharp, simple boundary between memorizing and generalizing: a model memorizes when the information its observations carry about the training set exceeds $\log(\text{dataset size})$, and generalizes otherwise. Remarkably, trained diffusion models \emph{track} this boundary during generation -- shrinking their receptive field over time so as to ride the edge of memorization.
+    \item Creativity is purchased by \emph{restricting} what the model sees, not by adding capacity -- an inversion of the default scaling instinct. Whether one can deliberately tune a model's distance to the memorization boundary (closer means safer, farther means more original but more garbage) is an open question, and a knob no current system exposes.
+\end{itemize}
+
+% --
+\section{Giorgi Butbaia, Caltech\\
+{\large Hierarchical RL for Sparse-Reward Search in Commutative Algebra}}
+
+\emph{Butbaia works in AI for pure mathematics at Caltech; this project joins reinforcement-learning researchers with senior commutative algebraists (including David Eisenbud and Sergei Gukov).}
+
+\subsection*{Summary}
+A pure-mathematics discovery problem posed as reinforcement learning: construct counterexamples to Kalai's algebraic Hirsch conjecture -- combinatorial objects that must satisfy two properties in direct tension with each other, and that occur under random sampling at a rate of roughly one in a billion. Before this work, zero such objects were known; the trained system now produces them essentially every episode. Two bottlenecks had to fall. The mathematical validity check took about a second per candidate in standard computer-algebra software, while the learning loop needed a thousand checks per second; a mathematical reformulation (via Schreyer's theorem) turned the check into bitwise GPU operations. And the near-total absence of reward signal was overcome by mining the \emph{failed} trajectories of standard agents, discovering that nearly all of them pass through the same simple intermediate structure (a ``spine''), and building a two-stage hierarchical policy around it: first build a spine, then repair it into a valid counterexample.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item In AI-for-mathematics, the binding constraint is usually the \emph{verifier}, not the learner -- and the big speedups come from the mathematics, not from systems engineering. The six-orders-of-magnitude gap here closed because a theorem turned the check into bit operations, not because anyone profiled the code. Any conjecturing pipeline we build should budget for verifier work.
+    \item Failure-mining is a meta-algorithm we could automate. The winning hierarchy was not designed from mathematical intuition; it was discovered by letting standard methods fail, logging their trajectories, and applying a cheap structural statistic to find what all of them had in common. That loop requires no creativity -- only logging and a statistic -- which makes it exactly the kind of routine an automated discovery system can run on itself.
+    \item Asked directly about large language models versus bespoke reinforcement learning, Butbaia framed it as a question of \emph{representation}, not capability: LLMs bring broad textual features from a large corpus; bespoke RL brings a representation tailored to the problem, and with it, control. Reasoning models produced nothing on this problem a year ago; today they could at best add speed, since his agent already succeeds every episode.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item A well-implemented classical search beat every flat reinforcement-learning method by four orders of magnitude, and only the \emph{hierarchical} approach beat the classical search. The win came from structure, not from RL as such -- so every ``we applied RL to X'' claim deserves a serious classical baseline.
+    \item The network succeeds by embedding domain logic into the model: cross-attention directly handles the agent's divisibility conditions, scaling much better than generic graph attention on larger problems.
+\end{itemize}
+
+% --
+\section{Zongyi Li, MIT\\
+{\large Generative Neural Operators as Foundation Models for PDEs}}
+
+\emph{Li, now a postdoctoral researcher at MIT, is the original inventor of the Fourier Neural Operator, one of the foundational architectures for learning the solutions of partial differential equations (PDEs) from data.}
+
+\subsection*{Summary}
+One generative model for many physical systems: a single flow-matching transformer trained jointly on 24 two-dimensional spatiotemporal systems -- numerical simulations, real laboratory measurements, and global weather data (about 5\,TB, scaled to 3.3 billion parameters and still improving). Unlike the usual pretrain-then-finetune recipe, which produces specialists, this model runs on all systems simultaneously with no finetuning. The design choices that make it possible: it is generative rather than deterministic (a deterministic model trained across many regimes learns only their blurry average); it has \emph{no} autoencoder, using instead a shared, per-field linear patch embedding that acts as a learned local basis (all pressure fields share one basis, all velocity fields another); each patch is normalized individually, letting six orders of magnitude of dynamic range coexist; and the identity of the equation and its coefficients are handed to the model as context tokens rather than left for it to infer.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item For messy real-world systems, classical numerical solvers are ceasing to be the gold standard. In Li's words, learned models ``are getting more accurate than the solvers we have'' -- and the field's gap is not methods but data: no one has yet trained a large model on the experimental datasets that already exist. The required work is curation and a canonical representation, not new algorithms -- exactly the kind of undertaking a research company can do and individual academic groups cannot.
+    \item The thing that makes a generalist possible is the representation, not the model. Autoencoder latent spaces are what tie a model to one domain; a shared field representation -- pressure means the same thing regardless of which system produced it -- is the physics analogue of a shared tokenizer across languages.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item Optimizing mean squared error on chaotic or turbulent systems silently selects physically wrong output: a blurred field and a sharp field whose fine detail is slightly displaced score the same, so the deterministic model happily regresses to the blur. In any domain with multiple possible outcomes, models must be generative and evaluation must be distributional.
+    \item The two inference modes serve different needs: the mean of a sampled ensemble minimizes pixel-wise error, while individual samples preserve the physical structure and the statistics.
+    \item Generative models absorb perturbations that break everything else -- unseen obstacles, sharp noise that blows up numerical solvers and deterministic surrogates alike -- by projecting back onto the manifold of valid solutions. For noisy real sensor data, this robustness can matter more than raw accuracy.
+\end{itemize}
+
+\section*{Poster Session}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{pics/bench-s.jpg}
+    \caption{TerminalBench Science (developed under the Harbor framework) is an open-source evaluation benchmark designed to test autonomous AI agents on end-to-end, interactive computational science tasks in realistic terminal environments. See \url{https://github.com/harbor-framework/terminal-bench-science}.}
+    \label{fig:landscape}
+\end{figure}
+
+\subsection*{Insights}
+\begin{itemize}
+    \item The biggest obstacle is correctly formulating the problem so that it is unambiguous and the researchers' intentions are well understood by the system.
+    \item Most of the failures turn out not to be knowledge errors but procedural errors or alignment problems.
+    \item By sandboxing execution inside dockerized runtime environments, evaluation moves away from LLM-as-a-judge heuristics or fuzzy text matching. The ground truth is purely functional: did the agent correctly generate the physical trajectory file, compute the exact statistical invariant, or complete the simulation pipeline without silent drift?
+\end{itemize}
+
+\section*{A Closing Observation}
+
+Not a single speaker had a large language model anywhere in their research pipeline. The one who tried (Butbaia) got nothing, a year ago; the incoming director's opening remarks treated LLM output mainly as a hazard. What these researchers actually need (or at least, what they expressed as their needs) were: fast verifiers, structured search, honest uncertainty, shared representations. In Monday talks, there was nothing about ``an AI that does physics.'' In the following days, the focus might shift. There will be more talks about foundational models and agentic systems.
+
+% --
+\section*{Papers Behind the Talks}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Kulkarni:} \href{https://arxiv.org/abs/2212.01174}{arXiv:2212.01174}, \href{https://arxiv.org/abs/2406.18033}{arXiv:2406.18033}, \href{https://arxiv.org/abs/2501.09770}{arXiv:2501.09770}
+    \item \textbf{Lim:} \href{https://arxiv.org/abs/2505.00763}{arXiv:2505.00763} (JFlow), \href{https://arxiv.org/abs/2606.27420}{arXiv:2606.27420}, \href{https://arxiv.org/abs/2508.14898}{arXiv:2508.14898}
+    \item \textbf{Weniger:} \href{https://arxiv.org/abs/2603.20431}{arXiv:2603.20431}, \href{https://arxiv.org/abs/2607.21134}{arXiv:2607.21134}, \url{https://github.com/cweniger/falcon}; compression ratios per \href{https://arxiv.org/abs/1903.06682}{arXiv:1903.06682}
+    \item \textbf{Ganguli:} \href{https://arxiv.org/abs/2607.08041}{arXiv:2607.08041} (BIRD), \href{https://arxiv.org/abs/2602.07488}{arXiv:2602.07488} (scaling laws)
+    \item \textbf{Butbaia:} \href{https://arxiv.org/abs/2606.22922}{arXiv:2606.22922}
+    \item \textbf{Li:} Talk paper not yet public; background \href{https://arxiv.org/abs/2111.03794}{arXiv:2111.03794}, \href{https://arxiv.org/abs/2309.15325}{arXiv:2309.15325}
+\end{itemize}
+
+\end{document}

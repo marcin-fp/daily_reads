@@ -1,0 +1,259 @@
+\documentclass[11pt]{article}
+
+% --- Packages ---
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+]{hyperref}
+
+% --- Title Information ---
+\title{IAIFI Summer Workshop\\[12pt]
+\large{Notes, Insights and Learnings -- Day 2}\\[3pt]
+\large{\url{https://iaifi.org/summer-workshop.html}}}
+\author{Marcin Abram and Moinul Hossain Rahat}
+\date{Tuesday, Aug 11, 2026}
+
+\begin{document}
+\maketitle
+
+\section*{The Shape of the Day}
+
+In the first talk, the speaker cited Eugene Wigner: \textbf{``It is nice to know that the computer understands the problem. But I would like to understand it too.''} It could have been the motto of the whole day. Across eleven talks, from cosmology to gravitational waves, the most persuasive evidence was never an accuracy number. It was always the demonstration that a model gets right something it was never asked for: a network that recovers the three-dimensionality of space without being told, a model that reproduces a famous diagram it was never trained on, a simulator that handles a physical regime absent from its training data. For this audience, understanding is part of the result, not something that happens after.
+
+% ---
+\section{Shivam Pandey, University of Arizona\\
+{\large Accelerated Forward Modeling for Cosmological Simulations}}
+
+\emph{Pandey is an observational cosmologist (much of his work was done at Columbia and the Flatiron Institute) building fast machine-learning stand-ins for cosmological simulations, with the practical aim of making inference on real galaxy-survey data possible at full survey size.}
+
+\subsection*{Summary}
+Cosmology learns about the universe by comparing the observed positions of galaxies against simulated ones, and the simulations are the bottleneck: a full simulation that actually forms galaxies costs on the order of $10^8$ CPU-hours for a single run. Pandey's system runs the cheap approximate simulation instead, and then a transformer writes out the missing structure: it emits each dark-matter halo (the gravitationally bound clump inside which galaxies form) as a short sequence of tokens, position first, then mass, velocity, and so on, exactly the way a language model writes a sentence. A newer version skips the halos and emits galaxies directly, with their brightness in each telescope filter, removing a hand-built modeling layer from the pipeline. The remarkable part is not that it works but what half the talk was spent on: opening the model up (interpreting each part and explaining the meaning of each operation), e.g., how the position embeddings were able to encode three-dimensional distance, or how the network rediscovered that space is isotropic on its own.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item The talk's structure ranks understanding above accuracy: agreement with the truth was established quickly, and the bulk of the time went to attention maps and token distributions showing that the model's internals are physically sensible. To this audience, an accurate but opaque model is an unfinished result, and transparency is not negotiable. Any system we ship into a physics workflow should be designed to produce this kind of evidence about itself.
+    \item Speed gains are only important if they are enabling something new. E.g., enable researchers to study dynamics of large structures; make survey-scale inference possible at all; remove a phenomenological modeling layer that was itself a source of assumptions, etc. When we describe a pipeline as ``faster,'' we should ask what else the speed buys, because that is usually the real pitch.
+    %\item Pandey explicitly proposed adding a second, reinforcement-style training stage: sample several candidate halo sets, score them by how well the whole set reproduces the target summary statistics, and use that as a reward. This is exactly the mismatch that post-training addresses in language models (next-token likelihood is local, but scientific validity is a property of the whole output). It was one of the very few places in two days where a large-language-model-like technique was proposed for a physics pipeline on structural rather than superficial grounds.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item Autoregressive factorization pays off precisely where the uncertainty is discrete. Here, the hard part is one choice (which density peak does this halo belong to), and once it is made, the remaining quantities are nearly deterministic. A model forced to predict everything jointly and unimodally would place halos at the average of several peaks, which is physically nowhere. When a problem has a hard discrete choice followed by easy continuous ones, order the prediction so the choice comes first.
+    %\item Two small engineering recipes worth stealing: an explicit end-of-sequence token makes the model learn when to stop, which solves the object-count problem for free (and the count is what every downstream statistic is most sensitive to); and generating each tile of a spatial field conditioned on a surrounding context several times larger than the tile eliminates edge effects between independently generated tiles.
+    %\item Emergent geometric structure in learned embeddings is a usable diagnostic, not a curiosity. If the position embeddings of a spatial model do not spontaneously encode distance, the model is probably not using the geometry, and something is wrong. Also validate against definitional changes: Pandey's out-of-distribution tests include swapping the halo-finding algorithm, i.e.\ changing the convention by which the training labels were made, a category of robustness test mainstream machine learning rarely runs.
+\end{itemize}
+
+% ---
+\section{Miles Cranmer, University of Cambridge\\
+{\large The Era of Scientific Foundation Models}}
+
+\emph{Cranmer is on the mathematics faculty at Cambridge, previously at Princeton and the Flatiron Institute. He wrote PySR, the standard open-source symbolic-regression package, and helps lead Polymathic AI, the multi-institution effort building large scientific foundation models.}
+
+\subsection*{Summary}
+Why does physics generalize so much better than machine learning? General relativity, published in 1915, predicted black holes and gravitational waves decades before any evidence existed; a network trained on a fresh dataset struggles to step slightly outside it. Cranmer's answer is inheritance. Every new physical theory is required to reduce to its predecessors in the right limit, so it inherits centuries of validated structure, while a network trained from scratch inherits nothing and owes consistency to nothing. Foundation models, in this view, are machine learning's first serious attempt to acquire an inheritance: pretrain broadly so that useful concepts (locality, conservation, causality, what an error bar means) are already in place before the real problem arrives.
+
+The speaker presented interesting evidence to illustrate this phenomenon. Pretraining a turbulence model on ordinary internet video, much of it cat videos, beats training from scratch, plausibly because a cat and a turbulent eddy share something real: neither teleports.
+
+Next, he presented Walrus, a 1.3-billion-parameter model for continuum physics, fine-tuned on three idealized simulations of the Rayleigh--Taylor instability (heavy fluid over light fluid, which mixes turbulently) and then shown real laboratory data it had never seen. Walrus was much better at recreating the physically plausible evolution of the system than any other tested method.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item Any system trained only on simulation output inherits the simulation's blind spots, so ingesting experimental data is not optional. And the highest-value role for the model here was not to make the simulation faster but to provide independent, data-driven evidence on a question that simulation alone could not settle. That is a genuinely different offering from acceleration, and it is one our pipelines could aim at (if we build a simulation group).
+    \item Cranmer stated plainly that inference with Walrus is usually slower than a classical solver. It wins in exactly two situations: when the solver is prohibitively expensive (some astronomical simulations that might cost up to a million dollars of compute), or when the solver is wrong (his explanation for why AI weather models now beat traditional ones). It reiterates the same message as the previous lecture: ``faster and cheaper'' is a weak pitch to this audience; ``reaches a regime you cannot otherwise reach'' and ``is right where your existing tool is wrong'' are strong ones.
+    \item Every physical constraint you build into training is a validation test you can no longer run. This is the core of Goodhart's law. Physicists hold a limited budget of independent checks. A product that ``automatically enforces physical constraints'' silently consumes that budget, so we should be careful what we include and what we do not.
+    %\item The closing claim was that for turbulence, symbolic distillation of the trained network fails not because the network is messy but because our mathematics may lack the operators to express what it is doing. He now holds a fellowship aimed at discovering those operators. If he is right, trained models are a source of hypotheses about mathematics itself, which is very close to the thesis of our own conjecturing work, arrived at independently from fluid dynamics.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    %\item The masked multimodal objective of AION-1 (the astronomy model: hide part of any observation, predict it from everything else, in every direction) is effectively a superset of the domain's downstream tasks, since almost every real task is ``given this data, predict that quantity.'' When you cannot enumerate the tasks, train on their closure. The gains are largest in the low-data limit (with roughly a hundred labels the per-example gain is dramatic), and in the data-rich regime the benefit shifts from accuracy to robustness. Pretraining even survives corrupted labels surprisingly well: a wrongly modelled pretraining quantity still helped downstream, because learned representations are far more informative than raw pixels.
+    \item Fine-tuning causes forgetting: adapting Walrus to one problem degraded every pretraining task. If one backbone is meant to serve many users, per-task fine-tuning produces as many divergent models as there are tasks, so continual learning belongs in the deployment plan from the start. %Relatedly, uncertainties can be retrofitted rather than retrained: fine-tuning an existing deterministic checkpoint against a proper probabilistic scoring rule converts it into a calibrated probabilistic model cheaply, and the result is more robust to noise.
+\end{itemize}
+
+% ---
+\section{Daniel Whiteson, University of California, Irvine\\
+{\large These Aren't the Anomalies You're Looking For}}
+
+\emph{Whiteson is an experimental particle physicist on the ATLAS collaboration at the Large Hadron Collider. He also popularizes science by publishing books, running a podcast. He also produced a children's television show.}
+
+\subsection*{Summary}
+Machine learning in particle physics has mostly done one thing: sharpened existing tools, extracting perhaps twenty percent more information from the same data. Whiteson does that work too and values it, but the talk is about the other thing: discoveries that could not be made at all without machine learning. His target is a hidden assumption. Every charged particle in a magnetic field moves in a helix, so the software that reconstructs particle tracks from detector hits assumes helices at every level; the assumption is what makes the problem computationally tractable. But an assumption that makes a problem tractable also makes you blind to whatever violates it. There could be spectacular discoveries sitting in recorded data right now, single events so strange that anyone shown the picture would gasp, which the current code silently discards as noise because the trajectory is not a helix. The escape route is a tracking method (developed elsewhere, for crowded collisions) that learns tracks by example rather than by formula: the definition of a valid track becomes implicit in the training sample. Train it on helices and it finds helices; train it on the oscillating trajectories of particles called quirks and it finds quirks; train it on deliberately wild but mathematically smooth random paths and it finds those too. The remaining hard problem is statistical, not computational: with no hypothesis for what the weird thing is, everything that fails a helix fit looks the same, and most of it is garbage. The proposed fix: use symbolic regression to fit a compact formula to each candidate track, manufacturing a hypothesis after the fact. Real anomalies fit the manufactured formula and not the helix; noise fits neither.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item The community distinguishes sharply between more power on the same question and a question it could not previously ask -- mostly only the second is important to them. An efficiency gain is respectable; a new discovery channel is the dream.
+    \item Every simplifying assumption is a blind spot. Assumptions made for tractability persist long after the tractability constraint is lifted because infrastructure is built on top of them. Auditing where an old computational compromise has hardened into an unexamined commitment is a high-value exercise, in physics and everywhere else.
+    \item The Large Hadron Collider's trigger discards almost all data in real time, so a discovery channel that exists only at the analysis stage does not really exist, because the interesting events were never written to disk. Whiteson's stated dream is a weird-track trigger running on the acquisition hardware. Any tool for real-time scientific data must be judged on whether it can live at the acquisition layer, which is an entirely different engineering problem from offline analysis.
+    \item Model-agnostic search has an explicit dial between breadth and sensitivity: every constraint you drop widens what you could find and weakens your power to find anything. The community discusses this trade-off openly and treats the choice of where to sit as a legitimate design decision. A tool that hides the dial, or claims to have escaped it, will be distrusted.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    \item Separating track finding from track fitting is what makes model-agnostic tracking possible. Classical pipelines fuse them (you need a parametric trajectory to decide which hit to consider next); the graph-neural-network approach instead learns a latent space in which hits from the same track cluster together, so finding needs no trajectory model at all. %Change the training sample and you change what is findable, with no algorithm development. The generalization is real but degrades measurably: trained on one quirk sample and tested on another, efficiency fell from about seventy to about fifty percent.
+    %\item Two tricks with reach well beyond physics. First, to generate random paths that are guaranteed smooth, draw their Fourier amplitudes from an envelope that decays fast enough (a Schwartz function); the validity constraint becomes a sampling-distribution choice. Second, if a hypothetical signal varies periodically in time, the signal-off phase is a free background measurement taken under identical conditions: nature turns the signal off for you, solving the most laborious part of any search.
+\end{itemize}
+
+% ---
+\section{Tilman Plehn, Heidelberg University\\
+{\large Machine-Learning-Enhanced Large Hadron Collider Simulations}}
+
+\emph{Plehn is a theoretical particle physicist at Heidelberg and a founding figure of the machine-learning-for-collider community.}
+
+\subsection*{Summary}
+Every measurement ever made at the Large Hadron Collider rests on simulation: the field has been doing simulation-based inference for decades, training on simulated events because they come with perfect labels, cheaply and at scale. A normalizing flow (a learned, invertible change of variables) outperforms the hand-tuned integration maps (optimized over thirty years, so this is an achievement). A learned surrogate for scattering amplitudes achieves something more surprising: instead of training a generative model on a million events, learn the smooth function underneath and keep the classical sampling machinery, and a region of the distribution containing only seventy training events can be populated with hundreds of thousands of statistically valid ones (this is an example showing that the classical approach can be better than generative AI). He represents a very strict culture of scientific rigor: "If you cannot write down the formula defining your uncertainty, do not talk about it as a physicist."
+
+\subsection*{Insights}
+\begin{itemize}
+    \item The operative failure mode of a surrogate is the tail, not the average. A model that is superb typically but wrong by a few percent in one sensitive corner of phase space can manufacture a false discovery. Every mean-based metric is structurally blind to exactly this.
+    \item Uncertainty standards in this community are enforced socially. Ensembles of networks were dismissed as uncertain not because they perform badly, but because their calibration cannot be derived and they cannot cleanly separate statistical from systematic error.
+    \item Plehn said ``understanding data beats performance'' as an explicit rejection of the bitter lesson, and backed it with a result: equivariant transformers (architectures respecting physical symmetries) match the accuracy of specialized physics networks at low dimension while scaling like ordinary transformers, dissolving the trade-off people assume exists. He also warned that in particle physics every good symmetry is broken, by the Higgs mechanism or by the detector, so the right move is approximately correct structure, never exact structure. (see also Tahmasebi's talk below.)
+    %\item Two blunt statements about the field's condition. On delivery: after ten years of proof-of-principle papers, ``at some point we need to deliver,'' and adoption requires that users be able to opt out of the learned components. On people: the work most needed for collider precision (higher-order calculations, hadronization) is, in his words, among the best ways of not getting an academic job in the United States. The binding constraint is a workforce shortage the job market actively creates, and tooling that lowers the human cost of exactly that work addresses a bottleneck the field cannot fix by hiring.
+    \item He warned about automation. ``We think we get paid because we train people. So if you make everything autonomous, they're going to say thank you, we'll take your funding back.'' A pitch regarding autonomous physics will meet strong pushback.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    %\item The closure test with historical data is a transferable method for validating uncertainties: freeze your methodology, restrict it to data available before some past date, derive the error bars, and check whether they covered what was measured afterwards. The NNPDF collaboration does this; almost nobody in machine learning does. It is an out-of-time calibration test of an uncertainty estimator, applicable to any domain with a long data record.
+    \item Never factorize a calibration fit from a signal fit unless the scales genuinely separate. Fitting the proton's internal structure without allowing for possible new physics lets the fit silently absorb the new physics, after which the search is biased toward finding nothing. This generalizes to any pipeline where a calibration stage is fitted on the same data as the effect of interest.
+    \item If you have an explicit density, learn the density and keep the Monte Carlo; train a generative model on samples only when no density exists. Generative AI does not replace classical methods. They work in different regimes.
+    \item When a trusted mechanistic model needs data-driven correction, re-calibrate it rather than replacing it.
+    %\item Evidential regression is worth knowing: assume the conditional distribution is Gaussian, take the conjugate prior, and the network needs to learn only four numbers per input, which decompose analytically into a mean, a statistical uncertainty, and a systematic uncertainty. His working definition to keep: a systematic uncertainty is one that does not shrink when you add more training data of the same kind.
+\end{itemize}
+
+\clearpage
+\section{Contributed Session: Foundation Models and Robust AI}
+
+\emph{Five short talks.}
+
+\subsection*{Ilay Kamai, Technion: A Foundation Model for Stellar Astronomy}
+
+When should you combine data modalities? The answer is often no. His stellar-survey pairs span the entire phase diagram, motivating a factorized architecture. The result beats AION-1, a much larger general astronomy model, on every stellar task. Lessons: whether to fuse is a question we should answer, not a goal in itself.
+
+\subsection*{Adiba Amira Siddiqa, Bryn Mawr College: Spectroscopic Information from Imaging}
+
+Spectra are scarce, images abundant. The question is how much spectroscopic information is already in the images? The pipeline is modular: pretrain and freeze a galaxy-shape autoencoder, then condition normalizing flows on shape plus photometry to output full joint posteriors.
+
+\subsection*{Behrooz Tahmasebi, Harvard University: Approximate Symmetry Is Exponentially Easier than Exact Symmetry}
+
+To make a model exactly invariant under a group of transformations, the canonical construction averages over the whole group, which for realistic groups is astronomically large (the permutations of fifty objects outnumber the atoms in the universe). His theorem: a random subset of size about $3\log|G|$ suffices for approximate symmetry, with an error bound that holds uniformly over the whole function class, meaning one subset sampled once, offline, serves the entire training run even as the model changes.
+
+Exact symmetry by averaging requires the entire group, even for modest polynomial function classes, with no clever subset possible.
+
+Plehn reached the identical conclusion that morning from detector physics (``every good symmetry is broken; don't build perfect symmetries''). So the same day, two people suggested the same thing: impose an approximately correct structure, know which constraints are approximations, and stop paying for exactness.
+
+\subsection*{Rhea Senthil Kumar, UC San Diego: Fast Generative Models for Gravitational-Wave Populations}
+
+Inferring how massive stars live and die requires simulating populations of binary stars across roughly fifteen parameters; at thirty seconds per parameter combination, even a coarse grid takes thirteen years of serial compute.
+
+Her emulator (built on conditional flow matching, a generative method that learns a simple velocity field carrying Gaussian noise onto the target distribution, chosen because it converges fast and imposes no architectural constraints) collapses this to about a day. The insight she emphasized is that the old cost did not just make studies slow; it forced a methodologically inferior design, varying one parameter at a time, which is structurally blind to interactions between parameters. Cheap forward modeling replaces that with joint exploration of the full space.
+
+Insight: Another story, where speed-up buys something quantitative.
+
+\subsection*{Amit Reza, Austrian Academy of Sciences: Classical and Quantum Machine Learning for Exoplanet Climates}
+
+A single three-dimensional climate simulation costs forty to two hundred forty hours on sixty-four cores; the group's published classical surrogate trains in less time than one such run and then predicts an entire planet in seconds. The talk's headline was an honest negative result: a hybrid quantum approach matched the classical model in most places and never exceeded it, with real hardware noise contributing to the errors.
+
+The room engaged with the negative result constructively; publishing the honest baseline is treated as a contribution here.
+
+The group refuses to train end-to-end across their three coupled model stages because they don't want errors to propagate across the whole model in an uncontrolled fashion. Controlling where the error budget is spent matters more than architectural elegance; that is an argument against end-to-end systems; the community wants (and needs) low-level control.
+
+% ---
+\section{Gregor Kasieczka, Universit\"at Hamburg\\
+Rethinking Discovery: Foundation Models for Particle Physics}
+
+\emph{Kasieczka is a professor at Hamburg and a central figure in machine learning for jet physics: he built several of the benchmarks the field measures itself against, co-developed the CATHODE anomaly-detection method, and leads the OmniJet foundation-model effort.}
+
+\subsection*{Summary}
+The talk opened with a historical observation. Fifty years ago, particle collisions were reconstructed by hand from photographs, by people called scanners, and, as Kasieczka put it, they were not physicists: the work was seen as menial labour and outsourced. Everything machine learning has successfully automated in the field descends from that category. The tasks physicists consider their own are done much as they always were. Ho noted: ``isn't it a bit like standing still?'' The rest of the talk surveys three routes forward. First, anomaly detection. Second, foundation models, where his definition sets a high bar: a real foundation model is one so expensive and so good that no group would rationally replicate it, and by that standard we don't have anything like that (note: many "physis" foundation models are rather small, in the range of millions of parameters -- we are not talking about LLMs here). Third, agents, where the trusted use case is precise and narrow: an agent that reproduces a published algorithm whose code was never released, with a human signing off on each step and a hard numerical benchmark to check against. Reproduction, in this framing, is a translation task, converting knowledge that already exists from paper form into code form, not the production of new knowledge.
+
+\subsection*{Insights}
+\begin{itemize}
+    \item An outlier sits far from the bulk of normal data. But much of physics discovery is the other problem: an overdensity, a signal that overlaps the background completely and is visible only as a small excess of events on top of it, which is unsolvable without an accurate model of the background.
+    \item Kasieczka raised a serious criticism of the approach he promotes. ATLAS and CMS exist as two experiments specifically so that a discovery can be independently confirmed by collaborations built not to share assumptions. If both fine-tune the same pretrained backbone, the confirmation is no longer independent: a shared backbone is a shared assumption and a correlated failure mode. The open technical question, precise and unanswered, is whether fine-tuning decouples two models enough to restore statistical independence, and how you would measure that. Every replication-dependent discipline acquires this exposure the moment one pretrained model becomes standard infrastructure. This question is measurable, and outcomes publishable. Maybe we can tackle it.
+    \item The conditions under which this community currently accepts agentic are strict. They require verifiable output, ground truth for comparison, a bounded scope, and human approval at each step. Across both days, the prevailing model of AI is an additional student, capable and worth supervising, assigned the laborious and verifiable work. Pitches that land inside that pattern are continuous with a century of delegating work to human computers and scanners; pitches premised on the machine doing the discovery are not yet live in this room, and Kasieczka was the only speaker in two days to seriously raise them.
+    \item Physics-encoded models currently reach the same peak performance as generalist models at far lower energy cost; the current appeal is transfer potential, not accuracy. In a domain where compute budgets are real and physics knowledge is abundant, the cheap structured model is often the rational choice.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    %\item The pretraining objective must match the causal structure of the downstream task. Next-token prediction sees only the past (a causal mask) and is best for downstream generation; masked modeling sees past and future and is much better for downstream classification. Mixing objectives works, but the mix must contain the task you actually want. The mechanism, causal versus non-causal attention, is general to any sequence model.
+    %\item When generating several correlated coordinates, do not sample them in parallel with independent heads, because no head knows what the others chose. Delay each coordinate's stream one step behind the previous one, so later heads condition on earlier choices through ordinary self-attention. Simple, effective, with one caveat the speaker stated himself: the resulting shifted embeddings transfer poorly to classification.
+    \item Tokenization of continuous physics data carries a legitimacy cost with domain experts (Jesse Thaler's objection, quoted verbatim: ``you'll never be excited about something that takes continuous physics data and chops it into discrete tokens'') and a real technical cost: it scales badly with dimensionality.
+    \item Two sober empirical notes: boosted decision trees were in tests more robust than neural networks when pure-noise features were added; and the transformer showed no gain over the graph-network baseline on the standard jet benchmark until fine-tuning was allowed, at which point it jumped substantially.
+    \item A classifier's performance ceiling is itself a physical measurement: it bounds how separable the underlying processes really are. Scaling laws are therefore not only a budgeting tool, but they say something about the physics itself.
+\end{itemize}
+
+% ---
+\section{Erik Katsavounidis, MIT\\
+Machine Learning for Gravitational-Wave Searches}
+
+\emph{Katsavounidis is a professor at MIT and a long-time leader in the LIGO collaboration's low-latency search infrastructure.}
+
+\subsection*{Summary}
+Gravitational-wave detectors measure mirror displacements of about $10^{-18}$ meters, and their noise is the enemy: highly non-Gaussian and highly non-stationary. The talk walked through every stage of the LIGO pipeline and showed where machine learning now runs in production. DeepClean learns the map from hundreds of auxiliary sensor channels to the noise in the science data, and subtracts it in real time. Aframe, the detection pipeline, matches the sensitivity of the five classical matched-filter pipelines.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{pics/hdr_latency_throughput.jpg}
+    \caption{The real-time data processing landscape as mapped by the NSF A3D3 (Accelerated AI Algorithms for Data-Driven Discovery) Institute. Experiments are characterized by streaming data rate (bytes per second) versus latency requirement (seconds), alongside cumulative annual volume indicators (bubbles on the top right). The domains span High Energy Physics (LHC L1T, LHC HLT), Multi-Messenger Astrophysics (DUNE, LIGO, ZTF, IceCube), Systems Neuroscience (Neuro), and commercial comparisons (Google Cloud, Netflix 4K UHD). Shaded regions highlight targeted hardware acceleration paradigms: low-latency ultra-fast edge processing via FPGAs/ASICs vs. higher-latency throughput processing via CPUs/GPUs.}
+    \label{fig:landscape}
+\end{figure}
+
+\subsection*{Insights}
+\begin{itemize}
+    \item In this domain, latency is a scientific quantity, not an engineering nicety. ``As accurate but 8.4 seconds faster'' is the scientific advance, because it allows scientists to point a telescope at interesting events before its end.
+    \item The accepted validation standard is ``does it change the answer,'' not ``does the metric improve.'' DeepClean's justification is that the full Bayesian parameter estimation, run with and without the cleaning, gives indistinguishable posteriors. Any tool that touches data upstream of a measurement must prove that it does not change the measurement. %, and that proof must run within the collaboration's own inference machinery. Relatedly, Aframe was evaluated on the collaboration's own injection engine against its own production pipelines; a bespoke benchmark would have carried no weight. Integration with a community's existing evaluation apparatus is a precondition for adoption, not a nice-to-have.
+    \item He stated: a foundation model for this field ``should not only capture the physics, it should capture the instrument as well.'' The auxiliary channels that witness instrumental noise are as much a part of the domain as the astrophysics, and a representation that only knows the physics cannot serve noise regression or glitch identification. For any experimental science, the instrument is part of the physics you have to learn.
+    \item The definition of ``anomaly'' is domain-specific and openly contested. %Here it is operationalized as anything that does not match a binary system, because binaries are the only source class with reliable templates; the genuinely unsolved part, which the speaker raised twice without answering, is separating instrumental effects from astrophysical ones. The hard part of anomaly detection is not the detector but the definition, and the definition is downstream of which templates the field trusts.
+    \item The workload scales cubically: event counts grow as the cube of detector sensitivity, so doubling sensitivity in the next observing run means nearly eight times the events. And even right now, the amount of data is massive (see the Figure). % to dig from the firehose. Detector upgrade schedules are a hard, published roadmap of future tooling demand.
+\end{itemize}
+
+\subsection*{Learnings}
+\begin{itemize}
+    %\item Before scaling a model to handle long context, check whether domain knowledge can compress the context instead. The heterodyning trick reduced a hundreds-of-seconds signal to one second using a phase that was already known analytically, and reached matched-filter performance with the existing short-context network.
+    \item Report anomaly thresholds as background event rates. ``One false event per hour'' versus ``one per year'' is what a user deciding whether to alert a telescope network can act on. %Their anomaly method itself replaces a single autoencoder's reconstruction error with a bank of autoencoders, one per known class, whose outputs span a space in which anomalies are located rather than merely scored; the speaker's own next step is contrastive learning, so the classes emerge from the data instead of being prescribed by the analyst.
+    %\item Long signals will overlap instrumental glitches as a matter of course (a hundred-second signal meeting a glitch is not statistically unusual; it happened to the famous 2017 neutron-star event), so glitch handling requires localization in time and frequency, not just classification of a data segment.
+    %\item Four production pipelines (noise regression, detection, parameter estimation, anomaly detection) were shipped by one modest group because they all sit on a single shared PyTorch utility library for data loading, whitening, and spectral estimation. Shared infrastructure, not novel architecture, is what made production deployment possible.
+\end{itemize}
+
+% ---
+\section*{A Closing Observation}
+
+Three threads ran through the whole day, and each bears directly on what we should build.
+
+First, the real problem behind ``discovery'' is background modelling. Because most searches look for a small excess sitting on top of an enormous known background rather than a lonely outlier, the decisive investment is always in modelling everything that is not the signal. Three independent solutions appeared in one day: generate the background with a normalizing flow and paint it into the blinded region (Kasieczka); let nature turn the signal off, if it is periodic, and read the background directly (Whiteson); or witness the noise with auxiliary sensors and subtract it (Katsavounidis). None of them detect the signal directly. Any tool that presents itself to this audience as a detector, without a background story, will face their criticism.
+
+Second, the current field's relationship to AI is delegation. What has been automated so far is the work that was already outsourced to non-physicist scanners half a century ago; the accepted agentic frontier is translation of established knowledge under human sign-off; and Plehn's funding argument (``we get paid because we train people'') gives the delegation a hard sell. The opportunities: the laborious, verifiable, bounded-scope work (reproduction, background modeling, benchmark construction, uncertainty machinery, pipeline plumbing) is wanted, trusted, and needed. The one speaker who raised automating discovery itself did so as an open worry, not a demand. Our discovery-oriented systems will be judged by this audience on whether they produce the kind of evidence the community already trusts: derivable uncertainties, unrequested consistency checks, and validation inside the community's own machinery.
+
+Third, the day produced one research question we could own. If two experiments built for independent confirmation both fine-tune the same foundation model, is the confirmation still independent? Kasieczka posed it precisely, and nobody has an answer. It is measurable, it is publishable, and every replication-dependent science will need the answer the moment shared pretrained models become infrastructure, which is exactly the future we are building.
+
+% ---
+\section*{Papers Behind the Talks}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Pandey:} \href{https://arxiv.org/abs/2409.09124}{arXiv:2409.09124} (CHARM), \href{https://arxiv.org/abs/2409.11401}{arXiv:2409.11401} (GOTHAM transformer), \href{https://arxiv.org/abs/2511.08438}{arXiv:2511.08438} (Galactification)
+    \item \textbf{Cranmer:} \href{https://arxiv.org/abs/2606.01470}{arXiv:2606.01470} (Rayleigh--Taylor transfer), \href{https://arxiv.org/abs/2511.15684}{arXiv:2511.15684} (Walrus), \href{https://arxiv.org/abs/2510.17960}{arXiv:2510.17960} (AION-1), \href{https://arxiv.org/abs/2512.11982}{arXiv:2512.11982} (AION-Search), \href{https://arxiv.org/abs/2603.01949}{arXiv:2603.01949} (probabilistic retrofitting), \href{https://arxiv.org/abs/2310.02994}{arXiv:2310.02994} (Multiple Physics Pretraining), \href{https://arxiv.org/abs/2412.00568}{arXiv:2412.00568} (The Well), \href{https://arxiv.org/abs/2412.02527}{arXiv:2412.02527} (Multimodal Universe)
+    \item \textbf{Whiteson:} \href{https://arxiv.org/abs/2410.00269}{arXiv:2410.00269} (quirky tracks), \href{https://arxiv.org/abs/2509.08878}{arXiv:2509.08878} (non-helical tracks)
+    \item \textbf{Plehn:} \href{https://arxiv.org/abs/2211.01421}{arXiv:2211.01421} (lecture notes), \href{https://arxiv.org/abs/2608.05812}{arXiv:2608.05812} (methodological essay)
+    \item \textbf{Kamai:} \href{https://arxiv.org/abs/2606.11190}{arXiv:2606.11190} (multimodal phase diagram)
+    \item \textbf{Senthil Kumar:} population target per \href{https://arxiv.org/abs/2605.27226}{arXiv:2605.27226} (GWTC-5.0)
+    \item \textbf{Reza:} Plaschzug et al., A\&A 706, A157 (2026), \href{https://doi.org/10.1051/0004-6361/202555631}{doi:10.1051/0004-6361/202555631}
+    \item \textbf{Kasieczka:} \href{https://arxiv.org/abs/2412.03747}{arXiv:2412.03747} (CMS anomaly search), \href{https://arxiv.org/abs/2512.20395}{arXiv:2512.20395} (methods companion), \href{https://arxiv.org/abs/2606.11304}{arXiv:2606.11304} (SPADE), \href{https://arxiv.org/abs/2604.18752}{arXiv:2604.18752} (SHARP agent pipeline), \href{https://arxiv.org/abs/2605.31103}{arXiv:2605.31103} (model-agnostic search review)
+    \item \textbf{Katsavounidis:} \href{https://arxiv.org/abs/2403.18661}{arXiv:2403.18661} (Aframe), \href{https://arxiv.org/abs/2607.01372}{arXiv:2607.01372} (heterodyned neutron-star search), plus DeepClean, AMPLFI, GWAK, and the shared ml4gw library
+    \item \textbf{Tahmasebi:} ICLR 2026 (approximate versus exact symmetry); classical basis in the Alon--Roichman expander results
+\end{itemize}
+
+\end{document}
