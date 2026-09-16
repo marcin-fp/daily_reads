@@ -149,7 +149,7 @@ Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `
 | `slug:daed-a-983` |  | `papers/raw/2026-06-09/daed-a-983-pdf.md` | — | — | raw |
 | `slug:dspark-paper` |  | `papers/raw/2026-06-09/dspark-paper-pdf.md` | — | — | raw |
 | `slug:genebench-pro` |  | `papers/raw/2026-06-09/genebench-pro-pdf.md` | — | — | raw |
-| `arxiv:2310.01798` | v2 | `papers/raw/2026-06-09/iclr-2024-large-language-models-cannot-self-correct-reasoning-yet-paper-conference-pdf.md` | `papers/canonical/2310.01798.md` | `reviews/2310.01798.md` | reviewed |
+| `arxiv:2310.01798` | v2 | `papers/raw/2026-06-09/iclr-2024-large-language-models-cannot-self-correct-reasoning-yet-paper-conference-pdf.md` | `papers/canonical/2026-06-09/2310.01798.md` | `reviews/2310.01798.md` | reviewed |
 | `slug:mira-tech-report` |  | `papers/raw/2026-06-09/mira-tech-report-pdf.md` | — | — | raw |
 | `slug:s41586-024-07421-0` |  | `papers/raw/2026-06-09/s41586-024-07421-0-pdf.md` | — | — | raw |
 | `slug:s42256-026-01268-y` |  | `papers/raw/2026-06-09/s42256-026-01268-y-pdf.md` | — | — | raw |

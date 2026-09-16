@@ -50,10 +50,17 @@ DOCUMENT_RE = re.compile(r"\\documentclass(?:\[[^\]]*\])?\{[^}]+\}")
 TITLE_RE = re.compile(r"\\title(?:\[[^\]]*\])?\{(.+?)\}", re.DOTALL)
 AUTHOR_RE = re.compile(r"\\author(?:\[[^\]]*\])?\{(.+?)\}", re.DOTALL)
 TABLE_ENV_RE = re.compile(r"\\begin\{(?:longtable|tabular\*?|tabularx)\}")
+# Count delimiter rows rather than requiring a perfectly parsed header row.
+# PDF extraction sometimes produces a ragged header but valid Markdown rows.
 MARKDOWN_TABLE_RE = re.compile(
-    r"^\s*\|.*\|\s*\n\s*\|(?:\s*:?-+:?\s*\|)+\s*$", re.MULTILINE
+    r"^\s*\|(?:\s*:?-{3,}:?\s*\|)+\s*$", re.MULTILINE
 )
-TABLE_CAPTION_RE = re.compile(r"\bTable\s+\d+\s*:", re.IGNORECASE)
+# A prose reference such as "the results of Table 9: ..." is not a caption.
+# Captions in these extracts begin their own line, optionally as a heading/bold.
+TABLE_CAPTION_RE = re.compile(
+    r"^\s*(?:#{1,6}\s*)?(?:\*\*)?Table\s+\d+\s*:",
+    re.IGNORECASE | re.MULTILINE,
+)
 
 
 @dataclass(frozen=True)
@@ -512,8 +519,9 @@ def validate(output: Path, report: dict[str, object]) -> list[str]:
         )
     if table_captions > markdown_tables:
         warnings.append(
-            f"found {table_captions} table captions but only "
-            f"{markdown_tables} Markdown tables; inspect missing tables"
+            f"{table_captions - markdown_tables} of {table_captions} tables "
+            "were preserved as unstructured text rather than Markdown tables; "
+            "content may be present but inspect formatting"
         )
     unresolved = report.get("unresolved_includes", [])
     if unresolved:

@@ -12,6 +12,10 @@ ArXiv files are converted with scripts/arxiv_to_md.py (newest version, auto
 fallback). Non-arXiv dumps are copied as-is. Existing canonical files are
 skipped unless --force is set.
 
+Output mirrors the dump folders: papers/raw/2026-05-06/*.md becomes
+papers/canonical/2026-05-06/*.md. A paper that appears in two dumps stays in the
+folder where it landed first, so each id has exactly one canonical file.
+
 Every job is appended to a JSONL log as it finishes, so an aborted run still
 leaves a usable record. Re-run the problem papers with --retry-from LOG.
 """
@@ -36,6 +40,7 @@ from arxiv_to_md import ARXIV_ID_RE, ConversionResult, convert_paper
 RAW_ARXIV_FILE = re.compile(
     r"^(?P<yyyy>\d{4})-(?P<nnnnn>\d{4,5})(?P<version>v\d+)?(?:-pdf)?\.md$"
 )
+RAW_DIR_NAME = "raw"
 
 
 @dataclass
@@ -52,6 +57,7 @@ class Counts:
     scanned: int = 0
     jobs: int = 0
     skipped: int = 0
+    duplicates: int = 0
     converted: int = 0
     copied: int = 0
     warnings: int = 0
@@ -148,27 +154,50 @@ def canonical_stem(path: Path) -> str:
     return path.stem
 
 
-def plan_jobs(raw_files: list[Path], output_dir: Path) -> list[Job]:
-    arxiv_sources: dict[str, Path] = {}
+def mirror_subdir(source: Path, raw_root: Path) -> Path:
+    """Folder of a raw file relative to papers/raw, so canonical mirrors the dump dates.
+
+    Anchored on the nearest ancestor named `raw` so that pointing the script at
+    papers/raw or at papers/raw/2026-05-06 both yield canonical/2026-05-06/.
+    """
+    parts = source.parent.parts
+    if RAW_DIR_NAME in parts:
+        index = len(parts) - parts[::-1].index(RAW_DIR_NAME)
+        return Path(*parts[index:])
+    try:
+        return source.parent.relative_to(raw_root)
+    except ValueError:
+        return Path()
+
+
+def plan_jobs(raw_files: list[Path], output_dir: Path, raw_root: Path) -> list[Job]:
+    arxiv_sources: dict[tuple[Path, str], Path] = {}
     jobs: list[Job] = []
     for path in raw_files:
+        subdir = mirror_subdir(path, raw_root)
+        dest_dir = output_dir / subdir if subdir.parts else output_dir
         parsed = parse_raw_arxiv(path)
         if parsed is None:
             stem = canonical_stem(path)
-            jobs.append(
-                Job("copy", stem, None, path, output_dir / f"{stem}.md")
-            )
+            jobs.append(Job("copy", stem, None, path, dest_dir / f"{stem}.md"))
             continue
         base, _version = parsed
         # Keep the last filename for this base (walk is sorted; later versions
         # typically sort after earlier ones). Conversion always fetches HEAD.
-        arxiv_sources[base] = path
-    for base, source in arxiv_sources.items():
-        jobs.append(
-            Job("arxiv", base, base, source, output_dir / f"{base}.md")
-        )
-    jobs.sort(key=lambda job: (job.kind != "arxiv", job.label))
+        arxiv_sources[(dest_dir, base)] = path
+    for (dest_dir, base), source in arxiv_sources.items():
+        jobs.append(Job("arxiv", base, base, source, dest_dir / f"{base}.md"))
+    jobs.sort(key=lambda job: (job.kind != "arxiv", str(job.dest)))
     return jobs
+
+
+def existing_canonical(output_dir: Path) -> dict[str, Path]:
+    """Canonical stem -> file, so a paper already converted under one dump date is
+    not converted again under another."""
+    found: dict[str, Path] = {}
+    for path in sorted(output_dir.rglob("*.md")):
+        found.setdefault(path.stem, path)
+    return found
 
 
 def copy_as_is(job: Job) -> ConversionResult:
@@ -193,9 +222,17 @@ def install_interrupt_handler() -> None:
     signal.signal(signal.SIGINT, handler)
 
 
-def print_result(job: Job, result: ConversionResult) -> None:
+def dest_label(dest: Path, output_dir: Path) -> str:
+    try:
+        return str(dest.relative_to(output_dir))
+    except ValueError:
+        return dest.name
+
+
+def print_result(job: Job, result: ConversionResult, output_dir: Path) -> None:
     mark = {
         "skipped": "skip",
+        "duplicate": "dup ",
         "copied": "copy",
         "pdf": "ok  ",
         "source": "ok  ",
@@ -203,9 +240,11 @@ def print_result(job: Job, result: ConversionResult) -> None:
         "failed": "FAIL",
     }.get(result.status, result.status[:4])
     extra = ""
-    if result.status not in ("skipped", "copied") and result.paper:
+    if result.status == "duplicate" and result.output:
+        extra = f" -> already at {dest_label(result.output, output_dir)}"
+    elif result.status not in ("skipped", "copied") and result.paper:
         extra = f" [{result.paper}]"
-    print(f"[{mark}] {job.dest.name}{extra}")
+    print(f"[{mark}] {dest_label(job.dest, output_dir)}{extra}")
     for warning in result.warnings:
         print(f"       WARNING: {warning}")
     for fallback in result.fallbacks:
@@ -223,6 +262,7 @@ def summarize(counts: Counts, log_path: Path | None, interrupted: bool) -> int:
     print(f"raw files scanned:     {counts.scanned}")
     print(f"unique papers:         {counts.jobs}")
     print(f"skipped (exists):      {counts.skipped}")
+    print(f"skipped (other dump):  {counts.duplicates}")
     print(f"converted (arxiv):     {counts.converted}")
     print(f"copied (non-arxiv):    {counts.copied}")
     print(f"raw-dump fallback:     {counts.raw_fallback}")
@@ -256,9 +296,10 @@ def summarize(counts: Counts, log_path: Path | None, interrupted: bool) -> int:
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Regenerate papers/canonical from a raw dump folder. "
-            "ArXiv papers use auto conversion of the newest version; "
-            "everything else is copied as-is. Existing canonical files are skipped."
+            "Regenerate papers/canonical from a raw dump folder, mirroring the "
+            "dump subfolders. ArXiv papers use auto conversion of the newest "
+            "version; everything else is copied as-is. Papers already canonical "
+            "(here or under another dump date) are skipped."
         )
     )
     parser.add_argument(
@@ -334,7 +375,8 @@ def main() -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     raw_files = discover_raw(raw_root)
-    jobs = plan_jobs(raw_files, output_dir)
+    jobs = plan_jobs(raw_files, output_dir, raw_root)
+    existing = existing_canonical(output_dir)
     if retry_reasons:
         jobs = [job for job in jobs if job.label in retry_reasons]
         print(f"Retrying {len(jobs)} papers from {args.retry_from}")
@@ -359,6 +401,21 @@ def main() -> int:
 
     try:
         for job in jobs:
+            elsewhere = existing.get(job.label)
+            if elsewhere is not None and elsewhere != job.dest:
+                result = ConversionResult(
+                    ok=True,
+                    status="duplicate",
+                    paper=job.label,
+                    output=elsewhere,
+                    warnings=[],
+                    fallbacks=[],
+                )
+                counts.duplicates += 1
+                print_result(job, result, output_dir)
+                if log:
+                    log.record(job, result, 0.0)
+                continue
             if job.dest.exists() and not args.force:
                 result = ConversionResult(
                     ok=True,
@@ -369,13 +426,17 @@ def main() -> int:
                     fallbacks=[],
                 )
                 counts.skipped += 1
-                print_result(job, result)
+                print_result(job, result, output_dir)
                 if log:
                     log.record(job, result, 0.0)
                 continue
             if args.dry_run:
                 action = "copy" if job.kind == "copy" else "arxiv"
-                print(f"[plan] {action} {job.source.name} -> {job.dest.name}")
+                existing[job.label] = job.dest
+                print(
+                    f"[plan] {action} {job.source.name} -> "
+                    f"{dest_label(job.dest, output_dir)}"
+                )
                 continue
 
             started = time.monotonic()
@@ -395,7 +456,9 @@ def main() -> int:
                     )
                     counts.failed += 1
                     counts.problems.append(f"failed: {job.label}: {error}")
-                print_result(job, result)
+                if result.ok:
+                    existing[job.label] = job.dest
+                print_result(job, result, output_dir)
                 if log:
                     log.record(job, result, time.monotonic() - started)
                 continue
@@ -405,13 +468,15 @@ def main() -> int:
             started = time.monotonic()
             result = convert_paper(
                 job.paper_id or job.label,
-                output_dir,
+                job.dest.parent,
                 mode=args.mode,
                 force=args.force,
                 repo_root=repo_root,
             )
             converted_so_far += 1
-            print_result(job, result)
+            if result.ok and result.output:
+                existing[job.label] = result.output
+            print_result(job, result, output_dir)
             if log:
                 log.record(job, result, time.monotonic() - started)
             if result.status == "skipped":

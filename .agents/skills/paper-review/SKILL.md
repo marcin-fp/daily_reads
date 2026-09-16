@@ -40,7 +40,7 @@ Voice: first-person is fine; technically precise; no Slack hooks (“Interesting
 ```
 ---
 paper: arxiv:YYMM.NNNNN
-canonical: papers/canonical/YYMM.NNNNN.md
+canonical: papers/canonical/YYYY-MM-DD/YYMM.NNNNN.md
 raw: papers/raw/YYYY-MM-DD/…
 ---
 

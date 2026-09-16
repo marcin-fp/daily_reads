@@ -13,8 +13,19 @@ graphify-out/wiki/
 # Bulk conversion logs
 logs/
 
-# Local env
+# Converter scratch (PDF/LaTeX/OCR workdirs, local test output)
+.conversion-test/
+.conversion-work/
+*.conversion.json
+
+# Local env / tooling
 .env
+.venv/
+venv/
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
 .DS_Store
 __pycache__/
 *.pyc
+*.egg-info/
