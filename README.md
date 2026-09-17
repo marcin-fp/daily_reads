@@ -180,6 +180,8 @@ Detect prints how many docs vs papers it found. Semantic extraction runs in chun
 
 Schema: [`lemmalog/SCHEMA.md`](lemmalog/SCHEMA.md). Rules: [`lemmalog/rules/evidence-chains.dl`](lemmalog/rules/evidence-chains.dl). Skill: `.agents/skills/evidence-chains`.
 
+Cursor wires the MCP server in `.cursor/mcp.json`. Claude Code wires the same binary and snapshot in `.mcp.json`. Override the executable with `LEMMALOG_MCP` if it is not at `~/src/lemmalog/target/release/lemmalog-mcp`.
+
 Lemmalog is the scientific relation and provenance store, not a second bibliography. It keeps Claims plus one `paper --reviewed_in--> review` pointer; titles, dates, authors, affiliations, funding, venue, and facets stay in review frontmatter.
 
 Use exact `lemmalog_query` calls and inspect derived results with `lemmalog_why`. `lemmalog_context` is useful for discovering candidate relations, but its relevance retrieval can include neighboring facts; confirm candidates exactly. Never feed `lemmalog/store.snapshot` or an unfiltered `lemmalog_dump` into synthesis.
@@ -189,6 +191,19 @@ There is no minimum-paper gate for evidence. A single paper can report or suppor
 ## Skills
 
 Canonical copies live in `.agents/skills/` (Cursor). Claude Code loads the same files through `.claude/skills/` (a symlink). Edit only `.agents/skills/`. Project instructions: `AGENTS.md` (Cursor) and `CLAUDE.md` (Claude Code; it includes `AGENTS.md`).
+
+### Claude Code
+
+Open the repo in Claude Code **or** Cursor, not both at once. They share `lemmalog/store.snapshot`; two MCP servers would each keep their own copy and overwrite each other.
+
+1. From the repo root, run `claude` (or open the folder in Claude Code Desktop).
+2. Trust the workspace when prompted.
+3. Approve the project MCP server `lemmalog` from `.mcp.json`. If the binary is not at the default path, set `LEMMALOG_MCP` to your `lemmalog-mcp` executable.
+4. Invoke a skill with a slash command, for example `/paper-review`. Those skills have `disable-model-invocation: true`, so Claude will not start a review unless you ask.
+
+The pipeline is the same as in Cursor: write `reviews/{id}.md`, validate it, mark `papers/index.md` reviewed, assert `reviewed_in` plus any Claims into lemmalog, then `lemmalog_save`.
+
+Available skills:
 
 - `paper-review` — the only full-paper reader; writes a validated schema-v1 review with metadata, field context, critical discussion, relevance, and Claims.
 - `evidence-chains` — assert reviewed Claims and review pointers; query two/three-hop chains; inspect `why` trees.

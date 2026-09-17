@@ -6,6 +6,8 @@ This repo is a personal paper corpus. Canonical Markdown is the readable source 
 
 Canonical copies live in **`.agents/skills/`** (Cursor). Claude Code loads the same files via **`.claude/skills/`**, which is a symlink to that folder. Edit only `.agents/skills/`.
 
+Lemmalog MCP: Cursor uses `.cursor/mcp.json`; Claude Code uses `.mcp.json`. Both write the same `lemmalog/store.snapshot`. Open this repo in **one** of Cursor or Claude Code at a time so the two MCP processes do not hold separate in-memory copies of the store.
+
 | Skill | Use when |
 |-------|----------|
 | `paper-review` | Reviewing a paper into `reviews/{id}.md` |

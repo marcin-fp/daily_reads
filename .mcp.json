@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "lemmalog": {
+      "type": "stdio",
+      "command": "${LEMMALOG_MCP:-/Users/marcinabram/src/lemmalog/target/release/lemmalog-mcp}",
+      "env": {
+        "LEMMALOG_MCP_PATH": "${CLAUDE_PROJECT_DIR:-.}/lemmalog/store.snapshot"
+      }
+    }
+  }
+}

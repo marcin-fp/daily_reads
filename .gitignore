@@ -35,5 +35,8 @@ __pycache__/
 # Lemmalog machine-local snapshot (created by MCP/CLI)
 lemmalog/*.snapshot
 
+# Claude Code local MCP/skill approvals (do not commit)
+.claude/settings.local.json
+
 # Secrets
 credentials.sh
