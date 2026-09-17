@@ -32,5 +32,8 @@ __pycache__/
 *.pyc
 *.egg-info/
 
+# Lemmalog machine-local snapshot (created by MCP/CLI)
+lemmalog/*.snapshot
+
 # Secrets
 credentials.sh

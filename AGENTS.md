@@ -26,8 +26,10 @@ Canonical copies live in **`.agents/skills/`** (Cursor). Claude Code loads the s
 3. `paper-review` is the only skill that reads canonical/raw full papers. It writes and validates schema-v1 `reviews/{id}.md`. Empty optional sections are allowed; do not force-fit FirstPrinciples or the approved bets. Critical discussion is required.
 4. All synthesis (`evidence-chains`, `learning-synthesis`, `perspectives`, `trend-analysis`, `news-article`) reads reviews, lemmalog, prior snapshots, `papers/index.md` for counts, and the reviews graph only. Never reopen canonical/raw papers or use the full-paper graph as synthesis evidence. Missing evidence becomes a review gap routed back through `paper-review`.
 5. Graphify lives **next to the corpus**, not at the repo root. Papers: `graphify extract papers/canonical --backend bedrock --directed` → `papers/canonical/graphify-out/`. Reviews: a separate `graphify extract reviews ...` → `reviews/graphify-out/`. Never scan the repo root.
-6. Evidence chains go through lemmalog, not the agent's head. A graph path is a candidate; reviewed Claims and a `why` tree are evidence.
+6. Evidence chains go through lemmalog, not the agent's head. Lemmalog stores scientific relations/provenance plus one `reviewed_in` pointer per paper; all publication and landscape metadata stays in reviews. A graph path or `lemmalog_context` result is a candidate. Confirm with exact `lemmalog_query` and `why`; never consume `store.snapshot` or an unfiltered dump as research context.
 7. Higher-level outputs are immutable dated Markdown snapshots under `learnings/`, `perspectives/`, `trends/`, and `news/`. Do not overwrite prior analyses; add a version suffix if needed.
+
+Evidence has graded support, not a minimum-paper gate. A single paper may report or support a scoped claim. Use corroborated only for meaningfully independent sources and well-established only for diverse evidence without a strong unresolved contradiction. Peer review is context, not a correctness multiplier.
 
 Paper ids: `arxiv:YYMM.NNNNN` with no version in the id.
 

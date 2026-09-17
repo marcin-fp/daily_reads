@@ -47,7 +47,7 @@ Voice: [STYLE.md](STYLE.md).
 1. Save `reviews/{id}.md` using [SCHEMA.md](SCHEMA.md).
 2. Run `uv run .agents/skills/paper-review/scripts/validate_review.py reviews/{id}.md` and fix every error.
 3. Update `papers/index.md` to `reviewed`.
-4. If lemmalog MCP/`lemmalog-cli` exists, assert paper metadata and review provenance, then assert non-empty Claims ([`lemmalog/SCHEMA.md`](../../../lemmalog/SCHEMA.md)). If tools are missing, say so once. Empty Claims skip claim edges, not metadata.
+4. If lemmalog MCP/`lemmalog-cli` exists, assert only the paper's `reviewed_in[1.0]` pointer and non-empty Claims ([`lemmalog/SCHEMA.md`](../../../lemmalog/SCHEMA.md)). Structural provenance is `[1.0]`; only the scientific relation carries the Claims-table confidence. If tools are missing, say so once. Empty Claims skip claim edges, not the review pointer. All other metadata stays in the review.
 
 ## Output template
 

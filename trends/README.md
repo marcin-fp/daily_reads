@@ -26,3 +26,5 @@ Do not read canonical/raw papers or use the full-paper graph. Missing evidence i
 Use paper first-public dates for research timing and review dates for pipeline coverage. Keep affiliations, grants, donated resources, paid services, and collaborations distinct. Separate observed facts, interpretation, and recommendation.
 
 The corpus is selected rather than statistically representative. Counts describe this corpus unless a reviewed source provides an external denominator. Terms such as "growing" or "fading" require multiple reviewed papers and at least two time windows.
+
+That trend threshold is not an evidence threshold. A report may include a strong result from one paper as a single-source signal. Corroboration depends on independent evidence, not paper count or venue prestige.

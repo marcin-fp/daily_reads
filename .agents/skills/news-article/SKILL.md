@@ -35,6 +35,10 @@ The central paper must be reviewed. Never open `papers/canonical`, `papers/raw`,
 
 If no reviewed connection exists yet, write a focused article from the central review. Do not invent a lineage to make the piece look more informed.
 
+Use graded evidence language. One paper may report or support a result; independent agreement may corroborate it; well-established requires diverse evidence and no strong unresolved contradiction. Mention peer review when relevant to the story, but do not use venue prestige as a substitute for evaluating the particular claim.
+
+Use exact `lemmalog_query` calls and `lemmalog_why` for relationships. `lemmalog_context` is candidate discovery only. Never consume `store.snapshot` or an unfiltered `lemmalog_dump`.
+
 ## Output
 
 ```markdown

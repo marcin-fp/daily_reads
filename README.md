@@ -30,7 +30,7 @@ Turn a paper corpus into reviewed evidence, then into dated learnings, perspecti
 1. Drop a dump into `papers/raw/YYYY-MM-DD/` and add a row to `papers/index.md` (`status: raw`).
 2. Generate canonical Markdown with `scripts/arxiv_to_md.py` (below). Set `status: canonical`. Raw-only papers stay **off** the graphify corpus.
 3. Explicitly invoke `paper-review` for one paper. It reads the full canonical text once and writes a schema-v1 review with dates, authors, organizations/support, facets, evidence, critical assessment, field context, internal relevance, and a **Claims** block.
-4. Assert review metadata and Claims to lemmalog when MCP/CLI is available. Build/update the separate reviews graph after the review corpus is large enough to benefit.
+4. Assert the paper's `reviewed_in` pointer and Claims to lemmalog when MCP/CLI is available. All other metadata stays in the review. Build/update the separate reviews graph after the review corpus is large enough to benefit.
 5. Find cross-paper chains with `evidence-chains` (`two_hop`, then `lemmalog_why`). It reads reviews, not full papers.
 6. Explicitly invoke `learning-synthesis`, `perspectives`, `trend-analysis`, or `news-article`. Each writes a new dated Markdown snapshot.
 
@@ -180,12 +180,18 @@ Detect prints how many docs vs papers it found. Semantic extraction runs in chun
 
 Schema: [`lemmalog/SCHEMA.md`](lemmalog/SCHEMA.md). Rules: [`lemmalog/rules/evidence-chains.dl`](lemmalog/rules/evidence-chains.dl). Skill: `.agents/skills/evidence-chains`.
 
+Lemmalog is the scientific relation and provenance store, not a second bibliography. It keeps Claims plus one `paper --reviewed_in--> review` pointer; titles, dates, authors, affiliations, funding, venue, and facets stay in review frontmatter.
+
+Use exact `lemmalog_query` calls and inspect derived results with `lemmalog_why`. `lemmalog_context` is useful for discovering candidate relations, but its relevance retrieval can include neighboring facts; confirm candidates exactly. Never feed `lemmalog/store.snapshot` or an unfiltered `lemmalog_dump` into synthesis.
+
+There is no minimum-paper gate for evidence. A single paper can report or support a scoped result. Use corroborated for meaningfully independent agreement, well-established for diverse evidence without a strong unresolved contradiction, and contested when credible results conflict. Peer review informs judgment but is not a correctness multiplier.
+
 ## Skills
 
 Canonical copies live in `.agents/skills/` (Cursor). Claude Code loads the same files through `.claude/skills/` (a symlink). Edit only `.agents/skills/`. Project instructions: `AGENTS.md` (Cursor) and `CLAUDE.md` (Claude Code; it includes `AGENTS.md`).
 
 - `paper-review` — the only full-paper reader; writes a validated schema-v1 review with metadata, field context, critical discussion, relevance, and Claims.
-- `evidence-chains` — assert reviewed claims and metadata; query two/three-hop chains; inspect `why` trees.
+- `evidence-chains` — assert reviewed Claims and review pointers; query two/three-hop chains; inspect `why` trees.
 - `learning-synthesis` — consolidate review Learnings into dated, deduplicated findings.
 - `perspectives` — write dated, argued research perspectives and show what changed.
 - `trend-analysis` — write dated competitive research landscape reports with coverage and selection-bias accounting.

@@ -35,6 +35,10 @@ Never open `papers/canonical`, `papers/raw`, or `papers/canonical/graphify-out`.
 
 With fewer than five relevant reviews, label the result `exploratory` in frontmatter and avoid field-wide conclusions.
 
+There is no minimum source count for using evidence. Mark a single source as reported or supported; reserve corroborated for meaningfully independent sources, well-established for diverse evidence without a strong unresolved contradiction, and contested for credible conflict. Shared authors, datasets, model families, or judges reduce independence. Peer review informs the assessment but never substitutes for examining the claim.
+
+Use exact `lemmalog_query` calls and `lemmalog_why` for conclusions. `lemmalog_context` is candidate discovery only. Never consume `store.snapshot` or an unfiltered `lemmalog_dump`.
+
 ## Output
 
 ```markdown

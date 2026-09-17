@@ -1,29 +1,55 @@
-% Batch id: evidence-chains
-% Bodies must use current(S, Rel, O), not Rel(S, O).
-
 supported_by(X, Y, P) :-
+  current(X, implies, Y),
   current(E, from, X),
   current(E, to, Y),
+  current(E, kind, implies),
   current(E, source_paper, P).
 
+contradicted_by(X, Y, P) :-
+  current(X, contradicts, Y),
+  current(E, from, X),
+  current(E, to, Y),
+  current(E, kind, contradicts),
+  current(E, source_paper, P).
+
+improved_by(X, Y, P) :-
+  current(X, improves, Y),
+  current(E, from, X),
+  current(E, to, Y),
+  current(E, kind, improves),
+  current(E, source_paper, P).
+
+used_by(X, Y, P) :-
+  current(X, uses, Y),
+  current(E, from, X),
+  current(E, to, Y),
+  current(E, kind, uses),
+  current(E, source_paper, P).
+
+evaluated_by(X, Y, P) :-
+  current(X, evaluates, Y),
+  current(E, from, X),
+  current(E, to, Y),
+  current(E, kind, evaluates),
+  current(E, source_paper, P).
+
+review_for_edge(E, R) :-
+  current(E, source_paper, P),
+  current(P, reviewed_in, R).
+
 two_hop(X, Z, P1, P2) :-
-  current(X, implies, Y),
-  current(Y, implies, Z),
-  X \= Z,
   supported_by(X, Y, P1),
   supported_by(Y, Z, P2),
+  X \= Z,
   P1 \= P2.
 
 three_hop(X, W, P1, P2, P3) :-
-  current(X, implies, Y),
-  current(Y, implies, Z),
-  current(Z, implies, W),
-  X \= Z,
-  Y \= W,
-  X \= W,
   supported_by(X, Y, P1),
   supported_by(Y, Z, P2),
   supported_by(Z, W, P3),
+  X \= Z,
+  Y \= W,
+  X \= W,
   P1 \= P2,
   P2 \= P3,
   P1 \= P3.

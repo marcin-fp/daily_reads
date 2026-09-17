@@ -32,6 +32,10 @@ Never open `papers/canonical`, `papers/raw`, or the full-paper graph. A missing 
 6. Calibrate causal language. A correlation, ablation, and mechanistic demonstration are not interchangeable.
 7. Write one finding per short paragraph, normally two or three sentences: result, why it matters, and the limiting condition.
 
+A learning does not need several papers to appear here. A strong single study can support a scoped, explicitly single-source learning. Upgrade it to corroborated only when independent evidence agrees; shared data, authors, model families, or judges do not count as independent confirmation. Peer review is useful context, not a mechanical trust multiplier.
+
+Use exact `lemmalog_query` calls and `lemmalog_why`; use `lemmalog_context` only to discover candidates. Never consume `store.snapshot` or an unfiltered `lemmalog_dump`.
+
 ## Output
 
 ```markdown

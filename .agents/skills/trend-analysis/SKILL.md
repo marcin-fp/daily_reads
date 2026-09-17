@@ -31,6 +31,8 @@ Never open `papers/canonical`, `papers/raw`, or the full-paper graph. Missing ev
 - "Emerging", "growing", or "fading" requires at least two time windows and multiple reviewed papers. One paper is a signal, not a trend.
 - Separate observation, interpretation, and recommendation. A repeated claim can still be repeatedly wrong.
 - Aggregate critical flags only after reading their supporting Critical discussion.
+- Do not require several papers before mentioning a scientific result. Label one-source results as reported or supported; use corroborated only for meaningfully independent evidence. Publication venue is context, not a correctness score.
+- Read publication dates, titles, organizations, and funding from review frontmatter, not lemmalog.
 
 ## Workflow
 
@@ -41,6 +43,8 @@ Never open `papers/canonical`, `papers/raw`, or the full-paper graph. Missing ev
 5. Use the reviews graph for candidate clusters and lemmalog for supported relationships. Label graph-derived cluster names as inferred.
 6. Test the strongest competitive narrative against contrary reviews.
 7. Write implications and niches separately from observations.
+
+Use exact `lemmalog_query` calls for relations/aggregates and `lemmalog_why` for provenance. `lemmalog_context` is candidate discovery only. Never consume `store.snapshot` or an unfiltered `lemmalog_dump`.
 
 ## Output
 

@@ -24,3 +24,5 @@ Do not read canonical/raw papers or use the full-paper graph. Missing details ar
 ## Standard
 
 Write one reusable finding per short paragraph: what happened, why it matters, and the condition that limits transfer. Merge genuinely equivalent findings and retain all independent review citations. Do not average away contradictory regimes or upgrade correlations into mechanisms.
+
+Single-source learnings are allowed when clearly labeled and well supported by that review. Upgrade to corroborated only when meaningfully independent evidence agrees; venue prestige alone does not justify the upgrade.

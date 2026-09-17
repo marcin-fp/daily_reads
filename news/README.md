@@ -23,3 +23,5 @@ The central paper must be reviewed. Do not read canonical/raw papers or use the 
 ## Standard
 
 Find the story before writing the headline. Lead with the scientific issue or surprising implication, then explain what was done, how the work fits in space and time, the strongest limitation, and what comes next. Community significance comes before internal relevance. If no cross-paper connection is yet reviewed, write a focused single-paper article rather than inventing a lineage.
+
+Use "reported" or "supported" for a single-paper result and reserve "corroborated" for independent agreement. Peer review may be worth mentioning, but it does not make every claim in the paper established.

@@ -24,4 +24,6 @@ Do not read canonical/raw papers or use the full-paper graph. Missing evidence i
 
 A perspective is an argument, not a summary or paper list. It states what changed from the previous view, gives the strongest supporting and contrary evidence, separates paper results from synthesis, and says what would reverse the conclusion. With fewer than five relevant reviews, label the result exploratory and avoid field-wide claims.
 
+A single strong paper may support a scoped point. Label support explicitly rather than suppressing it until an arbitrary paper count is reached. Corroboration requires meaningfully independent evidence; peer review is context, not a correctness certificate.
+
 The earlier LaTeX files under `context/perspective/` are historical working material. New perspectives live here as dated Markdown snapshots.
