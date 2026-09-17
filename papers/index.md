@@ -34,7 +34,6 @@ Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `
 | `slug:3772318-3791915` |  | `papers/raw/2026-05-06/3772318-3791915-pdf.md` | `papers/canonical/2026-05-06/3772318-3791915.md` | — | canonical |
 | `slug:angelopoulosscience2023` |  | `papers/raw/2026-05-06/angelopoulosscience2023-pdf.md` | `papers/canonical/2026-05-06/angelopoulosscience2023.md` | — | canonical |
 | `slug:arxiv-manuscript-sciaiwiki` |  | `papers/raw/2026-05-06/arxiv-manuscript-sciaiwiki-pdf.md` | `papers/canonical/2026-05-06/arxiv-manuscript-sciaiwiki.md` | — | canonical |
-| `slug:da2026-quantum` |  | `papers/raw/2026-05-06/da2026-quantum-pdf.md` | `papers/canonical/2026-05-06/da2026-quantum.md` | — | canonical |
 | `slug:distilling-expert-judgment-at-scale` |  | `papers/raw/2026-05-06/distilling-expert-judgment-at-scale-pdf.md` | `papers/canonical/2026-05-06/distilling-expert-judgment-at-scale.md` | — | canonical |
 | `slug:emergent-misalignment-2502-17424v7` |  | `papers/raw/2026-05-06/emergent-misalignment-2502-17424v7-pdf.md` | `papers/canonical/2026-05-06/emergent-misalignment-2502-17424v7.md` | — | canonical |
 | `slug:evaluation-frameworks-for-multi-agent-scientific-ai-systems` |  | `papers/raw/2026-05-06/evaluation-frameworks-for-multi-agent-scientific-ai-systems-pdf.md` | `papers/canonical/2026-05-06/evaluation-frameworks-for-multi-agent-scientific-ai-systems.md` | — | canonical |
@@ -44,7 +43,7 @@ Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `
 | `slug:llm-wiki-md` |  | `papers/raw/2026-05-06/llm-wiki-md.md` | `papers/canonical/2026-05-06/llm-wiki-md.md` | — | canonical |
 | `slug:matterchat-s42256-026-01214-y` |  | `papers/raw/2026-05-06/matterchat-s42256-026-01214-y-pdf.md` | `papers/canonical/2026-05-06/matterchat-s42256-026-01214-y.md` | — | canonical |
 | `slug:natural-language-autoencoders-produce-unsupervised-explanations-of-llm-activations-lesswrong` |  | `papers/raw/2026-05-06/natural-language-autoencoders-produce-unsupervised-explanations-of-llm-activations-lesswrong-pdf.md` | `papers/canonical/2026-05-06/natural-language-autoencoders-produce-unsupervised-explanations-of-llm-activations-lesswrong.md` | — | canonical |
-| `slug:nature-warm-accuracy-s41586-026-10410-0` |  | `papers/raw/2026-05-06/nature-warm-accuracy-s41586-026-10410-0-pdf.md` | `papers/canonical/2026-05-06/nature-warm-accuracy-s41586-026-10410-0.md` | — | canonical |
+| `slug:nature-warm-accuracy-s41586-026-10410-0` |  | `papers/raw/2026-05-06/nature-warm-accuracy-s41586-026-10410-0-pdf.md` | `papers/canonical/2026-05-06/nature-warm-accuracy-s41586-026-10410-0.md` | `reviews/nature-warm-accuracy-s41586-026-10410-0.md` | reviewed |
 | `slug:nickvash-embedding2025` |  | `papers/raw/2026-05-06/nickvash-embedding2025-pdf.md` | `papers/canonical/2026-05-06/nickvash-embedding2025.md` | — | canonical |
 | `slug:researchclaw-2605-20025v1` |  | `papers/raw/2026-05-06/researchclaw-2605-20025v1-pdf.md` | `papers/canonical/2026-05-06/researchclaw-2605-20025v1.md` | — | canonical |
 | `slug:s41746-025-02263-0-euai` |  | `papers/raw/2026-05-06/s41746-025-02263-0-euai-pdf.md` | `papers/canonical/2026-05-06/s41746-025-02263-0-euai.md` | — | canonical |
