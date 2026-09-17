@@ -1,8 +1,8 @@
 # Review context: who we are and how to read a paper
 
-This file is background for Discussion. It is not a checklist.
-Do not force a paper into our language. If nothing here fires, say so.
-Discussion still needs a grounded critique of the paper itself even when this file is silent.
+This file is background for `## Relevance to us`, not for judging whether the paper is sound. It is not a checklist.
+Do not force a paper into our language. If nothing here fires, write `None.` in that section.
+The paper's scientific merits belong in `## Critical discussion` and do not depend on this file.
 
 When company bets and the personal framing disagree, prefer the company list for "what we are building," and still report the personal framing if the paper speaks to it. If the paper contradicts both, say that plainly.
 
@@ -105,11 +105,7 @@ Also in the approved draft: diffusion surrogates with an agentic data path; quan
 5. Targeted scientific mechanisms. Conjecture plus credence, assumption ledger, graded verifier, grounded skeptic, exploratory retrieval, knowledge dial, diversity of hypotheses, problem formulation, integrity metrology.
 6. Collaborator. Signal is verified edits and re-runs, not thumbs. Intent as an inspectable object. Desirable difficulty vs cognitive offloading. The user and the payer may be different people.
 
-## What Discussion is allowed to conclude
-
-Start with the paper, not with us. Is the claim supported? Is the comparison fair? What would change your mind? Typical, fact-grounded problems (say them only when they are actually there): weak or missing baseline; overclaim relative to the setup; eval on the training distribution sold as general; judge circularity; contamination; process failures hidden by outcome-only scores.
-
-Then, if earned:
+## What Relevance to us is allowed to conclude
 
 - Evidence that a tension is real, a proposed resolution, or that our framing is wrong or incomplete.
 - The paper is irrelevant to us (allowed and preferred to fake relevance).

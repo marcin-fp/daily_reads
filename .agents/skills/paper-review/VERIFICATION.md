@@ -54,4 +54,8 @@ Would process evaluation change the headline number? Is the eval contaminated? I
 
 `## Verification` is for facts the paper states: methods, numbers, failure modes, what they refused to check. Keep it short. Slightly longer than a learning paragraph is fine if the numbers matter.
 
-`## Discussion` is where you argue: whether the check is actually a check, whether coverage is load-bearing, whether an LLM judge is doing the real work, whether this helps or hurts B12. If verification is absent, do not pad Discussion with "they should have built a verifier."
+`## Critical discussion` is where you assess whether the check supports the claim, whether coverage is load-bearing, and whether an LLM judge is doing the real work.
+
+`## Relevance to us` is where you say whether the result helps, hurts, or changes B12 or another part of our verification programme.
+
+If verification is absent, write `None.` in the Verification section. Do not criticize a paper merely for lacking a verifier unless its central claim requires a check it did not perform.

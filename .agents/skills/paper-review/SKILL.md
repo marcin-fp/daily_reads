@@ -1,6 +1,6 @@
 ---
 name: paper-review
-description: Review a research paper into reviews/{id}.md with a plain-language brief, extended summary, reusable learnings, verification notes when present, lemmalog claims, and a grounded critical discussion. Use when asked to review, summarize, critique, or extract facts from a paper (PDF, MD, or arXiv id), including papers that mention verification, process rewards, or physics checking only in passing.
+description: Produces a research-paper review in reviews/{id}.md with an accessible summary, reusable learnings, verification notes when present, lemmalog claims, a grounded critical discussion, and separate relevance to FirstPrinciples. Use when asked to review, summarize, critique, or extract facts from a paper (PDF, MD, or arXiv id), including papers that mention verification, process rewards, or physics checking only in passing.
 ---
 
 # Paper Review
@@ -9,24 +9,25 @@ description: Review a research paper into reviews/{id}.md with a plain-language 
 
 Resolve via [`papers/index.md`](../../../papers/index.md): canonical MD first, else raw. Write `reviews/{id}.md` (id without version). Never write next to the dump.
 
-Read [CONTEXT.md](CONTEXT.md), [TAXONOMY.md](TAXONOMY.md), [VERIFICATION.md](VERIFICATION.md), [STYLE.md](STYLE.md), and [CLAIMS.md](CLAIMS.md). Then draft. Do not force-fit our bets onto a paper that is not about them. Empty sections are correct when the paper does not earn them, except Discussion, which always scrutinizes the paper's own claims. Do not open other repo context folders while reviewing; those files are already distilled here.
+Read [CONTEXT.md](CONTEXT.md), [TAXONOMY.md](TAXONOMY.md), [VERIFICATION.md](VERIFICATION.md), [STYLE.md](STYLE.md), and [CLAIMS.md](CLAIMS.md). Then draft. Do not force-fit our bets onto a paper that is not about them. Do not open other repo context folders while reviewing; those files are already distilled here.
 
 ## Workflow
 
 ### 1. Resolve and read
 
-Canonical over raw. MD: Read. PDF: `pdftotext` or Read. If the extract is broken, say so (see repo README repair note) and review from what is usable.
+Canonical over raw. MD: Read. PDF: `pdftotext` or Read. The corpus is text-first: figures are not available for visual inspection, although captions or OCR text may have been extracted. Use that text when informative, but do not claim to have inspected a plot or diagram. If a result depends on an unavailable figure, say that it could not be assessed from the extract. If the extract is broken, say so (see repo README repair note) and review from what is usable.
 
 ### 2. Draft (length follows the paper)
 
-Follow the template. Keep every heading. Write `None.` when a section has nothing real to say. Do not pad. Discussion is never `None.`: if the extract is usable, scrutinize the claims, even briefly.
+Follow the template. Keep every heading. Write `None.` when an optional section has nothing real to say. Do not pad. Critical discussion is required when the extract is usable; relevance to us is optional.
 
 - What this paper is about: scientists, not jargon-first. Problem, what they did, what they claim. Short.
-- Extended summary: methods, setups, headline numbers, caveats that change the claim. Include details a later agent would otherwise re-read the PDF for. No fake precision.
+- Extended summary: methods, setups, headline numbers, and the authors' stated caveats. Include details a later agent would otherwise re-read the paper for. Report faithfully here; evaluate in Critical discussion. No fake precision.
 - Learnings: reusable mechanisms or surprises, in the style of [STYLE.md](STYLE.md). `None.` if nothing transfers.
 - Verification: what the paper actually says about checking claims, steps, traces, citations, or rewards. Central or satellite. `None.` if silent. See [VERIFICATION.md](VERIFICATION.md).
-- Claims: lemmalog edges (the paper's stated relations, not your verdict). See [CLAIMS.md](CLAIMS.md). `None.` if empty.
-- Discussion: two jobs. First, scrutinize the paper and the claims it makes. We are doing science, not repeating a pitch. If they compare against a weak or crippled baseline, note it. If they overclaim (headline stronger than the setup, on-distribution only sold as general, same-family LLM judge, contamination, unmeasured coverage, a mechanism that does not follow from the result), note it. Ground every objection in something the paper did or failed to do. Do not invent flaws to sound critical, and do not soften real ones to sound nice. Second, only if CONTEXT / TAXONOMY / VERIFICATION actually fire, say what it means for us. If the paper is irrelevant to us, one blunt sentence of relevance is enough; the scientific critique still happens. New bets or arcs are allowed; do not silently map them onto the nearest existing id.
+- Critical discussion: scrutinize the paper and the claims it makes. We are doing science, not repeating a pitch. Ask whether the evidence supports the central claim, the comparison is fair, the evaluation measures the stated capability, and the result generalizes as far as claimed. Note weak baselines, missing controls, circular or same-family judging, contamination, unmeasured coverage, and mechanisms that do not follow from the result when they are present. Ground objections in a specific setup, result, table, reported comparison, or omission available in the text. Distinguish a demonstrated error from a limitation or an experiment that remains to be run. Missing evidence narrows a claim; it does not by itself prove the claim false. Do not invent faults to sound critical, but do not soften real ones. End with what remains supported after the caveats.
+- Relevance to us: only if CONTEXT / TAXONOMY / VERIFICATION actually fire, explain what the paper changes, supports, or challenges for us. Name a bet only when it helps the reasoning. New bets or arcs are allowed; do not silently map them onto the nearest existing id. Write `None.` when the paper has no meaningful relevance.
+- Claims: lemmalog edges (the paper's stated relations, not your verdict). See [CLAIMS.md](CLAIMS.md). `None.` if empty. Keep this machine-readable table last so it does not interrupt the review.
 
 Voice: [STYLE.md](STYLE.md).
 
@@ -53,7 +54,7 @@ Citation: Author(s). Title. Venue, Year. URL
 
 ## Extended summary
 
-[Details that matter. Caveats. Missing baselines if they matter.]
+[Methods, setups, headline numbers, and the authors' caveats. Reserve your evaluation for Critical discussion.]
 
 ## Learnings
 
@@ -63,11 +64,15 @@ Citation: Author(s). Title. Venue, Year. URL
 
 [None.  or what they check, how, coverage/precision, who judges]
 
+## Critical discussion
+
+[Does the evidence support the claims? Name weak baselines, overclaims, circular evaluation, and missing controls when present. State what remains supported.]
+
+## Relevance to us
+
+[None.  or what this changes, supports, or challenges for us]
+
 ## Claims
 
 [Table per CLAIMS.md, or: None.]
-
-## Discussion
-
-[Scrutinize the claims. Weak baselines, overclaims, circular eval, missing controls: name them if they are there. Then relevance to us only if earned.]
 ```

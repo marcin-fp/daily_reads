@@ -2,7 +2,7 @@
 
 Scan these questions while reading. Surface only what the paper actually speaks to.
 Do not dump this list into the review. Do not fill every bucket.
-Scientific scrutiny of the paper itself (baselines, overclaim, circular eval) lives in Discussion; this file is only for whether the paper speaks to our tensions and mechanisms.
+Scientific scrutiny of the paper itself lives in `## Critical discussion`. This file is only for deciding whether the paper speaks to our tensions and mechanisms in `## Relevance to us`.
 
 ---
 
@@ -61,8 +61,8 @@ Use when the paper contains a transferable trick. Skip otherwise. These are exam
 
 ---
 
-## How this should appear in the review
+## How this should appear in Relevance to us
 
-In Discussion, write in ordinary scientific prose ([STYLE.md](STYLE.md)). Lead with a grounded critique of the paper. You may name a tension, arc, or B-id once when it is load-bearing. You may say this supports or weakens a tension; this is a candidate mechanism for a bet; this disagrees with how we framed something; this is interesting science and not our problem.
+Write in ordinary scientific prose ([STYLE.md](STYLE.md)). You may name a tension, arc, or B-id once when it is load-bearing. You may say this supports or weakens a tension; this is a candidate mechanism for a bet; this disagrees with how we framed something; this is interesting science and not our problem.
 
 Never: a bullet for each heading above.

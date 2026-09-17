@@ -4,7 +4,9 @@ Write as a scientist talking to another scientist. Precise language, ordinary wo
 
 First person and "we" are fine. No Slack hooks ("Interesting Paper!"). No em dashes. Do not open every bullet with a bold fragment. Bold is for rare emphasis, not for list scaffolding.
 
-The Discussion should feel like a human note: a claim, a caveat, a contrast, then what still holds. Hedging is allowed when the evidence is thin ("arguably", "to be frank", "this is only on their distribution"). Theatrical toughness is not.
+Critical discussion should feel like a human note: a claim, a caveat, a contrast, then what still holds. Hedging is allowed when the evidence is thin ("arguably", "to be frank", "this is only on their distribution"). Theatrical toughness is not.
+
+Keep scientific assessment separate from project relevance. First decide whether the paper's claims hold. Only then discuss whether those claims matter for us. A paper can be strong but irrelevant, or weak but highly relevant.
 
 ## Say the thing, then say how
 
@@ -20,7 +22,7 @@ The second versions name the object, the action, and the criterion. The first ve
 
 ## Learnings
 
-This section is a short list of reusable findings, not a recap of the paper. One finding per paragraph. Two or three sentences is the sweet spot: enough to say what happened, why it is surprising or useful, and the caveat that would change how you use it. Skip the section if nothing transfers.
+This section is a short list of reusable findings, not a recap of the paper. One finding per paragraph. Two or three sentences is the sweet spot: enough to say what happened, why it is surprising or useful, and the caveat that would change how you use it. Write `None.` if nothing transfers.
 
 Write full sentences. Do not start with a bold slogan. Do not dump TAXONOMY.md.
 
@@ -34,11 +36,13 @@ Same-model self-critique misses a large fraction of the model's own exploits. If
 
 ## Critical, not theatrical
 
-Discussion is where you scrutinize the paper. Restating the abstract in a colder tone is not a review. Neither is a sales recap.
+Critical discussion is where you scrutinize the paper. Restating the abstract in a colder tone is not a review. Neither is a sales recap.
 
 A review is allowed to say a paper is wrong, incomplete, or asking the wrong question. Ground that in what the paper actually did: missing or weak baseline, circular eval, contamination, unmeasured coverage, a claim stronger than the setup, a mechanism that does not follow from the result. If you cannot point at evidence, do not perform skepticism as a style.
 
-Praise is also allowed when earned. Empty toughness is as fake as empty enthusiasm.
+Use calibrated verbs. "The experiment does not establish X" is different from "X is false." "The authors did not test Y" is different from "the method fails on Y." Call an equation, derivation, or result wrong only after checking it closely enough to support that statement. When possible, point to the section, table, reported comparison, or omission on which the criticism rests. Do not write as if you visually inspected a figure; the corpus contains only text, captions, and occasional OCR extracted from figures.
+
+Praise is also allowed when earned. Empty toughness is as fake as empty enthusiasm. Critical means discriminating, not negative.
 
 ## Lists
 

@@ -113,7 +113,7 @@ Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `
 | `arxiv:2605.22502` | v1 | `papers/raw/2026-06-09/2605-22502v1-pdf.md` | `papers/canonical/2026-06-09/2605.22502.md` | — | canonical |
 | `arxiv:2605.26087` | v2 | `papers/raw/2026-06-09/2605-26087v1-pdf.md` | `papers/canonical/2026-06-09/2605.26087.md` | — | canonical |
 | `arxiv:2605.26340` | v1 | `papers/raw/2026-06-09/2605-26340v1-pdf.md` | `papers/canonical/2026-06-09/2605.26340.md` | — | canonical |
-| `arxiv:2605.26492` | v1 | `papers/raw/2026-06-09/2605-26492v1-pdf.md` | `papers/canonical/2026-06-09/2605.26492.md` | — | canonical |
+| `arxiv:2605.26492` | v1 | `papers/raw/2026-06-09/2605-26492v1-pdf.md` | `papers/canonical/2026-06-09/2605.26492.md` | `reviews/2605.26492.md` | reviewed |
 | `arxiv:2605.29468` | v1 | `papers/raw/2026-06-09/2605-29468v1-pdf.md` | `papers/canonical/2026-06-09/2605.29468.md` | — | canonical |
 | `arxiv:2605.29707` | v1 | `papers/raw/2026-06-09/2605-29707v1-pdf.md` | `papers/canonical/2026-06-09/2605.29707.md` | — | canonical |
 | `arxiv:2605.30353` | v1 | `papers/raw/2026-06-09/2605-30353v1-pdf.md` | `papers/canonical/2026-06-09/2605.30353.md` | — | canonical |
