@@ -198,8 +198,10 @@ Open the repo in Claude Code **or** Cursor, not both at once. They share `lemmal
 
 1. From the repo root, run `claude` (or open the folder in Claude Code Desktop).
 2. Trust the workspace when prompted.
-3. Approve the project MCP server `lemmalog` from `.mcp.json`. If the binary is not at the default path, set `LEMMALOG_MCP` to your `lemmalog-mcp` executable.
-4. Invoke a skill with a slash command, for example `/paper-review`. Those skills have `disable-model-invocation: true`, so Claude will not start a review unless you ask.
+3. Approve the project MCP server `lemmalog` from `.mcp.json` when prompted. Check it any time with `/mcp`; it should read `connected`. If the binary is not at the default path, set `LEMMALOG_MCP` to your `lemmalog-mcp` executable.
+4. Confirm the skills loaded with `/skills`, then invoke one, for example `/paper-review`. Those skills have `disable-model-invocation: true`, so Claude will not start a review unless you ask.
+
+A chat Project in the Desktop app is not the same thing. Reviews need a **local** code session on this folder: only that runs the repo's `.mcp.json` server and writes files in place.
 
 The pipeline is the same as in Cursor: write `reviews/{id}.md`, validate it, mark `papers/index.md` reviewed, assert `reviewed_in` plus any Claims into lemmalog, then `lemmalog_save`.
 
