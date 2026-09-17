@@ -1,15 +1,15 @@
 ---
 name: paper-review
-description: Review a research paper into reviews/{id}.md with a plain-language brief, extended summary, learnings, lemmalog claims, and an honest discussion against FirstPrinciples context. Use when asked to review, summarize, or extract facts from a paper (PDF, MD, or arXiv id).
+description: Review a research paper into reviews/{id}.md with a plain-language brief, extended summary, reusable learnings, verification notes when present, lemmalog claims, and a grounded critical discussion. Use when asked to review, summarize, critique, or extract facts from a paper (PDF, MD, or arXiv id), including papers that mention verification, process rewards, or physics checking only in passing.
 ---
 
 # Paper Review
 
 ## Quick start
 
-Resolve via [`papers/index.md`](../../../papers/index.md): **canonical MD first**, else raw. Write `reviews/{id}.md` (id without version). Never write next to the dump.
+Resolve via [`papers/index.md`](../../../papers/index.md): canonical MD first, else raw. Write `reviews/{id}.md` (id without version). Never write next to the dump.
 
-Read [CONTEXT.md](CONTEXT.md) (authority: approved bets > personal perspective > IAIFI customer lens) and [TAXONOMY.md](TAXONOMY.md) (suggested questions, not labels). Then draft. **Do not force-fit.** Empty sections are correct when the paper does not earn them.
+Read [CONTEXT.md](CONTEXT.md), [TAXONOMY.md](TAXONOMY.md), [VERIFICATION.md](VERIFICATION.md), [STYLE.md](STYLE.md), and [CLAIMS.md](CLAIMS.md). Then draft. Do not force-fit our bets onto a paper that is not about them. Empty sections are correct when the paper does not earn them, except Discussion, which always scrutinizes the paper's own claims. Do not open other repo context folders while reviewing; those files are already distilled here.
 
 ## Workflow
 
@@ -19,15 +19,16 @@ Canonical over raw. MD: Read. PDF: `pdftotext` or Read. If the extract is broken
 
 ### 2. Draft (length follows the paper)
 
-Follow the template below. Skip or write `None.` for any section with nothing real to say. Do not pad.
+Follow the template. Keep every heading. Write `None.` when a section has nothing real to say. Do not pad. Discussion is never `None.`: if the extract is usable, scrutinize the claims, even briefly.
 
-- **What this paper is about** — scientists, not ML-jargon-first. Problem, what they did, what they claim. Short.
-- **Extended summary** — methods, setups, headline numbers, caveats that change the claim. Include details a later agent would otherwise re-read the PDF for. Still no fake precision.
-- **Learnings** — surprising or reusable observations. Omit if none.
-- **Claims** — lemmalog edges. See [CLAIMS.md](CLAIMS.md). **Empty table is allowed.**
-- **Discussion** — only if CONTEXT/TAXONOMY actually fire: evidence for/against a tension; a possible mechanism for an approved bet; a customer (IAIFI) signal; or that **our framing is incomplete or wrong**. If the paper is irrelevant to us, one blunt sentence beats a strained paragraph. New bets/arcs are allowed; do not silently map them onto the nearest existing id.
+- What this paper is about: scientists, not jargon-first. Problem, what they did, what they claim. Short.
+- Extended summary: methods, setups, headline numbers, caveats that change the claim. Include details a later agent would otherwise re-read the PDF for. No fake precision.
+- Learnings: reusable mechanisms or surprises, in the style of [STYLE.md](STYLE.md). `None.` if nothing transfers.
+- Verification: what the paper actually says about checking claims, steps, traces, citations, or rewards. Central or satellite. `None.` if silent. See [VERIFICATION.md](VERIFICATION.md).
+- Claims: lemmalog edges (the paper's stated relations, not your verdict). See [CLAIMS.md](CLAIMS.md). `None.` if empty.
+- Discussion: two jobs. First, scrutinize the paper and the claims it makes. We are doing science, not repeating a pitch. If they compare against a weak or crippled baseline, note it. If they overclaim (headline stronger than the setup, on-distribution only sold as general, same-family LLM judge, contamination, unmeasured coverage, a mechanism that does not follow from the result), note it. Ground every objection in something the paper did or failed to do. Do not invent flaws to sound critical, and do not soften real ones to sound nice. Second, only if CONTEXT / TAXONOMY / VERIFICATION actually fire, say what it means for us. If the paper is irrelevant to us, one blunt sentence of relevance is enough; the scientific critique still happens. New bets or arcs are allowed; do not silently map them onto the nearest existing id.
 
-Voice: first-person is fine; technically precise; no Slack hooks (“Interesting Paper!”).
+Voice: [STYLE.md](STYLE.md).
 
 ### 3. Write files and memory
 
@@ -48,7 +49,7 @@ Citation: Author(s). Title. Venue, Year. URL
 
 ## What this paper is about
 
-[Short, no-jargon-first. Scientists in physics/CS should get it.]
+[Short. A physicist or CS colleague should get it without decoding slang.]
 
 ## Extended summary
 
@@ -56,7 +57,11 @@ Citation: Author(s). Title. Venue, Year. URL
 
 ## Learnings
 
-[None.  — or a short list]
+[None.  or a few short paragraphs, one finding each]
+
+## Verification
+
+[None.  or what they check, how, coverage/precision, who judges]
 
 ## Claims
 
@@ -64,5 +69,5 @@ Citation: Author(s). Title. Venue, Year. URL
 
 ## Discussion
 
-[None.  — or honest relevance / disagreement / new direction]
+[Scrutinize the claims. Weak baselines, overclaims, circular eval, missing controls: name them if they are there. Then relevance to us only if earned.]
 ```
