@@ -1,14 +1,16 @@
-# Graphify working files (keep graph.json, GRAPH_REPORT.md, .graphify_root)
-graphify-out/.graphify_python
-graphify-out/.graphify_*.json
-graphify-out/.graphify_uncached.txt
-graphify-out/.needs_update
-graphify-out/graph.html
-graphify-out/*.svg
-graphify-out/*.graphml
-graphify-out/cypher.txt
-graphify-out/obsidian/
-graphify-out/wiki/
+# Graphify: track the graph, report, HTML, cache, labels, and analysis.
+# Skip only machine-local paths, scratch, and optional bulky exports.
+# Graphs live next to each corpus: papers/canonical/graphify-out, reviews/graphify-out, …
+**/graphify-out/.graphify_python
+**/graphify-out/.graphify_root
+**/graphify-out/.graphify_uncached.txt
+**/graphify-out/.needs_update
+**/graphify-out/*.svg
+**/graphify-out/*.graphml
+**/graphify-out/cypher.txt
+**/graphify-out/obsidian/
+**/graphify-out/wiki/
+**/graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
 
 # Bulk conversion logs
 logs/

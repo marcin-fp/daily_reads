@@ -12,7 +12,8 @@ Store papers, write personal reviews, map concepts with graphify, and derive mul
 | `reviews/` | One review per paper: `{id}.md` (no version in the filename). |
 | `news/` `perspectives/` `trends/` | Later synthesis. Empty scaffolds for now. |
 | `lemmalog/` | Claim schema and Datalog rules. |
-| `graphify-out/` | Graph built from **`papers/canonical` only**. |
+| `papers/canonical/graphify-out/` | Concept graph of the **full papers**. Lives next to that corpus, not at the repo root. |
+| `reviews/graphify-out/` | Optional later graph of **reviews only** (smaller, denser; can use a stronger model). |
 
 ## Paper ids
 
@@ -25,21 +26,120 @@ Store papers, write personal reviews, map concepts with graphify, and derive mul
 1. Drop a dump into `papers/raw/YYYY-MM-DD/` and add a row to `papers/index.md` (`status: raw`).
 2. Generate canonical Markdown with `scripts/arxiv_to_md.py` (below). Set `status: canonical`. Raw-only papers stay **off** the graphify corpus.
 3. Review with the `paper-review` skill → `reviews/{id}.md` plus a **Claims** block. Assert claims to lemmalog when MCP/CLI is available.
-4. Rebuild the concept map: graphify `papers/canonical` with `--directed`; later `--update`.
+4. Rebuild the concept map: `graphify extract papers/canonical --directed` (see below). After new papers, `--update`.
 5. Find cross-paper chains with the `evidence-chains` skill (`two_hop`, then `lemmalog_why`). Do not close chains in the agent’s head.
 
-## Graphify runbook
+## Graphify
 
-Scan root is **`papers/canonical`**, never the repo root (skills and reviews would pollute the graph). Outputs stay in repo-root `graphify-out/`. Point `.graphify_root` at the canonical folder:
+Each corpus has its **own** graph in `<corpus>/graphify-out/`. The CLI writes there by default when you pass that folder as the scan path. There is no repo-root `graphify-out/`.
+
+| Corpus | Scan path | Graph | What it is for |
+|--------|-----------|-------|----------------|
+| Full papers | `papers/canonical` | `papers/canonical/graphify-out/` | Literature concept map (methods, claims, benchmarks) |
+| Reviews (later) | `reviews` | `reviews/graphify-out/` | Denser map of what you actually absorbed; can use a stronger model |
+
+Never scan the **repo root**. Skills, scripts, and raw dumps would pollute the graph.
+
+Graphify is the concept map (`query` / `path` / communities). It is **not** the evidence-chain store. Promote a path into lemmalog only after checking the papers.
+
+Keep the graph, report, HTML, semantic cache, labels, and analysis in git so clones can query, open the map, and `--update` without re-paying for extraction. Ignore only machine-local paths (`.graphify_python`, `.graphify_root`), extract scratch, optional SVG/GraphML/Obsidian/wiki dumps, and dated snapshot folders (duplicates of `graph.json`).
+
+### Install and credentials
 
 ```bash
-mkdir -p graphify-out
-echo "$(cd papers/canonical && pwd)" > graphify-out/.graphify_root
+uv tool install --upgrade 'graphifyy[bedrock]'   # Bedrock needs boto3 in Graphify’s env
 ```
 
-Then follow `.agents/skills/graphify/SKILL.md` with `INPUT_PATH=papers/canonical` and **`--directed`**. After new canonical files, use `--update`. Keep `graph.json` and `GRAPH_REPORT.md`; HTML and cache files are gitignored.
+Local secrets live in `credentials.sh` (gitignored). Source it in the shell before extract/query that needs a cloud backend:
 
-Graphify is the concept map (communities, surprising bridges, `query` / `path`). It is **not** the evidence-chain store. Promote a path into lemmalog only after checking the papers.
+```bash
+source credentials.sh
+```
+
+Typical contents:
+
+```bash
+export AWS_REGION=us-east-1
+export GRAPHIFY_BEDROCK_MODEL=global.anthropic.claude-haiku-4-5-20251001-v1:0
+export OPENAI_API_KEY=sk-…          # optional; Graphify will prefer this unless --backend is set
+export GRAPHIFY_OPENAI_MODEL=gpt-4.1-mini
+```
+
+Bedrock uses the AWS SSO session (`aws sso login`), not an Anthropic API key. `AWS_REGION` must be an **environment** variable (Graphify’s “no key” check does not read `~/.aws/config` alone).
+
+**Always pass `--backend`.** If `OPENAI_API_KEY` is set, auto-detect picks OpenAI over Bedrock.
+
+### First build (canonical papers)
+
+```bash
+source credentials.sh
+aws sso login   # when the Bedrock session has expired
+graphify extract papers/canonical --backend bedrock --directed
+graphify cluster-only papers/canonical --backend bedrock
+```
+
+`--directed` keeps edge direction. `cluster-only` names communities and writes `GRAPH_REPORT.md` plus `graph.html`.
+
+Open `papers/canonical/graphify-out/graph.html` in a browser.
+
+### Incremental update (new or changed papers)
+
+Re-extracts only files that are new, changed, or were incomplete last time (missing nodes, truncated chunks):
+
+```bash
+source credentials.sh
+graphify extract papers/canonical --backend bedrock --directed --update
+graphify cluster-only papers/canonical --backend bedrock
+```
+
+### Full rebuild
+
+```bash
+graphify extract papers/canonical --backend bedrock --directed --force
+graphify cluster-only papers/canonical --backend bedrock
+```
+
+`--force` overwrites a smaller graph if the shrink guard would otherwise refuse.
+
+### Query, path, explain
+
+`graphify query` looks at `./graphify-out/graph.json` relative to the **current directory**. From the repo root, pass `--graph`:
+
+```bash
+graphify query "how do multi-agent scientist systems evaluate hypotheses" \
+  --graph papers/canonical/graphify-out/graph.json
+
+graphify path "concept A" "concept B" --graph papers/canonical/graphify-out/graph.json
+graphify explain "some node" --graph papers/canonical/graphify-out/graph.json
+```
+
+Or `cd papers/canonical` first and omit `--graph`.
+
+### Switch models
+
+| Goal | Flags / env |
+|------|-------------|
+| Bedrock Haiku 4.5 (default for papers) | `--backend bedrock` and `GRAPHIFY_BEDROCK_MODEL=global.anthropic.claude-haiku-4-5-20251001-v1:0` |
+| Other Bedrock Claude | same `--backend bedrock`, change `GRAPHIFY_BEDROCK_MODEL` (or `--model`) to a `global.anthropic.*` inference profile |
+| OpenAI mini | `--backend openai` (default model `gpt-4.1-mini`) |
+| Other OpenAI | `--backend openai --model gpt-5.6-luna` or `GRAPHIFY_OPENAI_MODEL=…` |
+| Gemini | `--backend gemini` if `GEMINI_API_KEY` or `GOOGLE_API_KEY` is set |
+
+`--model` on the CLI overrides the env default for that run.
+
+A reviews graph can use a stronger model because the corpus is smaller:
+
+```bash
+graphify extract reviews --backend openai --directed --model gpt-5.6-luna
+graphify cluster-only reviews --backend openai --model gpt-5.6-luna
+graphify query "…" --graph reviews/graphify-out/graph.json
+```
+
+Do not mix papers and reviews in one scan. Two graphs, two folders.
+
+### What a run looks like
+
+Detect prints how many docs vs papers it found. Semantic extraction runs in chunks (Bedrock Haiku often **splits** chunks that hit the output cap — that is normal and costs extra tokens). After merge you should see `graph.json` with thousands of nodes. Warnings about duplicate node ids across papers mean Haiku collapsed a shared concept onto one file; the graph is still usable. One missing file or a few truncated chunks is a job for `--update`, not a full rebuild.
 
 ## Lemmalog
 
