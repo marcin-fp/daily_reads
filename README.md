@@ -1,6 +1,6 @@
 # Daily reads
 
-Store papers, write personal reviews, map concepts with graphify, and derive multi-paper evidence chains with lemmalog.
+Turn a paper corpus into reviewed evidence, then into dated learnings, perspectives, competitive research landscapes, and analytical news articles. Human review gates are deliberate: a person invokes each skill and reads the output before the next synthesis layer uses it.
 
 ## Layout
 
@@ -9,8 +9,12 @@ Store papers, write personal reviews, map concepts with graphify, and derive mul
 | `papers/raw/YYYY-MM-DD/` | Immutable dumps (PDF/HTML extracts). Do not edit. |
 | `papers/canonical/YYYY-MM-DD/` | Repaired markdown, one folder per dump date mirroring `papers/raw/`. One file per paper. Graphify corpus. |
 | `papers/index.md` | id, paths, status (`raw` / `canonical` / `reviewed`). |
-| `reviews/` | One review per paper: `{id}.md` (no version in the filename). |
-| `news/` `perspectives/` `trends/` | Later synthesis. Empty scaffolds for now. |
+| `reviews/` | One schema-v1 review per paper: `{id}.md` (no version in the filename). The downstream source of truth. |
+| `learnings/` | Dated snapshots of reusable mechanisms and findings. |
+| `perspectives/` | Dated, provisional arguments for internal research discussion. |
+| `trends/` | Dated competitive research landscape reports for product/GTM/leads. |
+| `news/` | One analytical article centered on one reviewed paper. |
+| `context/` | Historical working material showing how earlier views evolved; not the output location for new synthesis. |
 | `lemmalog/` | Claim schema and Datalog rules. |
 | `papers/canonical/graphify-out/` | Concept graph of the **full papers**. Lives next to that corpus, not at the repo root. |
 | `reviews/graphify-out/` | Optional later graph of **reviews only** (smaller, denser; can use a stronger model). |
@@ -25,9 +29,38 @@ Store papers, write personal reviews, map concepts with graphify, and derive mul
 
 1. Drop a dump into `papers/raw/YYYY-MM-DD/` and add a row to `papers/index.md` (`status: raw`).
 2. Generate canonical Markdown with `scripts/arxiv_to_md.py` (below). Set `status: canonical`. Raw-only papers stay **off** the graphify corpus.
-3. Review with the `paper-review` skill → `reviews/{id}.md` plus a **Claims** block. Assert claims to lemmalog when MCP/CLI is available.
-4. Rebuild the concept map: `graphify extract papers/canonical --directed` (see below). After new papers, `--update`.
-5. Find cross-paper chains with the `evidence-chains` skill (`two_hop`, then `lemmalog_why`). Do not close chains in the agent’s head.
+3. Explicitly invoke `paper-review` for one paper. It reads the full canonical text once and writes a schema-v1 review with dates, authors, organizations/support, facets, evidence, critical assessment, field context, internal relevance, and a **Claims** block.
+4. Assert review metadata and Claims to lemmalog when MCP/CLI is available. Build/update the separate reviews graph after the review corpus is large enough to benefit.
+5. Find cross-paper chains with `evidence-chains` (`two_hop`, then `lemmalog_why`). It reads reviews, not full papers.
+6. Explicitly invoke `learning-synthesis`, `perspectives`, `trend-analysis`, or `news-article`. Each writes a new dated Markdown snapshot.
+
+```mermaid
+flowchart LR
+  Raw[Raw] --> Canonical[CanonicalText]
+  Canonical --> PaperReview[PaperReview]
+  PaperReview --> Reviews[SchemaV1Reviews]
+  Reviews --> Lemmalog[LemmalogClaims]
+  Reviews --> ReviewGraph[ReviewsGraph]
+  Reviews --> Learnings[LearningSnapshots]
+  Reviews --> News[NewsArticles]
+  Lemmalog --> Perspectives[PerspectiveSnapshots]
+  ReviewGraph --> Perspectives
+  Lemmalog --> Trends[LandscapeReports]
+  ReviewGraph --> Trends
+```
+
+## The review boundary
+
+`paper-review` is the only skill that opens `papers/canonical` or `papers/raw`. Its output is the durable interface for every later skill. If a synthesis cannot support a statement from the review, it records a review gap and asks for that paper to be reviewed again; it does not silently reopen the source.
+
+Review frontmatter uses `schema_version: 1`. It preserves the earliest public date (with day/month/year precision), reviewed version/date, venue/status, authors, explicit organization roles, grants, released artifacts, compact facets, extraction limitations, and grounded critical flags. See `.agents/skills/paper-review/SCHEMA.md`. Validate reviews with:
+
+```bash
+uv run .agents/skills/paper-review/scripts/validate_review.py reviews/2605.26492.md
+uv run .agents/skills/paper-review/scripts/validate_review.py
+```
+
+Downstream sources are `reviews/`, `papers/index.md` for coverage counts, lemmalog, prior dated snapshots, and `reviews/graphify-out/` when present. They do not use raw/canonical papers or the full-paper graph.
 
 ## Graphify
 
@@ -35,12 +68,14 @@ Each corpus has its **own** graph in `<corpus>/graphify-out/`. The CLI writes th
 
 | Corpus | Scan path | Graph | What it is for |
 |--------|-----------|-------|----------------|
-| Full papers | `papers/canonical` | `papers/canonical/graphify-out/` | Literature concept map (methods, claims, benchmarks) |
-| Reviews (later) | `reviews` | `reviews/graphify-out/` | Denser map of what you actually absorbed; can use a stronger model |
+| Full papers | `papers/canonical` | `papers/canonical/graphify-out/` | Ingestion-time literature map and paper-review discovery |
+| Reviews | `reviews` | `reviews/graphify-out/` | Downstream synthesis map of absorbed, critically assessed knowledge |
 
 Never scan the **repo root**. Skills, scripts, and raw dumps would pollute the graph.
 
-Graphify is the concept map (`query` / `path` / communities). It is **not** the evidence-chain store. Promote a path into lemmalog only after checking the papers.
+Graphify is the concept map (`query` / `path` / communities). It is **not** the evidence-chain store. Promote a review-graph path into lemmalog only when the Claims in those reviews support it; route full-paper candidates through `paper-review`.
+
+Synthesis skills query the reviews graph only. They do not use the full-paper graph as evidence or reopen its source files. Build the reviews graph when there is enough reviewed material to make cross-review discovery useful (roughly 15–20 reviews is a reasonable first trigger).
 
 Keep the graph, report, HTML, semantic cache, labels, and analysis in git so clones can query, open the map, and `--update` without re-paying for extraction. Ignore only machine-local paths (`.graphify_python`, `.graphify_root`), extract scratch, optional SVG/GraphML/Obsidian/wiki dumps, and dated snapshot folders (duplicates of `graph.json`).
 
@@ -149,9 +184,15 @@ Schema: [`lemmalog/SCHEMA.md`](lemmalog/SCHEMA.md). Rules: [`lemmalog/rules/evid
 
 Canonical copies live in `.agents/skills/` (Cursor). Claude Code loads the same files through `.claude/skills/` (a symlink). Edit only `.agents/skills/`. Project instructions: `AGENTS.md` (Cursor) and `CLAUDE.md` (Claude Code; it includes `AGENTS.md`).
 
-- `paper-review` — plain-language brief, extended summary, learnings, Claims, and honest contextual discussion; writes `reviews/{id}.md`.
-- `evidence-chains` — extract/assert claims; query two-hop chains; discuss with `why` trees.
-- `graphify` / `lemmalog` — as vendored.
+- `paper-review` — the only full-paper reader; writes a validated schema-v1 review with metadata, field context, critical discussion, relevance, and Claims.
+- `evidence-chains` — assert reviewed claims and metadata; query two/three-hop chains; inspect `why` trees.
+- `learning-synthesis` — consolidate review Learnings into dated, deduplicated findings.
+- `perspectives` — write dated, argued research perspectives and show what changed.
+- `trend-analysis` — write dated competitive research landscape reports with coverage and selection-bias accounting.
+- `news-article` — write one analytical, paper-centered article with field history, limits, and significance.
+- `graphify` / `lemmalog` — concept discovery and provenance-aware claim reasoning, respectively.
+
+The paper and synthesis skills are explicitly invoked (`disable-model-invocation: true`). This preserves the intended human gates between reading, review, and higher-level synthesis.
 
 ## Generate canonical Markdown
 

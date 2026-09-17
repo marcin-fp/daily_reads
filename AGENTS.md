@@ -10,6 +10,10 @@ Canonical copies live in **`.agents/skills/`** (Cursor). Claude Code loads the s
 |-------|----------|
 | `paper-review` | Reviewing a paper into `reviews/{id}.md` |
 | `evidence-chains` | Typed claims, two-hop links, `why` trees |
+| `learning-synthesis` | Dated cross-paper learnings |
+| `perspectives` | Dated, argued views for researchers |
+| `trend-analysis` | Competitive research landscape for product/GTM/leads |
+| `news-article` | One analytical article centered on a reviewed paper |
 | `graphify` | Concept map; one graph per corpus folder (`papers/canonical/graphify-out`, later `reviews/graphify-out`) |
 | `lemmalog` | Assert/query claims in the Datalog store |
 | `grill-me` | Stress-testing a plan until it is agreed |
@@ -19,9 +23,11 @@ Canonical copies live in **`.agents/skills/`** (Cursor). Claude Code loads the s
 
 1. Raw dumps stay in `papers/raw/YYYY-MM-DD/`. Do not edit them.
 2. Canonical files mirror the dump date: `papers/raw/2026-05-06/` → `papers/canonical/2026-05-06/`. Bulk: `uv run scripts/canonicalize_raw.py papers/raw`. Single paper: `uv run scripts/arxiv_to_md.py <arxiv-id> --output-dir papers/canonical/<dump-date>`. Filename is unversioned (`2605.26492.md`); version is frontmatter. One canonical file per id — a paper in a second dump stays where it already is. Skip existing unless `--force`.
-3. Review with `paper-review` → `reviews/{id}.md`. Empty sections are allowed; do not force-fit FirstPrinciples or the approved bets.
-4. Graphify lives **next to the corpus**, not at the repo root. Papers: `graphify extract papers/canonical --backend bedrock --directed` → `papers/canonical/graphify-out/`. Query with `--graph papers/canonical/graphify-out/graph.json`. Never scan the repo root. A reviews graph is a separate extract of `reviews/` when that corpus exists.
-5. Evidence chains go through lemmalog, not the agent's head.
+3. `paper-review` is the only skill that reads canonical/raw full papers. It writes and validates schema-v1 `reviews/{id}.md`. Empty optional sections are allowed; do not force-fit FirstPrinciples or the approved bets. Critical discussion is required.
+4. All synthesis (`evidence-chains`, `learning-synthesis`, `perspectives`, `trend-analysis`, `news-article`) reads reviews, lemmalog, prior snapshots, `papers/index.md` for counts, and the reviews graph only. Never reopen canonical/raw papers or use the full-paper graph as synthesis evidence. Missing evidence becomes a review gap routed back through `paper-review`.
+5. Graphify lives **next to the corpus**, not at the repo root. Papers: `graphify extract papers/canonical --backend bedrock --directed` → `papers/canonical/graphify-out/`. Reviews: a separate `graphify extract reviews ...` → `reviews/graphify-out/`. Never scan the repo root.
+6. Evidence chains go through lemmalog, not the agent's head. A graph path is a candidate; reviewed Claims and a `why` tree are evidence.
+7. Higher-level outputs are immutable dated Markdown snapshots under `learnings/`, `perspectives/`, `trends/`, and `news/`. Do not overwrite prior analyses; add a version suffix if needed.
 
 Paper ids: `arxiv:YYMM.NNNNN` with no version in the id.
 
@@ -30,3 +36,5 @@ Paper ids: `arxiv:YYMM.NNNNN` with no version in the id.
 - Commit conversion logs (`logs/`) or machine-local graphify files (`.graphify_python`, `.graphify_root`, dated snapshot folders). Do track `graph.json`, `GRAPH_REPORT.md`, `graph.html`, `cache/`, labels, and analysis.
 - Overwrite canonical Markdown unless the user asks to regenerate.
 - Treat a table-formatting warning as missing content until you compare with `papers/raw`.
+- Infer affiliations, funders, grants, or corporate support from names or prior knowledge. Record only relationships explicit in the paper/review.
+- Treat counts in this selected corpus as prevalence in the whole research field.

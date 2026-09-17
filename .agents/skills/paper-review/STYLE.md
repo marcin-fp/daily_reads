@@ -8,6 +8,8 @@ Critical discussion should feel like a human note: a claim, a caveat, a contrast
 
 Keep scientific assessment separate from project relevance. First decide whether the paper's claims hold. Only then discuss whether those claims matter for us. A paper can be strong but irrelevant, or weak but highly relevant.
 
+Field context is neutral. Explain where the work sits in the field and what changed without turning it into either a press release or a FirstPrinciples strategy memo. State whether a connection comes from the authors' related-work framing or from comparison with another review.
+
 ## Say the thing, then say how
 
 Bad: "define the knob-freedom map from the checklist alone"

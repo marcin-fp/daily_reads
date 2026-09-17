@@ -1,6 +1,6 @@
 ---
 name: evidence-chains
-description: Extract typed paper claims into lemmalog and discuss multi-paper evidence chains (A said X→Y, B said Y→Z). Use when extracting facts from papers or reviews, asserting claims, querying two-hop or three-hop links, or explaining chains of evidence across papers.
+description: Extract typed claims from schema-v1 paper reviews into lemmalog and discuss multi-paper evidence chains (A said X→Y, B said Y→Z). Use when asserting reviewed claims, querying two-hop or three-hop links, or explaining chains of evidence across reviewed papers.
 ---
 
 # Evidence chains
@@ -15,11 +15,12 @@ On first corpus session: `lemmalog_observe` the `describes` lines from SCHEMA.md
 
 ## Extract and assert
 
-From a review **Claims** table or from canonical text you just checked:
+From a schema-v1 review. Do not open `papers/canonical`, `papers/raw`, or the full-paper graph in this skill.
 
-1. Canonicalize concept names (`alias_of` if a synonym already exists). Do not mint a second node for the same idea.
-2. Assert paper `title` / `year`, the reified `edge`, `located`, and the closable `X --rel[conf]--> Y`.
-3. Tag confidence honestly. Never assert an unread hop.
+1. Assert paper metadata and `reviewed_in` from frontmatter, including publication date, authors, affiliations, funders, grants, and venue when present.
+2. Canonicalize concept names (`alias_of` if a synonym already exists). Do not mint a second node for the same idea.
+3. For each non-empty Claims row, assert the reified `edge`, its canonical `located` anchor, its `reviewed_in` path, and the closable `X --rel[conf]--> Y`.
+4. Tag confidence honestly. Never assert a hop that is absent from the review.
 
 ## Query chains
 
@@ -30,10 +31,10 @@ two_hop(X, Z, P1, P2)
 three_hop(X, W, P1, P2, P3)
 ```
 
-Then `lemmalog_why` on a derived fact. Re-read the **weakest** `located` anchors in the papers. If an endpoint was a false name, retract and alias.
+Then `lemmalog_why` on a derived fact. Read the linked reviews and inspect the weakest claim's summary, critical discussion, and Claims row. If the review does not contain enough evidence, record the gap and invoke/request `paper-review` to refresh that review. Do not silently reopen a full paper. If an endpoint was a false name, retract and alias.
 
-Graphify: `graphify path "A" "B"` or surprising connections are **candidates** only. Promote to lemmalog after reading the papers.
+The reviews graph may suggest a path. Promote it to lemmalog only when the reviews contain the required claim edges. The full-paper graph is not a synthesis source.
 
 ## Discuss (do not invent the middle node)
 
-In chat (perspectives files come later): name X, Y, Z; papers P1/P2; quote or paraphrase each hop with anchors; product confidence from the why-tree; say what would break the chain. Optional: a short appendix under the relevant `reviews/{id}.md`.
+In chat: name X, Y, Z; papers P1/P2; quote or paraphrase each hop from its review; product confidence from the why-tree; say what would break the chain. Do not edit a completed review during synthesis; gaps go back through `paper-review`.

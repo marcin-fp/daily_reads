@@ -16,4 +16,4 @@ Verification-related edges are welcome when the paper actually states them (how 
 | minimal story prompts | thematic diversity | contradicts | 0.9 | papers/canonical/2026-06-09/2605.26492.md:ABSTRACT | Weak prompts repeatedly produce the same narrow motifs |
 ```
 
-When asserting: mint `e:{id-without-prefix:}:{short}` (no spaces); set `source_paper`, `from`, `to`, `kind`, `located`, and `from --{relation}[conf]--> to`. See [`lemmalog/SCHEMA.md`](../../../lemmalog/SCHEMA.md).
+When asserting: first write the review metadata facts from [SCHEMA.md](SCHEMA.md). Mint `e:{id-without-prefix:}:{short}` (no spaces); set `source_paper`, `from`, `to`, `kind`, the canonical `located` anchor, `reviewed_in` pointing to this review, and `from --{relation}[conf]--> to`. See [`lemmalog/SCHEMA.md`](../../../lemmalog/SCHEMA.md).
