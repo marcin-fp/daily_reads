@@ -23,139 +23,121 @@
     "ast_hash": "1821d9b0f605ef3931d87244c778e319",
     "semantic_hash": "1821d9b0f605ef3931d87244c778e319"
   },
-  "2026-05-06/3772318-3791915.md": {
+  "2026-05-06/26sycoph.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535396,
     "ast_hash": "f7257e254bef40daed9bf707c3fab27b",
     "semantic_hash": "f7257e254bef40daed9bf707c3fab27b"
   },
-  "2026-05-06/angelopoulosscience2023.md": {
+  "2026-05-06/23ppi.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535397,
     "ast_hash": "295f3a2ebc242b042d98d4dac9481306",
     "semantic_hash": "295f3a2ebc242b042d98d4dac9481306"
   },
-  "2026-05-06/arxiv-manuscript-sciaiwiki.md": {
+  "2026-05-06/26sciwiki.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535397,
     "ast_hash": "b1703ef00a3b0eea062ce9bf64666717",
     "semantic_hash": "b1703ef00a3b0eea062ce9bf64666717"
   },
-  "2026-05-06/da2026-quantum.md": {
-    "mtime": 312796800.0,
-    "seen": 1789604346.535398,
-    "ast_hash": "0b8f165f4e6273ec407c3cf073b3f149",
-    "semantic_hash": "0b8f165f4e6273ec407c3cf073b3f149"
-  },
-  "2026-05-06/distilling-expert-judgment-at-scale.md": {
+  "2026-05-06/26distill.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535398,
     "ast_hash": "23dd730e1b44c4945f34f837cc294293",
     "semantic_hash": "23dd730e1b44c4945f34f837cc294293"
   },
-  "2026-05-06/emergent-misalignment-2502-17424v7.md": {
+  "2026-05-06/25misalign.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535398,
     "ast_hash": "cbad47cdaf92f6d47cf93a37e2f44f40",
     "semantic_hash": "cbad47cdaf92f6d47cf93a37e2f44f40"
   },
-  "2026-05-06/evaluation-frameworks-for-multi-agent-scientific-ai-systems.md": {
+  "2026-05-06/26scieval.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535399,
     "ast_hash": "89ba15b31fd01ce8a0042386cc07a578",
     "semantic_hash": "89ba15b31fd01ce8a0042386cc07a578"
   },
-  "2026-05-06/general-scales-nature.md": {
+  "2026-05-06/26scales.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535399,
     "ast_hash": "421549e8544085eed083f89e1480fe69",
     "semantic_hash": "421549e8544085eed083f89e1480fe69"
   },
-  "2026-05-06/google-co-scientist-s41586-026-10644-y-reference.md": {
+  "2026-05-06/26cosci.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535399,
     "ast_hash": "a24083456b062ab4468fadc78f11ff2b",
     "semantic_hash": "a24083456b062ab4468fadc78f11ff2b"
   },
-  "2026-05-06/google-empirical-software-s41586-026-10658-6-reference.md": {
+  "2026-05-06/26empsw.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.5354,
     "ast_hash": "21db3cdbe318f0d38816dc5b21fe702f",
     "semantic_hash": "21db3cdbe318f0d38816dc5b21fe702f"
   },
-  "2026-05-06/llm-wiki-md.md": {
+  "2026-05-06/26llmwiki.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.5354,
     "ast_hash": "10499fb5167c4144146dd67e4854623b",
     "semantic_hash": "10499fb5167c4144146dd67e4854623b"
   },
-  "2026-05-06/matterchat-s42256-026-01214-y.md": {
+  "2026-05-06/26matter.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.5354009,
     "ast_hash": "e29f53d55842c9f20ca20ac574fab212",
     "semantic_hash": "e29f53d55842c9f20ca20ac574fab212"
   },
-  "2026-05-06/natural-language-autoencoders-produce-unsupervised-explanations-of-llm-activations-lesswrong.md": {
+  "2026-05-06/26nla.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.5354009,
     "ast_hash": "a7e93df9f9f937ca12045648d772ec8f",
     "semantic_hash": "a7e93df9f9f937ca12045648d772ec8f"
   },
-  "2026-05-06/nature-warm-accuracy-s41586-026-10410-0.md": {
+  "2026-05-06/26warm.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.5354009,
     "ast_hash": "f8606e3570f2649f36e822594ccf7ddc",
     "semantic_hash": "f8606e3570f2649f36e822594ccf7ddc"
   },
-  "2026-05-06/nickvash-embedding2025.md": {
+  "2026-05-06/25egen.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535402,
     "ast_hash": "905717e811fabe736a1ca669a42af284",
     "semantic_hash": "905717e811fabe736a1ca669a42af284"
   },
-  "2026-05-06/researchclaw-2605-20025v1.md": {
-    "mtime": 312796800.0,
-    "seen": 1789604346.535402,
-    "ast_hash": "fcb4cb08ca772ac23527e8775cdf8110",
-    "semantic_hash": "fcb4cb08ca772ac23527e8775cdf8110"
-  },
-  "2026-05-06/s41746-025-02263-0-euai.md": {
+  "2026-05-06/26euai.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535402,
     "ast_hash": "9cb625f42eb9c4af8a44a7b48b13dd4f",
     "semantic_hash": "9cb625f42eb9c4af8a44a7b48b13dd4f"
   },
-  "2026-05-06/s42256-026-01214-y-pdf-2.md": {
-    "mtime": 312796800.0,
-    "seen": 1789604346.535403,
-    "ast_hash": "cccb4e8d958abba1eda286ab29d6f16e",
-    "semantic_hash": "cccb4e8d958abba1eda286ab29d6f16e"
-  },
-  "2026-05-06/von-mises-fisher-n-gram-memory.md": {
+  "2026-05-06/26vmfmem.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535403,
     "ast_hash": "06b9ef7d936d5230099c0c7db0d15a90",
     "semantic_hash": "06b9ef7d936d5230099c0c7db0d15a90"
   },
-  "2026-06-09/2025-findings-emnlp-78.md": {
+  "2026-06-09/25mcrit.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535403,
     "ast_hash": "45027a3f21f8a97348ecfedccd67794a",
     "semantic_hash": "45027a3f21f8a97348ecfedccd67794a"
   },
-  "2026-06-09/2026-acl-long-204.md": {
+  "2026-06-09/26mdocrag.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535404,
     "ast_hash": "6fa6c0d158dceb5af0173e22e404fe17",
     "semantic_hash": "6fa6c0d158dceb5af0173e22e404fe17"
   },
-  "2026-06-09/2026-findings-acl-1.md": {
+  "2026-06-09/26eva.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535404,
     "ast_hash": "ac5a805f9ae23e7a7eca01878b76f38b",
     "semantic_hash": "ac5a805f9ae23e7a7eca01878b76f38b"
   },
-  "2026-06-09/2026-nlp4dh-1-30.md": {
+  "2026-06-09/26madrag.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535404,
     "ast_hash": "c3d7c55edcb783472f7b3a7f4c70ec35",
@@ -281,79 +263,79 @@
     "ast_hash": "e05896ef52cc90b9b17b7127a6f902d9",
     "semantic_hash": "e05896ef52cc90b9b17b7127a6f902d9"
   },
-  "2026-06-09/33-debate-a-large-scale-benchm.md": {
+  "2026-06-09/25debate.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535411,
     "ast_hash": "dde619caf7f5000174efccba1b01ae18",
     "semantic_hash": "dde619caf7f5000174efccba1b01ae18"
   },
-  "2026-06-09/3772318-3791157.md": {
+  "2026-06-09/26masense.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535412,
     "ast_hash": "5bfe135f864425a218a3e891ac7e7bd0",
     "semantic_hash": "5bfe135f864425a218a3e891ac7e7bd0"
   },
-  "2026-06-09/agentic-coding-report-expertise.md": {
+  "2026-06-09/26agencode.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535412,
     "ast_hash": "f7b18fb3c0bd859c1d3b7bfd5465c0df",
     "semantic_hash": "f7b18fb3c0bd859c1d3b7bfd5465c0df"
   },
-  "2026-06-09/chung-2025-mach-learn-sci-technol-6-030505.md": {
+  "2026-06-09/25tpbench.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535412,
     "ast_hash": "6d5cce4f1db848592e4f085ea7286903",
     "semantic_hash": "6d5cce4f1db848592e4f085ea7286903"
   },
-  "2026-06-09/daed-a-983.md": {
+  "2026-06-09/26daedsci.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535413,
     "ast_hash": "8b0bf6c40b5bbe23c7c8c2f449388677",
     "semantic_hash": "8b0bf6c40b5bbe23c7c8c2f449388677"
   },
-  "2026-06-09/dspark-paper.md": {
+  "2026-06-09/26dspark.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535413,
     "ast_hash": "45331f7a035b02f18f87e04fc9acd9de",
     "semantic_hash": "45331f7a035b02f18f87e04fc9acd9de"
   },
-  "2026-06-09/genebench-pro.md": {
+  "2026-06-09/26genebp.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535413,
     "ast_hash": "f45d06b73b6d946faec33e5d0ebc6a8e",
     "semantic_hash": "f45d06b73b6d946faec33e5d0ebc6a8e"
   },
-  "2026-06-09/iclr-2024-large-language-models-cannot-self-correct-reasoning-yet-paper-conference.md": {
+  "2026-06-09/24selfcor.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535414,
     "ast_hash": "823ef8fa30b4d479b48a3f82c43a796d",
     "semantic_hash": "823ef8fa30b4d479b48a3f82c43a796d"
   },
-  "2026-06-09/mira-tech-report.md": {
+  "2026-06-09/26mira.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535414,
     "ast_hash": "7155d9b24cd9a0d2220599bc644f3fd0",
     "semantic_hash": "7155d9b24cd9a0d2220599bc644f3fd0"
   },
-  "2026-06-09/s41586-024-07421-0.md": {
+  "2026-06-09/24semant.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535414,
     "ast_hash": "639959c271ad18020d09e587b762075f",
     "semantic_hash": "639959c271ad18020d09e587b762075f"
   },
-  "2026-06-09/s42256-026-01268-y.md": {
+  "2026-06-09/26masat.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535415,
     "ast_hash": "5a50b4f4ed71bff3380848ef65433dab",
     "semantic_hash": "5a50b4f4ed71bff3380848ef65433dab"
   },
-  "2026-06-09/s44387-025-00057-z.md": {
+  "2026-06-09/25mcpsim.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535415,
     "ast_hash": "223ee296ae16f469a78e3f0df8201831",
     "semantic_hash": "223ee296ae16f469a78e3f0df8201831"
   },
-  "2026-06-09/scientific-invention-position-paper-17.md": {
+  "2026-06-09/26abduct.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535415,
     "ast_hash": "a446a55e40041f973c35f6ca3d850f16",
@@ -503,7 +485,7 @@
     "ast_hash": "7c18a05dca4a96a79135637096597e02",
     "semantic_hash": "7c18a05dca4a96a79135637096597e02"
   },
-  "2026-06-09/2026-acl-long-29.md": {
+  "2026-06-09/26intragt.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535424,
     "ast_hash": "c8d01ed47ba384b384cee8c47b686838",
@@ -1139,7 +1121,7 @@
     "ast_hash": "181dcae9117ea183d298ee520031dfd6",
     "semantic_hash": "181dcae9117ea183d298ee520031dfd6"
   },
-  "2026-06-09/udag003.md": {
+  "2026-06-09/26aifsci.md": {
     "mtime": 312796800.0,
     "seen": 1789604346.535458,
     "ast_hash": "9993f1e8cdb5cc60da7878803225b83c",

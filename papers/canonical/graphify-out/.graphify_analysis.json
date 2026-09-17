@@ -2974,18 +2974,10 @@
       "rq4_skill_retrieval_execution"
     ],
     "125": [
-      "chgnet_encoder",
-      "mace_encoder",
-      "materials_project_dataset",
-      "matterchat_bridge_model",
       "matterchat_embedding_analysis",
-      "matterchat_language_branch",
-      "matterchat_material_branch",
       "matterchat_material_encoder",
       "matterchat_multimodal_llm",
-      "matterchat_rag_module",
-      "matterchat_system",
-      "mistral_7b_llm"
+      "matterchat_rag_module"
     ],
     "126": [
       "paper_bradley_terry_model",
@@ -3493,18 +3485,7 @@
       "three_level_sampling",
       "ucb_air_gate"
     ],
-    "166": [
-      "autonomous_research_pipeline_concept",
-      "researchclaw_arc_bench",
-      "researchclaw_autoresearchclaw",
-      "researchclaw_citation_verification",
-      "researchclaw_cross_run_evolution",
-      "researchclaw_hitl_collaboration",
-      "researchclaw_multi_agent_debate",
-      "researchclaw_self_healing_executor",
-      "researchclaw_strict_judge",
-      "researchclaw_verifiable_result_reporting"
-    ],
+    "166": [],
     "167": [
       "benchmark_family_discovery",
       "constraint_modified_problems",
@@ -4005,16 +3986,7 @@
       "2026_05_06_2606_10917_state_grouping",
       "2026_05_06_2606_10917_wia"
     ],
-    "212": [
-      "2026_05_06_da2026_quantum_bch_codes",
-      "2026_05_06_da2026_quantum_css_codes",
-      "2026_05_06_da2026_quantum_golay_code",
-      "2026_05_06_da2026_quantum_rank_distance",
-      "2026_05_06_da2026_quantum_rank_locality_envelope",
-      "2026_05_06_da2026_quantum_steane_code",
-      "2026_05_06_da2026_quantum_theo_conjecture",
-      "2026_05_06_da2026_quantum_toric_codes"
-    ],
+    "212": [],
     "213": [
       "2026_06_09_2026_findings_acl_1_emotional_validation",
       "2026_06_09_2026_findings_acl_1_empathetic_dialogues",
@@ -7059,7 +7031,7 @@
       "source": "Test-Time Compute Scaling Paradigm",
       "target": "Test-Time Compute Scaling",
       "source_files": [
-        "2026-05-06/google-co-scientist-s41586-026-10644-y-reference.md",
+        "2026-05-06/26cosci.md",
         "2026-06-09/2510.00931.md"
       ],
       "confidence": "EXTRACTED",
@@ -7092,7 +7064,7 @@
       "source": "Emergent Misalignment Research Paper",
       "target": "StrongReject Benchmark",
       "source_files": [
-        "2026-05-06/emergent-misalignment-2502-17424v7.md",
+        "2026-05-06/25misalign.md",
         "2026-06-09/2510.01171.md"
       ],
       "confidence": "EXTRACTED",
@@ -7103,7 +7075,7 @@
       "source": "Emergent Misalignment in LLMs",
       "target": "Training Dynamics Analysis",
       "source_files": [
-        "2026-05-06/emergent-misalignment-2502-17424v7.md",
+        "2026-05-06/25misalign.md",
         "2026-06-09/2310.03716.md"
       ],
       "confidence": "EXTRACTED",

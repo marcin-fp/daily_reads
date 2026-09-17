@@ -743,15 +743,15 @@
 
 ## Surprising Connections (you probably didn't know these)
 - `Test-Time Compute Scaling Paradigm` --conceptually_related_to--> `Test-Time Compute Scaling`  [EXTRACTED]
-  2026-05-06/google-co-scientist-s41586-026-10644-y-reference.md → 2026-06-09/2510.00931.md
+  2026-05-06/26cosci.md → 2026-06-09/2510.00931.md
 - `CELEUS: Certifiable and Efficient LLM Evaluation Framework` --conceptually_related_to--> `Qwen Model Family`  [EXTRACTED]
   2026-06-09/2606.20820.md → 2026-05-06/2604.27251.md
 - `Agent-Native Research Artifacts (ARA) Protocol` --semantically_similar_to--> `AutoResearchClaw: Autonomous Research Pipeline`  [INFERRED] [semantically similar]
   2026-05-06/2604.24658.md → 2026-05-06/2605.20025.md
 - `Emergent Misalignment Research Paper` --references--> `StrongReject Benchmark`  [EXTRACTED]
-  2026-05-06/emergent-misalignment-2502-17424v7.md → 2026-06-09/2510.01171.md
+  2026-05-06/25misalign.md → 2026-06-09/2510.01171.md
 - `Emergent Misalignment in LLMs` --implements--> `Training Dynamics Analysis`  [EXTRACTED]
-  2026-05-06/emergent-misalignment-2502-17424v7.md → 2026-06-09/2310.03716.md
+  2026-05-06/25misalign.md → 2026-06-09/2310.03716.md
 
 ## Import Cycles
 - None detected.

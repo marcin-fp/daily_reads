@@ -31,31 +31,29 @@ Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `
 | `arxiv:2605.28655` | v1 | `papers/raw/2026-05-06/2605-28655v1-pdf.md` | `papers/canonical/2026-05-06/2605.28655.md` | — | canonical |
 | `arxiv:2606.04075` | v2 | `papers/raw/2026-05-06/2606-04075v1-pdf.md` | `papers/canonical/2026-05-06/2606.04075.md` | — | canonical |
 | `arxiv:2606.10917` | v2 | `papers/raw/2026-05-06/2606-10917v1-pdf.md` | `papers/canonical/2026-05-06/2606.10917.md` | — | canonical |
-| `slug:3772318-3791915` |  | `papers/raw/2026-05-06/3772318-3791915-pdf.md` | `papers/canonical/2026-05-06/3772318-3791915.md` | — | canonical |
-| `slug:angelopoulosscience2023` |  | `papers/raw/2026-05-06/angelopoulosscience2023-pdf.md` | `papers/canonical/2026-05-06/angelopoulosscience2023.md` | — | canonical |
-| `slug:arxiv-manuscript-sciaiwiki` |  | `papers/raw/2026-05-06/arxiv-manuscript-sciaiwiki-pdf.md` | `papers/canonical/2026-05-06/arxiv-manuscript-sciaiwiki.md` | — | canonical |
-| `slug:distilling-expert-judgment-at-scale` |  | `papers/raw/2026-05-06/distilling-expert-judgment-at-scale-pdf.md` | `papers/canonical/2026-05-06/distilling-expert-judgment-at-scale.md` | — | canonical |
-| `slug:emergent-misalignment-2502-17424v7` |  | `papers/raw/2026-05-06/emergent-misalignment-2502-17424v7-pdf.md` | `papers/canonical/2026-05-06/emergent-misalignment-2502-17424v7.md` | — | canonical |
-| `slug:evaluation-frameworks-for-multi-agent-scientific-ai-systems` |  | `papers/raw/2026-05-06/evaluation-frameworks-for-multi-agent-scientific-ai-systems-pdf.md` | `papers/canonical/2026-05-06/evaluation-frameworks-for-multi-agent-scientific-ai-systems.md` | — | canonical |
-| `slug:general-scales-nature` |  | `papers/raw/2026-05-06/general-scales-nature-pdf.md` | `papers/canonical/2026-05-06/general-scales-nature.md` | — | canonical |
-| `slug:google-co-scientist-s41586-026-10644-y-reference` |  | `papers/raw/2026-05-06/google-co-scientist-s41586-026-10644-y-reference-pdf.md` | `papers/canonical/2026-05-06/google-co-scientist-s41586-026-10644-y-reference.md` | — | canonical |
-| `slug:google-empirical-software-s41586-026-10658-6-reference` |  | `papers/raw/2026-05-06/google-empirical-software-s41586-026-10658-6-reference-pdf.md` | `papers/canonical/2026-05-06/google-empirical-software-s41586-026-10658-6-reference.md` | — | canonical |
-| `slug:llm-wiki-md` |  | `papers/raw/2026-05-06/llm-wiki-md.md` | `papers/canonical/2026-05-06/llm-wiki-md.md` | — | canonical |
-| `slug:matterchat-s42256-026-01214-y` |  | `papers/raw/2026-05-06/matterchat-s42256-026-01214-y-pdf.md` | `papers/canonical/2026-05-06/matterchat-s42256-026-01214-y.md` | — | canonical |
-| `slug:natural-language-autoencoders-produce-unsupervised-explanations-of-llm-activations-lesswrong` |  | `papers/raw/2026-05-06/natural-language-autoencoders-produce-unsupervised-explanations-of-llm-activations-lesswrong-pdf.md` | `papers/canonical/2026-05-06/natural-language-autoencoders-produce-unsupervised-explanations-of-llm-activations-lesswrong.md` | — | canonical |
-| `slug:nature-warm-accuracy-s41586-026-10410-0` |  | `papers/raw/2026-05-06/nature-warm-accuracy-s41586-026-10410-0-pdf.md` | `papers/canonical/2026-05-06/nature-warm-accuracy-s41586-026-10410-0.md` | `reviews/nature-warm-accuracy-s41586-026-10410-0.md` | reviewed |
-| `slug:nickvash-embedding2025` |  | `papers/raw/2026-05-06/nickvash-embedding2025-pdf.md` | `papers/canonical/2026-05-06/nickvash-embedding2025.md` | — | canonical |
-| `slug:researchclaw-2605-20025v1` |  | `papers/raw/2026-05-06/researchclaw-2605-20025v1-pdf.md` | `papers/canonical/2026-05-06/researchclaw-2605-20025v1.md` | — | canonical |
-| `slug:s41746-025-02263-0-euai` |  | `papers/raw/2026-05-06/s41746-025-02263-0-euai-pdf.md` | `papers/canonical/2026-05-06/s41746-025-02263-0-euai.md` | — | canonical |
-| `slug:s42256-026-01214-y-pdf-2` |  | `papers/raw/2026-05-06/s42256-026-01214-y-pdf-2.md` | `papers/canonical/2026-05-06/s42256-026-01214-y-pdf-2.md` | — | canonical |
-| `slug:von-mises-fisher-n-gram-memory` |  | `papers/raw/2026-05-06/von-mises-fisher-n-gram-memory-pdf.md` | `papers/canonical/2026-05-06/von-mises-fisher-n-gram-memory.md` | — | canonical |
+| `slug:26sycoph` |  | `papers/raw/2026-05-06/26sycoph-pdf.md` | `papers/canonical/2026-05-06/26sycoph.md` | — | canonical |
+| `slug:23ppi` |  | `papers/raw/2026-05-06/23ppi-pdf.md` | `papers/canonical/2026-05-06/23ppi.md` | — | canonical |
+| `slug:26sciwiki` |  | `papers/raw/2026-05-06/26sciwiki-pdf.md` | `papers/canonical/2026-05-06/26sciwiki.md` | — | canonical |
+| `slug:26distill` |  | `papers/raw/2026-05-06/26distill-pdf.md` | `papers/canonical/2026-05-06/26distill.md` | — | canonical |
+| `slug:25misalign` |  | `papers/raw/2026-05-06/25misalign-pdf.md` | `papers/canonical/2026-05-06/25misalign.md` | — | canonical |
+| `slug:26scieval` |  | `papers/raw/2026-05-06/26scieval-pdf.md` | `papers/canonical/2026-05-06/26scieval.md` | — | canonical |
+| `slug:26scales` |  | `papers/raw/2026-05-06/26scales-pdf.md` | `papers/canonical/2026-05-06/26scales.md` | — | canonical |
+| `slug:26cosci` |  | `papers/raw/2026-05-06/26cosci-pdf.md` | `papers/canonical/2026-05-06/26cosci.md` | — | canonical |
+| `slug:26empsw` |  | `papers/raw/2026-05-06/26empsw-pdf.md` | `papers/canonical/2026-05-06/26empsw.md` | — | canonical |
+| `slug:26llmwiki` |  | `papers/raw/2026-05-06/26llmwiki.md` | `papers/canonical/2026-05-06/26llmwiki.md` | — | canonical |
+| `slug:26matter` |  | `papers/raw/2026-05-06/26matter-pdf.md` | `papers/canonical/2026-05-06/26matter.md` | — | canonical |
+| `slug:26nla` |  | `papers/raw/2026-05-06/26nla-pdf.md` | `papers/canonical/2026-05-06/26nla.md` | — | canonical |
+| `slug:26warm` |  | `papers/raw/2026-05-06/26warm-pdf.md` | `papers/canonical/2026-05-06/26warm.md` | `reviews/26warm.md` | reviewed |
+| `slug:25egen` |  | `papers/raw/2026-05-06/25egen-pdf.md` | `papers/canonical/2026-05-06/25egen.md` | — | canonical |
+| `slug:26euai` |  | `papers/raw/2026-05-06/26euai-pdf.md` | `papers/canonical/2026-05-06/26euai.md` | — | canonical |
+| `slug:26vmfmem` |  | `papers/raw/2026-05-06/26vmfmem-pdf.md` | `papers/canonical/2026-05-06/26vmfmem.md` | — | canonical |
 | `arxiv:1911.03864` | v2 | `papers/raw/2026-06-09/1911-03864v2-pdf.md` | `papers/canonical/2026-06-09/1911.03864.md` | — | canonical |
 | `arxiv:2012.14913` | v2 | `papers/raw/2026-06-09/2012-14913v2-pdf.md` | `papers/canonical/2026-06-09/2012.14913.md` | — | canonical |
-| `slug:2025-findings-emnlp-78` |  | `papers/raw/2026-06-09/2025-findings-emnlp-78-pdf.md` | `papers/canonical/2026-06-09/2025-findings-emnlp-78.md` | — | canonical |
-| `slug:2026-acl-long-204` |  | `papers/raw/2026-06-09/2026-acl-long-204-pdf.md` | `papers/canonical/2026-06-09/2026-acl-long-204.md` | — | canonical |
-| `slug:2026-acl-long-29` |  | `papers/raw/2026-06-09/2026-acl-long-29-pdf.md` | `papers/canonical/2026-06-09/2026-acl-long-29.md` | — | canonical |
-| `slug:2026-findings-acl-1` |  | `papers/raw/2026-06-09/2026-findings-acl-1-pdf.md` | `papers/canonical/2026-06-09/2026-findings-acl-1.md` | — | canonical |
-| `slug:2026-nlp4dh-1-30` |  | `papers/raw/2026-06-09/2026-nlp4dh-1-30-pdf.md` | `papers/canonical/2026-06-09/2026-nlp4dh-1-30.md` | — | canonical |
+| `slug:25mcrit` |  | `papers/raw/2026-06-09/25mcrit-pdf.md` | `papers/canonical/2026-06-09/25mcrit.md` | — | canonical |
+| `slug:26mdocrag` |  | `papers/raw/2026-06-09/26mdocrag-pdf.md` | `papers/canonical/2026-06-09/26mdocrag.md` | — | canonical |
+| `slug:26intragt` |  | `papers/raw/2026-06-09/26intragt-pdf.md` | `papers/canonical/2026-06-09/26intragt.md` | — | canonical |
+| `slug:26eva` |  | `papers/raw/2026-06-09/26eva-pdf.md` | `papers/canonical/2026-06-09/26eva.md` | — | canonical |
+| `slug:26madrag` |  | `papers/raw/2026-06-09/26madrag-pdf.md` | `papers/canonical/2026-06-09/26madrag.md` | — | canonical |
 | `arxiv:2105.01601` | v4 | `papers/raw/2026-06-09/2105-01601v4-pdf.md` | `papers/canonical/2026-06-09/2105.01601.md` | — | canonical |
 | `arxiv:2105.08050` | v2 | `papers/raw/2026-06-09/2105-08050v2-pdf.md` | `papers/canonical/2026-06-09/2105.08050.md` | — | canonical |
 | `arxiv:2204.05862` | v1 | `papers/raw/2026-06-09/2204-05862v1-pdf.md` | `papers/canonical/2026-06-09/2204.05862.md` | — | canonical |
@@ -187,17 +185,17 @@ Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `
 | `arxiv:2609.13443` | v1 | `papers/raw/2026-06-09/2609-13443v1-pdf.md` | `papers/canonical/2026-06-09/2609.13443.md` | — | canonical |
 | `arxiv:2609.15818` | v1 | `papers/raw/2026-06-09/2609-15818v1-pdf.md` | `papers/canonical/2026-06-09/2609.15818.md` | — | canonical |
 | `arxiv:2609.17523` | v1 | `papers/raw/2026-06-09/2609-17523v1-pdf.md` | `papers/canonical/2026-06-09/2609.17523.md` | — | canonical |
-| `slug:33-debate-a-large-scale-benchm` |  | `papers/raw/2026-06-09/33-debate-a-large-scale-benchm-pdf.md` | `papers/canonical/2026-06-09/33-debate-a-large-scale-benchm.md` | — | canonical |
-| `slug:3772318-3791157` |  | `papers/raw/2026-06-09/3772318-3791157-pdf.md` | `papers/canonical/2026-06-09/3772318-3791157.md` | — | canonical |
-| `slug:agentic-coding-report-expertise` |  | `papers/raw/2026-06-09/agentic-coding-report-expertise-pdf.md` | `papers/canonical/2026-06-09/agentic-coding-report-expertise.md` | — | canonical |
-| `slug:chung-2025-mach-learn-sci-technol-6-030505` |  | `papers/raw/2026-06-09/chung-2025-mach-learn-sci-technol-6-030505-pdf.md` | `papers/canonical/2026-06-09/chung-2025-mach-learn-sci-technol-6-030505.md` | — | canonical |
-| `slug:daed-a-983` |  | `papers/raw/2026-06-09/daed-a-983-pdf.md` | `papers/canonical/2026-06-09/daed-a-983.md` | — | canonical |
-| `slug:dspark-paper` |  | `papers/raw/2026-06-09/dspark-paper-pdf.md` | `papers/canonical/2026-06-09/dspark-paper.md` | — | canonical |
-| `slug:genebench-pro` |  | `papers/raw/2026-06-09/genebench-pro-pdf.md` | `papers/canonical/2026-06-09/genebench-pro.md` | — | canonical |
-| `slug:iclr-2024-large-language-models-cannot-self-correct-reasoning-yet-paper-conference` |  | `papers/raw/2026-06-09/iclr-2024-large-language-models-cannot-self-correct-reasoning-yet-paper-conference-pdf.md` | `papers/canonical/2026-06-09/iclr-2024-large-language-models-cannot-self-correct-reasoning-yet-paper-conference.md` | — | canonical |
-| `slug:mira-tech-report` |  | `papers/raw/2026-06-09/mira-tech-report-pdf.md` | `papers/canonical/2026-06-09/mira-tech-report.md` | — | canonical |
-| `slug:s41586-024-07421-0` |  | `papers/raw/2026-06-09/s41586-024-07421-0-pdf.md` | `papers/canonical/2026-06-09/s41586-024-07421-0.md` | — | canonical |
-| `slug:s42256-026-01268-y` |  | `papers/raw/2026-06-09/s42256-026-01268-y-pdf.md` | `papers/canonical/2026-06-09/s42256-026-01268-y.md` | — | canonical |
-| `slug:s44387-025-00057-z` |  | `papers/raw/2026-06-09/s44387-025-00057-z-pdf.md` | `papers/canonical/2026-06-09/s44387-025-00057-z.md` | — | canonical |
-| `slug:scientific-invention-position-paper-17` |  | `papers/raw/2026-06-09/scientific-invention-position-paper-17-pdf.md` | `papers/canonical/2026-06-09/scientific-invention-position-paper-17.md` | — | canonical |
-| `slug:udag003` |  | `papers/raw/2026-06-09/udag003-pdf.md` | `papers/canonical/2026-06-09/udag003.md` | — | canonical |
+| `slug:25debate` |  | `papers/raw/2026-06-09/25debate-pdf.md` | `papers/canonical/2026-06-09/25debate.md` | — | canonical |
+| `slug:26masense` |  | `papers/raw/2026-06-09/26masense-pdf.md` | `papers/canonical/2026-06-09/26masense.md` | — | canonical |
+| `slug:26agencode` |  | `papers/raw/2026-06-09/26agencode-pdf.md` | `papers/canonical/2026-06-09/26agencode.md` | — | canonical |
+| `slug:25tpbench` |  | `papers/raw/2026-06-09/25tpbench-pdf.md` | `papers/canonical/2026-06-09/25tpbench.md` | — | canonical |
+| `slug:26daedsci` |  | `papers/raw/2026-06-09/26daedsci-pdf.md` | `papers/canonical/2026-06-09/26daedsci.md` | — | canonical |
+| `slug:26dspark` |  | `papers/raw/2026-06-09/26dspark-pdf.md` | `papers/canonical/2026-06-09/26dspark.md` | — | canonical |
+| `slug:26genebp` |  | `papers/raw/2026-06-09/26genebp-pdf.md` | `papers/canonical/2026-06-09/26genebp.md` | — | canonical |
+| `slug:24selfcor` |  | `papers/raw/2026-06-09/24selfcor-pdf.md` | `papers/canonical/2026-06-09/24selfcor.md` | — | canonical |
+| `slug:26mira` |  | `papers/raw/2026-06-09/26mira-pdf.md` | `papers/canonical/2026-06-09/26mira.md` | — | canonical |
+| `slug:24semant` |  | `papers/raw/2026-06-09/24semant-pdf.md` | `papers/canonical/2026-06-09/24semant.md` | — | canonical |
+| `slug:26masat` |  | `papers/raw/2026-06-09/26masat-pdf.md` | `papers/canonical/2026-06-09/26masat.md` | — | canonical |
+| `slug:25mcpsim` |  | `papers/raw/2026-06-09/25mcpsim-pdf.md` | `papers/canonical/2026-06-09/25mcpsim.md` | — | canonical |
+| `slug:26abduct` |  | `papers/raw/2026-06-09/26abduct-pdf.md` | `papers/canonical/2026-06-09/26abduct.md` | — | canonical |
+| `slug:26aifsci` |  | `papers/raw/2026-06-09/26aifsci-pdf.md` | `papers/canonical/2026-06-09/26aifsci.md` | — | canonical |
