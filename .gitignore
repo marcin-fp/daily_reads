@@ -33,7 +33,7 @@ __pycache__/
 *.egg-info/
 
 # Lemmalog machine-local snapshot (created by MCP/CLI)
-lemmalog/*.snapshot
+# lemmalog/*.snapshot
 
 # Claude Code local MCP/skill approvals (do not commit)
 .claude/settings.local.json
