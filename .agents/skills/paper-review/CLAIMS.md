@@ -4,7 +4,13 @@ Machine section for relations the paper itself asserts. May be empty (`None.` un
 
 Verification-related edges are welcome when the paper actually states them (how a step is checked, what a reward measures, coverage/precision, LLM judge vs oracle). Do not mint a verification claim because we care about the topic.
 
-`from` / `to`: ≤8 words. `anchor`: space-free, prefer canonical (`papers/canonical/2026-06-09/2605.26492.md:ABSTRACT` or `…md:L42`).
+`from` / `to`: aim for ≤8 words, but a faithful claim that needs up to 10
+words (and up to 120 characters — long hyphenated/technical terms cost
+more of that budget than word count suggests) is fine and preferred over
+compressing until the claim is no longer understandable; lemmalog itself
+enforces the 10-word/120-char ceiling at ingestion time and drops
+anything over it, so don't write claims you know exceed that. `anchor`:
+space-free, prefer canonical (`papers/canonical/2026-06-09/2605.26492.md:ABSTRACT` or `…md:L42`).
 
 `relation`: `implies` | `improves` | `contradicts` | `uses` | `evaluates`.
 

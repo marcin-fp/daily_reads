@@ -9,9 +9,32 @@ Lemmalog stores scientific relations, their provenance, and one pointer from eac
 ## Entity names
 
 - Papers: `arxiv:2606.18195` (no version). Quote in rules: `"arxiv:2606.18195"`.
-- Concepts: ≤8 words, natural language, quoted. Alias variants: `local --alias_of[conf]--> canonical`.
+- Concepts: **aim for ≤8 words**, natural language, quoted. This is a style
+  target, not the hard limit — don't mutilate a claim's meaning chasing
+  it. The local `lemmalog-mcp` binary's actual ceiling (as of the
+  2026-09-19 rebuild) is **≤10 words AND ≤120 characters**, whichever is
+  hit first; going over either silently drops the whole line (`lemmalog_observe`
+  reports it under `dropped N line(s)` — always read that field, a
+  nonzero `added` count does not mean everything you sent landed).
+  Compound/hyphenated technical vocabulary common in this corpus
+  ("spectrally-constrained", "post-training", "counterfactual") eats the
+  character budget fast even within 8 words — if a claim needs the extra
+  headroom to stay faithful to the review, use it rather than compressing
+  until the claim reads as word salad; staying under 120 characters and
+  10 words matters more than staying under 8 words. Alias variants:
+  `local --alias_of[c]--> canonical`.
 - Edges: `e:{paper-id}:{short}` with no spaces, e.g. `e:2606.18195:dopsd-sample-eff`.
 - `located` objects: space-free, `papers/canonical/2606.18195.md:Abstract` or `…md:L42`.
+- Disallowed in concept text regardless of length: literal double quotes,
+  commas, parentheses, semicolons, and — inside a *spaced* (multi-word)
+  value specifically — periods and colons (both read as a `file:line`
+  source-reference pattern and get rejected even in otherwise-ordinary
+  text like `GPT-4.1`). Decimal numbers (`92.7`) trigger the same false
+  match; round or restate them (`93` or `93 percent`) rather than drop
+  the fact. `/`, `%`, `=`, `@`, `~`, `+`, and non-ASCII characters are
+  accepted by the parser but are worth normalizing to plain words/hyphens
+  for readability (`percent`, `at`, hyphen) since several read oddly once
+  rendered back out of the store.
 
 Confidence: verified quotes `[1.0]`; fair paraphrases `[0.7]`–`[0.9]`; interpretive `[0.4]`–`[0.6]`. Untagged defaults to 0.9 and decays down the proof chain. Structural provenance (`reviewed_in`, `source_paper`, `from`, `to`, `kind`, `located`) is not uncertain once copied from a validated review; assert it at `[1.0]` so it does not dilute the scientific edge confidence.
 

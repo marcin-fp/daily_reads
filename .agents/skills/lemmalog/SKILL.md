@@ -119,7 +119,18 @@ Evidence objects take a bare source reference (space-free) or a
 punctuation-free phrase; spaces plus punctuation read as leaked prose
 and are dropped. Symmetric quotes around subjects/objects are stripped
 (`"mean field"` lands as `mean field`) — multi-word values are fine up
-to 8 words; compress longer prose into a short name or split it.
+to **10 words and 120 characters** (verified against `lemmalog-mcp`'s
+`entity_token_problem`; if your build predates the 2026-09-19 widening
+it may still enforce the tighter original 8-word/60-character pair —
+check by asserting a probe fact near the boundary and reading whether
+`lemmalog_observe` reports it under `dropped`). Either way, treat ~8
+words as a good default for a short label, not a wall to write around:
+compressing a claim past what it can say clearly is worse than a
+slightly longer value that stays under the real ceiling. `lemmalog_observe`
+always reports what it dropped and why in its response text — read that
+field; `added=N` with `N` smaller than expected, or any `dropped` line
+at all, means part of what you sent did not land, silently, unless you
+check.
 
 ## State that changes
 
@@ -127,13 +138,34 @@ Values, quantities, and sets evolve — assert them so the engine can
 maintain them (these conventions are what the update policy and the
 aggregates need):
 
-- **Update by re-asserting the same relation.** When a value changes,
-  assert the new value under the SAME relation name: the policy
-  supersedes the old fact automatically. Never invent a synonym
-  relation for the new value (`uses` → `switched_to`) — that leaves
-  both values open, and every current-state query gets flaky. If you
-  need the history, the superseded fact is still queryable by its
+- **Update by re-asserting the same relation — but only for relations the
+  engine treats as single-valued.** Re-asserting `(S, rel)` with a new
+  object supersedes the old fact automatically ONLY when `rel` is
+  hardcoded `FUNCTIONAL` (`status`, `phone`, `address`, `email`,
+  `version`, `value_of`, `current_value`, by name-prefix), hardcoded
+  `MULTI` (`evidence`, `mentions`, `located`, `describes`, `tag`,
+  `related_to`, `depends_on`, `owns`, `calls`, `part_of`, `source`,
+  `cites`, `symptom_of`, `aka`, `alias_of` — these instead accumulate,
+  silently, no supersede and no escalation either), or explicitly
+  declared `exclusive("relname")` in an installed rule batch (today only
+  `works_at` ships pre-declared). A schema's own relations — this
+  project's `from`/`to`/`kind` included — are none of these by default:
+  re-asserting a different object for the same `(edge, from)` does
+  **`ADD + escalation`**, not an update — both values end up `current`
+  at once, and `lemmalog_observe`'s response names the conflict but does
+  not resolve it. If you correct a fact under one of these relations,
+  explicitly `lemmalog_retract` the stale value yourself (see
+  `dup_val`-style audit query below) — do not assume re-asserting alone
+  cleaned it up. Never invent a synonym relation for the new value
+  (`uses` → `switched_to`) either way — that leaves both values open
+  under a name split instead of a name collision, which is just as
+  flaky to query. If you need the history, the superseded fact (for the
+  relations that actually do supersede) is still queryable by its
   validity interval.
+  Spot-check any relation you're unsure about with a self-join before
+  relying on silent supersession at scale:
+  `dup(E,X,Y) :- current(E, your_rel, X), current(E, your_rel, Y), X \= Y.`
+  — a nonempty result means it isn't superseding and you must retract by hand.
 - **Bare numbers are integers.** `launch --monthly_cost--> 120` (never
   `$120` or `120 dollars`) — digit-only objects feed `sum`/`count`
   aggregates and `<`/`>=` comparisons. Mixed forms are opaque symbols.
