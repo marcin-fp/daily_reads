@@ -25,7 +25,7 @@ Lemmalog MCP: Cursor uses `.cursor/mcp.json`; Claude Code uses `.mcp.json`. Both
 
 1. Raw dumps stay in `papers/raw/YYYY-MM-DD/`. Do not edit them.
 2. Canonical files mirror the dump date: `papers/raw/2026-05-06/` → `papers/canonical/2026-05-06/`. Bulk: `uv run scripts/canonicalize_raw.py papers/raw`. Single paper: `uv run scripts/arxiv_to_md.py <arxiv-id> --output-dir papers/canonical/<dump-date>`. Filename is unversioned (`2605.26492.md`); version is frontmatter. One canonical file per id — a paper in a second dump stays where it already is. Skip existing unless `--force`.
-3. `paper-review` is the only skill that reads canonical/raw full papers. It writes and validates schema-v1 `reviews/{id}.md`. Empty optional sections are allowed; do not force-fit FirstPrinciples or the approved bets. Critical discussion is required.
+3. `paper-review` is the only skill that reads canonical/raw full papers. It writes and validates schema-v1 `reviews/{id}.md`. Empty optional sections are allowed; do not force-fit FirstPrinciples or the approved bets. Critical discussion is required. Do not review papers whose `papers/index.md` status is `skipped`.
 4. All synthesis (`evidence-chains`, `learning-synthesis`, `perspectives`, `trend-analysis`, `news-article`) reads reviews, lemmalog, prior snapshots, `papers/index.md` for counts, and the reviews graph only. Never reopen canonical/raw papers or use the full-paper graph as synthesis evidence. Missing evidence becomes a review gap routed back through `paper-review`.
 5. Graphify lives **next to the corpus**, not at the repo root. Papers: `graphify extract papers/canonical --backend bedrock --directed` → `papers/canonical/graphify-out/`. Reviews: a separate `graphify extract reviews ...` → `reviews/graphify-out/`. Never scan the repo root.
 6. Evidence chains go through lemmalog, not the agent's head. Lemmalog stores scientific relations/provenance plus one `reviewed_in` pointer per paper; all publication and landscape metadata stays in reviews. A graph path or `lemmalog_context` result is a candidate. Confirm with exact `lemmalog_query` and `why`; never consume `store.snapshot` or an unfiltered dump as research context.
@@ -42,3 +42,4 @@ Paper ids: `arxiv:YYMM.NNNNN` with no version in the id.
 - Treat a table-formatting warning as missing content until you compare with `papers/raw`.
 - Infer affiliations, funders, grants, or corporate support from names or prior knowledge. Record only relationships explicit in the paper/review.
 - Treat counts in this selected corpus as prevalence in the whole research field.
+- Review a paper marked `skipped` in `papers/index.md`.

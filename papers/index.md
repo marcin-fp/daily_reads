@@ -1,6 +1,6 @@
 # Paper index
 
-Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `reviewed` = `reviews/{id}.md` exists.
+Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `reviewed` = `reviews/{id}.md` exists. `skipped` = deliberately not reviewing (do not write a review).
 
 | id | version | raw | canonical | review | status |
 |----|---------|-----|-----------|--------|--------|
@@ -16,7 +16,7 @@ Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `
 | `arxiv:2601.05280` | v4 | `papers/raw/2026-05-06/2601-05280v2-pdf.md` | `papers/canonical/2026-05-06/2601.05280.md` | `reviews/2601.05280.md` | reviewed |
 | `arxiv:2602.06613` | v1 | `papers/raw/2026-05-06/2602-06613v1-pdf.md` | `papers/canonical/2026-05-06/2602.06613.md` | `reviews/2602.06613.md` | reviewed |
 | `arxiv:2602.11908` | v3 | `papers/raw/2026-05-06/2602-11908v3-pdf.md` | `papers/canonical/2026-05-06/2602.11908.md` | `reviews/2602.11908.md` | reviewed |
-| `arxiv:2603.26718` | v2 | `papers/raw/2026-05-06/2603-26718v2-pdf.md` | `papers/canonical/2026-05-06/2603.26718.md` | `reviews/2603.26718.md` | reviewed |
+| `arxiv:2603.26718` | v2 | `papers/raw/2026-05-06/2603-26718v2-pdf.md` | `papers/canonical/2026-05-06/2603.26718.md` |  | skipped |
 | `arxiv:2604.14228` | v2 | `papers/raw/2026-05-06/2604-14228v1-pdf.md` | `papers/canonical/2026-05-06/2604.14228.md` | `reviews/2604.14228.md` | reviewed |
 | `arxiv:2604.18176` | v1 | `papers/raw/2026-05-06/2604-18176v1-pdf.md` | `papers/canonical/2026-05-06/2604.18176.md` | `reviews/2604.18176.md` | reviewed |
 | `arxiv:2604.24658` | v3 | `papers/raw/2026-05-06/2604-24658v2-pdf.md` | `papers/canonical/2026-05-06/2604.24658.md` | `reviews/2604.24658.md` | reviewed |
@@ -34,9 +34,9 @@ Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `
 | `slug:26sycoph` |  | `papers/raw/2026-05-06/26sycoph-pdf.md` | `papers/canonical/2026-05-06/26sycoph.md` | `reviews/26sycoph.md` | reviewed |
 | `slug:23ppi` |  | `papers/raw/2026-05-06/23ppi-pdf.md` | `papers/canonical/2026-05-06/23ppi.md` | `reviews/23ppi.md` | reviewed |
 | `slug:26sciwiki` |  | `papers/raw/2026-05-06/26sciwiki-pdf.md` | `papers/canonical/2026-05-06/26sciwiki.md` | `reviews/26sciwiki.md` | reviewed |
-| `slug:26distill` |  | `papers/raw/2026-05-06/26distill-pdf.md` | `papers/canonical/2026-05-06/26distill.md` | — | canonical |
+| `slug:26distill` |  | `papers/raw/2026-05-06/26distill-pdf.md` | `papers/canonical/2026-05-06/26distill.md` | `reviews/26distill.md` | reviewed |
 | `slug:25misalign` |  | `papers/raw/2026-05-06/25misalign-pdf.md` | `papers/canonical/2026-05-06/25misalign.md` | `reviews/25misalign.md` | reviewed |
-| `slug:26scieval` |  | `papers/raw/2026-05-06/26scieval-pdf.md` | `papers/canonical/2026-05-06/26scieval.md` | — | canonical |
+| `slug:26scieval` |  | `papers/raw/2026-05-06/26scieval-pdf.md` | `papers/canonical/2026-05-06/26scieval.md` |  | skipped |
 | `slug:26scales` |  | `papers/raw/2026-05-06/26scales-pdf.md` | `papers/canonical/2026-05-06/26scales.md` | `reviews/26scales.md` | reviewed |
 | `slug:26cosci` |  | `papers/raw/2026-05-06/26cosci-pdf.md` | `papers/canonical/2026-05-06/26cosci.md` | `reviews/26cosci.md` | reviewed |
 | `slug:26empsw` |  | `papers/raw/2026-05-06/26empsw-pdf.md` | `papers/canonical/2026-05-06/26empsw.md` | `reviews/26empsw.md` | reviewed |
@@ -205,3 +205,16 @@ Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `
 | `arxiv:2605.19156` | v1 | `papers/raw/2026-09-18/2605-19156v1-pdf.md` | `papers/canonical/2026-09-18/2605.19156.md` | `reviews/2605.19156.md` | reviewed |
 | `arxiv:2607.27191` | v2 | `papers/raw/2026-09-18/2607-27191v2-pdf.md` | `papers/canonical/2026-09-18/2607.27191.md` | `reviews/2607.27191.md` | reviewed |
 | `slug:26aisc` |  | `papers/raw/2026-09-18/26aisc-pdf.md` | `papers/canonical/2026-09-18/26aisc.md` | `reviews/26aisc.md` | reviewed |
+| `arxiv:2401.02843` | v3 | `papers/raw/2026-09-21/2401-02843v3-pdf.md` | `papers/canonical/2026-09-21/2401.02843.md` | `reviews/2401.02843.md` | reviewed |
+| `arxiv:2411.15114` | v2 | `papers/raw/2026-09-21/2411-15114v2-pdf.md` | `papers/canonical/2026-09-21/2411.15114.md` | `reviews/2411.15114.md` | reviewed |
+| `arxiv:2505.22954` | v3 | `papers/raw/2026-09-21/2505-22954v3-pdf.md` | `papers/canonical/2026-09-21/2505.22954.md` | `reviews/2505.22954.md` | reviewed |
+| `arxiv:2506.13131` | v1 | `papers/raw/2026-09-21/2506-13131v1-pdf.md` | `papers/canonical/2026-09-21/2506.13131.md` | `reviews/2506.13131.md` | reviewed |
+| `arxiv:2607.07663` | v2 | `papers/raw/2026-09-21/2607-07663v2-pdf.md` | `papers/canonical/2026-09-21/2607.07663.md` | `reviews/2607.07663.md` | reviewed |
+| `arxiv:2609.00137` | v1 | `papers/raw/2026-09-21/2609-00137v1-pdf.md` | `papers/canonical/2026-09-21/2609.00137.md` | `reviews/2609.00137.md` | reviewed |
+| `arxiv:2609.15802` | v1 | `papers/raw/2026-09-21/2609-15802v1-pdf.md` | `papers/canonical/2026-09-21/2609.15802.md` | `reviews/2609.15802.md` | reviewed |
+| `slug:26w2s` |  | `papers/raw/2026-09-21/26w2s-pdf.md` | `papers/canonical/2026-09-21/26w2s.md` | `reviews/26w2s.md` | reviewed |
+| `slug:26iaisr` |  | `papers/raw/2026-09-21/26iaisr-pdf.md` | `papers/canonical/2026-09-21/26iaisr.md` | `reviews/26iaisr.md` | reviewed |
+| `slug:26oaiacc` |  | `papers/raw/2026-09-21/26oaiacc-pdf.md` | `papers/canonical/2026-09-21/26oaiacc.md` | `reviews/26oaiacc.md` | reviewed |
+| `arxiv:2512.22396` | v1 | `papers/raw/2026-09-22/2512-22396v1-pdf.md` | `papers/canonical/2026-09-22/2512.22396.md` | `reviews/2512.22396.md` | reviewed |
+| `arxiv:2609.19352` | v1 | `papers/raw/2026-09-22/2609-19352v1-pdf.md` | `papers/canonical/2026-09-22/2609.19352.md` | `reviews/2609.19352.md` | reviewed |
+| `arxiv:2609.19644` | v1 | `papers/raw/2026-09-22/2609-19644v1-pdf.md` | `papers/canonical/2026-09-22/2609.19644.md` | `reviews/2609.19644.md` | reviewed |

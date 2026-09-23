@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 ## Quick start
 
-Resolve via [`papers/index.md`](../../../papers/index.md): canonical MD first, else raw. Write `reviews/{id}.md` (id without version). Never write next to the dump.
+Resolve via [`papers/index.md`](../../../papers/index.md): canonical MD first, else raw. Write `reviews/{id}.md` (id without version). Never write next to the dump. If the index status is `skipped`, stop — do not review that paper.
 
 Read [SCHEMA.md](SCHEMA.md), [CONTEXT.md](CONTEXT.md), [TAXONOMY.md](TAXONOMY.md), [VERIFICATION.md](VERIFICATION.md), [STYLE.md](STYLE.md), and [CLAIMS.md](CLAIMS.md). Then draft. Do not force-fit our bets onto a paper that is not about them. Do not open other repo context folders while reviewing; those files are already distilled here.
 
