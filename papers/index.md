@@ -218,3 +218,10 @@ Status: `raw` = dump only (not on graphify). `canonical` = readable MD exists. `
 | `arxiv:2512.22396` | v1 | `papers/raw/2026-09-22/2512-22396v1-pdf.md` | `papers/canonical/2026-09-22/2512.22396.md` | `reviews/2512.22396.md` | reviewed |
 | `arxiv:2609.19352` | v1 | `papers/raw/2026-09-22/2609-19352v1-pdf.md` | `papers/canonical/2026-09-22/2609.19352.md` | `reviews/2609.19352.md` | reviewed |
 | `arxiv:2609.19644` | v1 | `papers/raw/2026-09-22/2609-19644v1-pdf.md` | `papers/canonical/2026-09-22/2609.19644.md` | `reviews/2609.19644.md` | reviewed |
+| `arxiv:1904.09751` | v2 | `papers/raw/2026-09-23/1904-09751v2-pdf.md` | `papers/canonical/2026-09-23/1904.09751.md` | `reviews/1904.09751.md` | reviewed |
+| `arxiv:2402.05201` | v3 | `papers/raw/2026-09-23/2402-05201v3-pdf.md` | `papers/canonical/2026-09-23/2402.05201.md` | `reviews/2402.05201.md` | reviewed |
+| `arxiv:2504.16828` | v5 | `papers/raw/2026-09-23/2504-16828v5-pdf.md` | `papers/canonical/2026-09-23/2504.16828.md` | `reviews/2504.16828.md` | reviewed |
+| `arxiv:2510.09340` | v2 | `papers/raw/2026-09-23/2510-09340v2-pdf.md` | `papers/canonical/2026-09-23/2510.09340.md` | `reviews/2510.09340.md` | reviewed |
+| `arxiv:2607.11849` | v1 | `papers/raw/2026-09-23/2607-11849v1-pdf.md` | `papers/canonical/2026-09-23/2607.11849.md` | `reviews/2607.11849.md` | reviewed |
+| `arxiv:2604.02460` | v2 |  | `papers/canonical/2026-09-28/2604.02460.md` | `reviews/2604.02460.md` | reviewed |
+| `arxiv:2512.08296` | v3 |  | `papers/canonical/2026-09-28/2512.08296.md` | `reviews/2512.08296.md` | reviewed |
